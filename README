@@ -1,0 +1,41 @@
+# ;; -*- mode: org; coding: utf-8 -*-
+
+#+TITLE: GNU Guile-CV README
+
+* GNU Guile-CV
+
+GNU Guile-CV [1]
+a Vigra based Computer Vision library for Guile [2]
+
+** Description
+
+Guile-CV is a Computer Vision library for Guile Scheme, based on
+Vigra [3].  It comprises a direct binding to Vigra_c [4] (a C wrapper to
+some of the Vigra functionality), and a higher level API written in
+Guile Scheme [5].
+
+** What else
+
+Guile-CV is entirely written in Guile, no C code.
+
+
+** Savannah
+
+GNU Guile-CV also has a Savannah [6] project page.
+
+** License
+
+GNU Guile-CV is a free software, distributed under the terms of the GNU
+Lesser General Public License LGPLv3 or higher. You must be aware there
+is no warranty whatsoever for GNU Guile-CV. This is described in full in
+the license.
+
+
+[1] http://www.gnu.org/software/guile-cv/
+[2] GNU Guile
+    an interpreter and compiler for the Scheme [6] programming language
+    http://www.gnu.org/software/guile/
+[3] http://ukoethe.github.io/vigra/
+[4] https://github.com/BSeppke/vigra_c
+[5] http://schemers.org/
+[6] https://savannah.gnu.org/projects/guile-cv/

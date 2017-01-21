@@ -1,0 +1,22 @@
+# ;; -*- mode: org; coding: utf-8 -*-
+
+#+TITLE: GNU Guile-CV NEWS
+
+* Latest News
+
+** dd Month year
+
+GNU Guile-CV version 0.1.0-alpha is released.
+
+Here is a summary of the changes since version 0.0.0. See GNU
+Guile-CV's git summary [1] and git log [2] for a complete
+description:
+
+
+[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+
+* Older News
+
+For older News, see http://www.gnu.org/software/guile-cv/news.html
