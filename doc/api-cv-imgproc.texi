@@ -1,0 +1,225 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Image Processing
+@subsection Image Processing
+
+The Guile-CV procedures and methods to process images.
+
+@subheading Procedures
+
+
+@indentedblock
+@table @code
+@item @ref{im-resize}
+@item @ref{im-resize-channel}
+@item @ref{im-rotate}
+@item @ref{im-rotate-channel}
+@item @ref{im-flip}
+@item @ref{im-flip-channel}
+@item @ref{im-crop-size}
+@item @ref{im-crop}
+@item @ref{im-crop-channel}
+@item @ref{im-padd-size}
+@item @ref{im-padd}
+@item @ref{im-padd-channel}
+@item @ref{im-rgb->grey}
+@item @ref{im-threshold}
+@item @ref{im-and}
+@item @ref{im-or}
+@item @ref{im-complement}
+@end table
+@end indentedblock
+
+
+@anchor{im-resize}
+@anchor{im-resize-channel}
+@deffn Procedure im-resize image new-width new-height @
+       [#:i-mode 'bilinear]
+@deffnx Procedure im-resize-channel channel width height new-width new-height @
+        [#:i-mode 'bilinear]
+
+Returns a new image or chanbnel resized to @var{new-width},
+@var{new-height}.
+
+The interpolation mode @var{#:i-mode}, can be one of:
+
+@indentedblock
+@table @code
+@item none
+@item bilinear
+@item biquadratic
+@item bicubic
+@item ? (fixme) 
+@end table
+@end indentedblock
+@end deffn
+
+
+@anchor{im-rotate}
+@anchor{im-rotate-channel}
+@deffn Procedure im-rotate image angle [#:i-mode 'bilinear]
+@deffnx Procedure im-rotate-channel channel width height angle @
+        [#:i-mode 'bilinear]
+
+Returns a new image or channel rotated by @var{angle}.
+
+The @var{angle} is in degrees: @code{+/-[0.0 360.0]}.
+
+It is neccessary, for rotations other than multiples of 90°, to
+recalculate the target coordinates, since after the rotation, they might
+be floats.  The 'next neighbor' interpolation possible modes,
+@var{#:i-mode}, are:
+
+@indentedblock
+@table @code
+@item bilinear
+@item biquadratic
+@item bicubic
+@item ? (fixme)
+@end table
+@end indentedblock
+@end deffn
+
+
+@anchor{im-flip}
+@anchor{im-flip-channel}
+@deffn Procedure im-flip image axis
+@deffnx Procedure im-flip-channel channel width height axis
+
+Returns a new image or channel flipped by @var{axis}.
+
+The rotation @var{axis} can be one of:
+
+@indentedblock
+@table @code
+@item horizontal
+@item vertical
+@item both
+@end table
+@end indentedblock
+@end deffn
+
+
+@anchor{im-crop-size}
+@deffn Procedure im-crop-size width height left top right bottom
+
+Returns a list, @code{(new-width new-height)}.
+
+Given the original image @var{width} and @var{height}, this procedure
+checks that @var{left}, @var{top}, @var{right} and @var{bottom} are
+valid and return a list, @code{(new-width new-height)}, otherwise, it
+raises an error.
+@end deffn
+
+
+@anchor{im-crop}
+@anchor{im-crop-channel}
+@deffn Procedure im-crop image left top right bottom
+@deffnx Procedure im-crop-channel channel width height left top right bottom @
+        [#:new-w #f] [#:new-h #f]
+
+Returns a new image, resulting of the crop of @var{image} at @var{left},
+@var{top}, @var{right} and @var{bottom}.
+@end deffn
+
+
+@anchor{im-padd-size}
+@deffn Procedure im-padd-size width height left top right bottom
+
+Returns a list, @code{(new-width new-height)}.
+
+Given the original image @var{width} and @var{height}, this procedure
+checks that @var{left}, @var{top}, @var{right} and @var{bottom} are
+@code{>= 0.0} and return a list, @code{(new-width new-height)},
+otherwise, it raises an error.
+@end deffn
+
+
+@anchor{im-padd}
+@anchor{im-padd-channel}
+@deffn Procedure im-padd image left top right bottom
+@deffnx Procedure im-padd-channel channel width height left top right bottom @
+        [#:new-w #f] [#:new-h #f]
+
+Returns a new image, resulting of the padding of @var{image} by @var{left},
+@var{top}, @var{right} and @var{bottom} pixels initialized to 0.0 
+@end deffn
+
+
+@c ;;;
+@c ;;; Additional IP
+@c ;;;
+
+
+@anchor{im-rgb->grey}
+@deffn Procedure im-rgb->grey image
+
+Returns a new GREY image.
+@end deffn
+
+
+@anchor{im-threshold}
+@deffn Procedure im-threshold image threshold @
+       [#:bg 'dark] [#:prec 1.0e-4]
+
+Returns a new BLACK and WHITE image.
+
+Valid @var{#:bg} values are @code{'(dark light)}, the default is
+@code{dark}. If @var{image} is an RGB image, @ref{im-rgb->grey} is first
+called.
+
+Pixels for which the original value is @code{>=} @var{threshold} are set
+to 255.0 if @var{#:bg} is @code{'dark}, and set to 0.0 if @var{#:bg} is
+@code{'light}. The other pixels are set to 0.0 or 255.0 respectively.
+@end deffn
+
+
+@anchor{im-and}
+@anchor{im-or}
+@deffn Procedure im-and i1 i2 i3 @dots{}
+@deffnx Procedure im-or i1 i2 i3 @dots{}
+
+Returns @var{image} if one argument only, otherwise, it returns a new
+image, as the result of computing the logical @code{AND} or @code{OR} of
+all images.
+
+In the case of @code{AND}, for all positive results, the pixel value (of
+each channel) of the new image is set to the one obtained from
+@var{i1}, and @code{0.0} otherwise.
+
+In the case of @code{OR}, the pixel value (of each channel) of the new
+image is to the one obtained from @var{i1} when it is @code{> 0.0},
+otherwise, it is set to the corresponding pixel mean value of all other
+images.
+
+All images must have the same @code{width} and @code{height}.
+@end deffn
+
+
+@anchor{im-complement}
+@deffn Procedure im-complement image
+
+Returns a new image.
+
+This procedure computes the mathematical complement of @var{image},
+which for Guile-CV means that for each pixel of each channel, the new
+value is @code{(- 255.0 pixel-value)}.
+@end deffn

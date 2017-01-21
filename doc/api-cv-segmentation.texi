@@ -1,0 +1,93 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Segmentation
+@subsection Segmentation
+
+The Guile-CV procedures and methods related to segmentation.
+
+@subheading Procedures
+
+
+@indentedblock
+@table @code
+@item @ref{im-label}
+@item @ref{im-label-channel}
+@item @ref{im-label-all}
+@item @ref{im-label-all-channel}
+@c @item @ref{im-watershed}
+@c @item @ref{im-watershed-channel}
+@end table
+@end indentedblock
+
+
+@anchor{im-label}
+@anchor{im-label-channel}
+@anchor{im-label-all}
+@anchor{im-label-all-channel}
+@deffn Procedure im-label image [#:con 8] [#:bg 'dark]
+@deffnx Procedure im-label-channel channel width height [#:con 8] [#:bg 'dark]
+@deffnx Procedure im-label-all image [#:con 8]
+@deffnx Procedure im-label-all-channel channel width height [#:con 8]
+
+Returns two values: a new GREY image or GREY channnel, and the total
+number of objects.
+
+The @code{im-label} and @code{im-label-channel} procedures label
+foreground objects in the binary @var{image}.  In the new image or
+channel, 0.0 indicates a background pixel, 1.0 indicates that the pixel
+belongs to object number 1, 2.0 that the pixel belongs to object number
+2, etc.
+
+The @code{im-label-all} and @code{im-label-all-channel} procedures label
+all objects in the binary @var{image}, with no specific distinction for
+any @emph{background value}. As a result, these two procedures will
+label not only the continuous background, if any, but also any
+whole(s). As an example, they are used by @ref{im-fill}, defined in the
+module @code{(cv morphology)}, which you may have a look at for a better
+understanding of how it works.
+
+Two pixels belong to the same object if they are neighbors.  By default
+the algorithm uses 8-connectivity to define a neighborhood, but this can
+be changed through the keyword argument @var{#:bg}, which can be either
+4 or 8.
+
+@c @ifhtml
+@ifnottex
+@image{../images/pp-17-bf,,,,png}
+@image{../images/pp-17-label,,,,png}
+@image{../images/pp-17-label-all,,,,png}
+
+Here above, left being the original image (over which we first have to
+call @code{im-threshold} since both labeling procedures expect a binary
+image), you can see the difference between @code{im-label} (1 object)
+and @code{im-label-all} (6 objects).
+@end ifnottex
+@c @end ifhtml
+@end deffn
+
+
+@c @anchor{im-watershed}
+@c @anchor{im-watershed-channel}
+@c @deffn Procedure im-watershed image
+@c @deffnx Procedure im-watershed-channel channel width height
+
+@c Returns a new image or channnel.
+@c @end deffn

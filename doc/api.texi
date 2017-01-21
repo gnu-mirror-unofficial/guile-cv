@@ -1,0 +1,54 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+@node API Reference
+@chapter API Reference
+
+@c Guile-CV Reference Manual still is a mock-up: any help is more
+@c then welcome to improve this situation, thanks!
+
+
+@menu
+* API Overview::
+* Guile-CV::
+* Support::
+@end menu
+
+
+@node API Overview
+@section API Overview
+
+@include api-overview.texi
+
+
+@node Guile-CV
+@section Guile-CV
+
+@include api-cv-impex.texi
+@include api-cv-idata.texi
+@include api-cv-imgproc.texi
+@include api-cv-filters.texi
+@include api-cv-segmentation.texi
+@include api-cv-morphology.texi
+@include api-cv-utils.texi
+
+@node Support
+@section Support
+
+@include api-support.texi

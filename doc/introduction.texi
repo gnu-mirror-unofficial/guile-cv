@@ -1,0 +1,216 @@
+@c -*- mode: texinfo; coding: utf-8 -*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+@node Introduction
+@chapter Introduction
+
+@menu
+* About Guile-CV::
+@c * Description::
+@c * What else::
+@c * Savannah::
+* Obtaining and Installing Guile-CV::
+* Contact::
+* Reporting Bugs::
+@end menu
+
+
+@node About Guile-CV
+@section About Guile-CV
+
+GNU Guile-CV @* a Computer Vision functional programming library for
+@uref{@value{UGUILE}, Guile}
+
+
+@subheading Description
+
+Guile-CV is a Computer Vision function progrmming library for the
+@uref{@value{UGUILE}, Guile} Scheme language. Guile-CV is based on
+@uref{@value{UVIGRA}, Vigra} (Vision with Generic Algorithms).  It
+comprises a direct binding to @uref{@value{UVIGRAC}, vigra_c} (a C
+wrapper to a subset of the Vigra library), and a higher level API
+written in Guile Scheme.
+
+
+@subheading What else
+
+Guile-CV is entirely written in @uref{@value{UGUILE}, Guile}, no C
+code.
+
+
+@subheading Savannah
+
+GNU Guile-CV also has a @uref{@value{UGUILE-CV-SAVANNAH}, Savannah} project
+page.
+
+
+@node Obtaining and Installing Guile-CV
+@section Obtaining and Installing Guile-CV
+
+GNU Guile-CV can be obtained from the following archive site
+@uref{@value{UGUILE-CV-RELEASES}}.  The file will be named
+guile-cv-version.tar.gz. The current version is @value{VERSION}, so
+the file you should grab is:
+
+@tie{}@tie{}@tie{}@tie{}@uref{@value{UGUILE-CV-LATEST}}
+
+
+@subheading Dependencies
+
+GNU Guile-CV needs the following software to run:
+
+@itemize @bullet
+
+@item
+Autoconf >= 2.69
+@item
+Automake >= 1.14
+@item
+@uref{@value{UGUILE}, Guile} >= 2.0.13
+@item
+@uref{@value{UGUILE-LIB}, Guile-Lib} >= 0.2.5
+@item 
+@uref{@value{UVIGRA}, Vigra}
+@item
+@uref{@value{UVIGRAC}, vigra_c}
+@end itemize
+
+
+@subheading Quickstart
+
+Assuming you have satisfied the dependencies, open a terminal and
+proceed with the following steps:
+
+@example
+cd <download-path>
+tar zxf guile-cv-@value{VERSION}.tar.gz
+cd guile-cv-@value{VERSION}
+./configure [--prefix=/your/prefix]
+make
+make install
+@end example
+
+Happy Guile-CV!
+
+@*
+@strong{Notes:}
+
+@enumerate
+@item
+In the above @code{configure} step, @code{--prefix=/your/prefix} is
+optional.  The default value is @code{/usr/local}.  As an example, you
+could use
+
+@example
+./configure --prefix=/opt
+@end example
+
+@item
+To install GNU Guile-CV, you must have @code{write permissions} for
+@code{$prefix}, Guile's global site and site-ccache directories.
+@ifhtml
+@*@*
+@end ifhtml
+
+@item
+GNU Guile-CV's modules are installed in Guile's global site directory.  If
+you want to know its location, enter the following expression in a
+terminal:
+
+@example
+guile -c "(display (%global-site-dir)) (newline)"
+@end example
+
+@item
+Guile-CV's compiled modules are installed in the Guile's
+@code{site-ccache} directory.  If you want to know its location, enter
+the following expression in a terminal:
+
+@example
+guile -c "(display (%site-ccache-dir)) (newline)"
+@end example
+
+@item
+Like for any other GNU Tool Chain compatible software, you may install
+the documentation locally using @code{make install-info}, @code{make
+install-html} and/or @code{make install-pdf}. The documentation is
+installed in @code{$prefix/share/doc/guile-cv}
+@ifhtml
+@*@*
+@end ifhtml
+
+@item
+Last but not least :), Guile-CV comes with a tests suite, which we
+recommend you to run (especially before @ref{Reporting Bugs}):
+
+@example
+make check
+@end example
+@end enumerate
+
+
+@node Contact
+@section Contact
+
+
+@subheading Mailing list
+
+Guile-CV uses the following mailing list:
+
+@itemize @bullet
+
+@item
+bug-guile-cv is used for Guile-CV bug reports.
+
+@item
+guile-devel is used to discuss most aspects of Guile-CV, including
+development and enhancement requests.
+
+@item
+guile-user is for general user help and discussion.
+
+@end itemize
+
+When sending emails to guile-user or guile-devel, please use
+'Guile-CV: ' to preceed the subject line of any Guile-CV related
+email, thanks!
+
+
+@subheading IRC
+
+Most of the time you can find me on irc, channel @emph{#guile},
+@emph{#guix} and @emph{#scheme} on @emph{irc.freenode.net},
+@emph{#clutter} on @emph{irc.gnome.org}, under the nickname
+@strong{daviid}.
+
+
+
+@node Reporting Bugs
+@section Reporting Bugs
+
+Guile-CV has a @uref{@value{UGUILE-CV-BUGS-TRACKER}, bugs tracker}. You
+may send your bugs report here:
+
+@itemize @bullet
+@item bug-guile-cv at gnu dot org
+@end itemize
+
+You can (un)subscribe to the bugs report list by following instructions
+on the @uref{@value{UGUILE-CV-BUGS-LISTINFO}, list information page}.
+

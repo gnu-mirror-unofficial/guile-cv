@@ -1,0 +1,103 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Import Export
+@subsection Import Export
+
+The Guile-CV procedures and methods to load, save and query file system
+images.
+
+@subheading Procedures
+
+
+@indentedblock
+@table @code
+@item @ref{im-load}
+@item @ref{im-save}
+@item @ref{im-size}
+@item @ref{im-width}
+@item @ref{im-height}
+@item @ref{im-n-channel}
+@item @ref{im-grey?}
+@item @ref{im-rgb?}
+@end table
+@end indentedblock
+
+
+@anchor{im-load}
+@deffn Procedure im-load filename
+
+Returns a Guile-CV image.
+
+Loads the image pointed by @var{filename} and returns a Guile-CV image.
+@var{filename} can either be a GREY or an RGB image.
+
+At this point, Guile-CV supports the following file formats: GIF, TIFF,
+JPEG, BMP, EXR, HDR, PNM (PBM, PGM, PPM), PNG, SunRaster, KHOROS-VIFF.
+@end deffn
+
+
+@anchor{im-save}
+@deffn Procedure im-save image filename
+
+Returns #t.
+
+Saves @var{image} in @var{filename}.  The type in which @var{image} is
+saved is determined by the @var{filename} extension.
+
+@lisp
+,use (cv)
+(define img-1 (im-load "images/lenna.png"))
+...
+(im-save img-1 "/tmp/lenna.jpg")
+@end lisp
+
+@end deffn
+
+
+@anchor{im-size}
+@deffn Method im-size filename
+
+
+Returns the list of @code{(@var{width} @var{height} @var{n-channel})for
+@var{filename}}.
+@end deffn
+
+
+@anchor{im-width}
+@anchor{im-height}
+@anchor{im-n-channel}
+@deffn Method im-width filename
+@deffnx Method im-height filename
+@deffnx Method im-n-channel filename
+
+Returns, respectively the @var{width}, the @var{height} and the
+@var{n-channel} for @var{filename}.
+@end deffn
+
+
+@anchor{im-grey?}
+@anchor{im-rgb?}
+@deffn Method im-grey? filename
+@deffnx Method im-rgb? filename
+
+Returns @code{#t} if @var{filename} is respectively a GREY scale or an
+RGB image.
+@end deffn

@@ -1,0 +1,148 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Utilities
+@subsection Utilities
+
+Other Guile-CV procedures and methods utilities.
+
+
+@subheading Procedures
+
+
+@indentedblock
+@table @code
+@item @ref{im-show}
+@end table
+@end indentedblock
+
+
+@anchor{im-show}
+@deffn Method im-show filename
+@deffnx Method im-show image
+@deffnx Method im-show image name
+
+Returns the string "#<Image: @dots{}>", where "@dots{}" is
+either @var{filename} or a filename constructed by im-show, see below.
+
+These three methods will also effectively dislay the image if you are
+using @uref{@value{UGEISER}, Geiser}, which analyzes Guile's procedures
+and methods returned values (through the use of its pattern matcher),
+and when appropriate, triggers its image display mechanism.
+
+Geiser has two variables that allow you to choose either to inline
+images in its @uref{@value{UEMACS}, Emacs} (Guile repl) buffer, or to
+display them using externel viewer: @code{geiser-image-viewer} and
+@code{geiser-repl-inline-images-p}.  You may choose to add these
+variables in your @file{.emacs} file, for example:
+
+@example
+(setq geiser-image-viewer "eog")
+(setq geiser-repl-inline-images-p nil)
+@end example
+
+Note that @code{(setq geiser-repl-inline-images-p t)} will only work if
+you are using a graphics-aware Emacs, and otherwise, will fall on the
+external viewer approach, if the variable @code{geiser-image-viewer} has
+been defined. When using Geiser in a non graphics-aware Emac, or when
+using the external viewer approach, images will appear as buttons: press
+return on them to invoke (or raise) the external viewer (window
+containing that image).
+
+Except for the first @code{im-show} method, Guile-CV has to save the
+@var{image} first, and does it in the location defined by the
+@ref{%image-cache} variable. If you call @code{im-show} passing
+@var{name}, the @var{image} is saved as
+@file{%image-cache/@var{name}.png}, otherwise under a generated name,
+the result of @code{(symbol->string (gensym "im-show-"))}.
+
+Note that if you do not specify @var{name}, a new external viewer window
+is opened at each @code{im-show} invocation, even for identical
+@var{image} calls: this because in Guile-CV, on purpose, images are just
+list, with no (unique) identifier, and there is no way for
+@code{im-show} to know ... Further to this point, when you pass
+@var{name} as an argument, you are not @samp{identifying} @var{image},
+which may actually differ, but rather just ask to reuse the filename and
+hence the external viewer window associated with it.
+
+Last note: many external viewers, such as Eog (the Gnome Eye Viewer),
+will try to apply, per default, some sort of smoothing techniques,
+especially on @code{zoom-in} and @code{zoom-out}: where this is fine for
+viewing @samp{lazer} pictures, you probably want to check and disable
+these options when working with Guile-CV.
+@end deffn
+
+
+@subheading Variables
+
+
+@indentedblock
+@table @code
+@item @ref{%image-cache}
+@item @ref{%image-cache-format}
+@end table
+@end indentedblock
+
+
+@anchor{%image-cache}
+@defvr Variable %image-cache
+@cindex User configuration
+
+Specifies the location used by @ref{im-show} to save images. 
+
+The default value is @file{/tmp/<username>/guile-cv}, but you may
+@code{set!} it.  If you'd like to reuse that location for future
+guile-cv sessions, you may save it in guile-cv's @samp{per user} config
+file @file{<userdir>/.config/guile-cv} as an assoc pair, here is an
+example:
+
+@example
+cat ~/.config/guile-cv.conf
+((image-cache . "~/tmp"))
+@end example
+
+Note that if used, the @samp{~} is expanded at load time, so in geiser,
+it becomes:
+
+@example
+scheme@@(guile-user)> ,use (cv)
+scheme@@(guile-user)> %image-cache
+@print{}
+$2 = "/home/david/tmp"
+@end example
+@end defvr
+
+
+@anchor{%image-cache-format}
+@defvr Variable %image-cache-format
+
+Specifies the format used by @ref{im-show} to save images. 
+
+The default value is @code{"png"}, but you may @code{set!} it.  If you'd
+like to reuse that format for future guile-cv sessions, you may save
+it in guile-cv's @samp{per user} config file
+@file{<userdir>/.config/guile-cv}, as an assoc pair, here is an
+example:
+
+@example
+cat ~/.config/guile-cv.conf
+((image-cache-format . "jpg"))
+@end example
+@end defvr

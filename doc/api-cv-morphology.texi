@@ -1,0 +1,162 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Morphology
+@subsection Morphology
+
+The Guile-CV procedures and methods related to morphology.
+
+@subheading Procedures
+
+
+@indentedblock
+@table @code
+@item @ref{im-disc-erode}
+@item @ref{im-disc-erode-channel}
+@item @ref{im-disc-dilate}
+@item @ref{im-disc-dilate-channel}
+@item @ref{im-open}
+@item @ref{im-open-channel}
+@item @ref{im-close}
+@item @ref{im-close-channel}
+@item @ref{im-fill}
+@item @ref{im-fill-channel}
+@end table
+@end indentedblock
+
+
+@anchor{im-disc-erode}
+@anchor{im-disc-erode-channel}
+@deffn Procedure im-disc-erode image radius
+@deffnx Procedure im-disc-erode-channel channel width height radius
+
+Returns a new image or channnel.
+
+Performs the morpholgical erosion of @var{image} using a disc of a given
+@var{radius}. Here is an example:
+
+@lisp
+(im-make 5 5 1 1.0)
+@print{}
+$2 = (5 5 1 (#f32(1.0 1.0 1.0 1.0 1.0 …)))
+(im-set! $2 1 2 0.0)
+(im-disc-erode $2 1)
+@print{}
+$3 = (5 5 1 (#f32(1.0 0.0 0.0 0.0 1.0 …)))
+(im-display $2 #:proc inexact->exact)
+@print{}
+Channel 1
+  1  1  1  1  1
+  1  1  0  1  1
+  1  1  1  1  1
+  1  1  1  1  1
+  1  1  1  1  1
+(im-display $3 #:proc inexact->exact)
+@print{}
+Channel 1
+  1  0  0  0  1
+  1  0  0  0  1
+  1  0  0  0  1
+  1  1  1  1  1
+  1  1  1  1  1
+@end lisp
+@end deffn
+
+
+@anchor{im-disc-dilate}
+@anchor{im-disc-dilate-channel}
+@deffn Procedure im-disc-dilate image radius
+@deffnx Procedure im-disc-dilate-channel channel width height radius
+
+Returns a new image or channnel.
+
+Performs the morpholgical dilatation of @var{image} using a disc of a
+given @var{radius}. Here is an example:
+
+@lisp
+...
+@print{}
+$13 = (11 11 1 (#f32(0.0 0.0 0.0 0.0 0.0 …)))
+(im-disc-dilate $13 1)
+@print{}
+$14 = (11 11 1 (#f32(1.0 1.0 1.0 1.0 1.0 …)))
+(im-display $13 #:proc inexact->exact)
+@print{}
+Channel 1
+  0  0  0  0  0  0  0  0  0  0  0
+  0  1  1  1  1  0  0  1  1  1  0
+  0  1  1  1  1  0  0  1  1  1  0
+  0  1  1  1  1  1  1  1  1  1  0
+  0  1  1  1  1  1  1  1  1  1  0
+  0  1  1  0  0  0  1  1  1  1  0
+  0  1  1  0  0  0  1  1  1  1  0
+  0  1  1  0  0  0  1  1  1  1  0
+  0  1  1  1  1  1  1  1  0  0  0
+  0  1  1  1  1  1  1  1  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0
+(im-display $14 #:proc inexact->exact)
+@print{}
+Channel 1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  0  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  1  1
+  1  1  1  1  1  1  1  1  1  0  0
+  1  1  1  1  1  1  1  1  1  0  0
+@end lisp
+@end deffn
+
+
+@anchor{im-open}
+@anchor{im-open-channel}
+@deffn Procedure im-open image
+@deffnx Procedure im-open-channel channel width height
+
+Returns a new image or channnel.
+
+FIXME.
+@end deffn
+
+
+@anchor{im-close}
+@anchor{im-close-channel}
+@deffn Procedure im-close image
+@deffnx Procedure im-close-channel channel width height
+
+Returns a new image or channnel.
+
+FIXME.
+@end deffn
+
+
+@anchor{im-fill}
+@anchor{im-fill-channel}
+@deffn Procedure im-fill image
+@deffnx Procedure im-fill-channel channel width height
+
+Returns a new image or channnel.
+
+FIXME.
+@end deffn

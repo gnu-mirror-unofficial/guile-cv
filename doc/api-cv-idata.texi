@@ -1,0 +1,338 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Image Structure and Accessors
+@subsection Image Structure and Accessors
+
+The Guile-CV procedures and methods related to images data structure,
+creating, accessing ad copying images.
+
+
+@subheading Image Data Structure
+
+A Guile-CV image is represented by a list containing the following
+elements:
+
+@lisp
+(@var{width} @var{height} @var{n-channel} @var{idata})
+@end lisp
+
+where @var{idata} is a list of @var{n-channel} elements, each element
+being a vector of @code{(* @var{width} @var{height})} cells. More
+precisely, each element is an @code{srfi-4} homogeneous numeric vector
+of 32 bit floats, called @code{f32vector}, knowing that @code{f32} is
+the C type @code{float}.
+
+The external representation (ie. read syntax) for @var{idata} vectors is
+@code{#f32(@dots{})}. As an example, a grey scale image of width 3 and
+height 2, initialized to 0.0 is represnented by the following list:
+
+@lisp
+(3 2 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0)))
+@end lisp
+
+The @var{n-channel} is an integer @code{>= 1}, with no limit but the
+memory size.  This said, most Guile-CV procedures and methods expect
+either GREY scale (@var{n-channel=1}), or RGB (@var{n-channel=3})
+images.  For the later, the channels are @code{Red}, @code{Green} and
+@code{Blue} in that order.
+
+Guile-CV provides usefull accessors for all these fields. However, very
+often, you will need them all, in which case your best friend is
+@code{(ice-9 match)}, here is an example:
+
+@lisp
+,use (cv)
+(define image (im-make 4 3 3))
+(match image
+  ((width height n-chan idata)
+   (match idata
+     ((r g b)
+      ... your code here ...))))
+@end lisp
+
+Note that the @code{(cv)} module imports and re-exports the public
+interface of @code{(ice-9 match)}. You will find other examples the
+module @code{(cv idata) }of Guile-CV's source code.
+
+
+@subheading Procedures
+
+@indentedblock
+@table @code
+@item @ref{im-make}
+@item @ref{im-make-channels}
+@item @ref{im-make-channel}
+
+@item @ref{im-copy}
+
+@item @ref{im-size_}
+@item @ref{im-width_}
+@item @ref{im-height_}
+@item @ref{im-n-channel_}
+@item @ref{im-channels_}
+@item @ref{im-channel}
+
+@item @ref{im-image?}
+@item @ref{im-binary?}
+@item @ref{im-grey?_}
+@item @ref{im-rgb?_}
+
+@item @ref{im-=?}
+@item @ref{im-list=?}
+
+@item @ref{im-ref}
+@item @ref{im-fast-ref}
+@item @ref{im-set!}
+@item @ref{im-fast-set!}
+
+@item @ref{im-channel-offset}
+@item @ref{im-fast-channel-offset}
+
+@item @ref{im-channel-ref}
+@item @ref{im-fast-channel-ref}
+@item @ref{im-channel-set!}
+@item @ref{im-fast-channel-set!}
+
+@item @ref{im-collect}
+
+@item @ref{im-display}
+@item @ref{im-display-channel}
+@end table
+@end indentedblock
+
+
+@anchor{im-make}
+@anchor{im-make-channels}
+@anchor{im-make-channel}
+@deffn Procedure im-make width height n [value]
+@deffnx Procedure im-make-channels width height n [value]
+@deffnx Procedure im-make-channel width height [value]
+
+Returns a new image, list of channels or channel.
+
+Each channel is an srfi-4 homogeneous vector of 32 bit floats
+(f32vector), of @var{width} by @var{height} initialized to
+@var{value}. The default @var{value} is 0.0
+@end deffn
+
+
+@anchor{im-copy}
+@deffn Procedure im-copy image
+
+Returns a new fresh copy of @var{image}.
+@end deffn
+
+
+@anchor{im-size_}
+@deffn Method im-size image
+
+Returns the list of @code{(@var{width} @var{height} @var{n-channel})for
+@var{image}}.
+@end deffn
+
+
+@anchor{im-width_}
+@anchor{im-height_}
+@anchor{im-n-channel_}
+@anchor{im-channels_}
+@anchor{im-channel}
+@deffn Method im-width image
+@deffnx Method im-height image
+@deffnx Method im-n-channel image
+@deffnx Method im-channels image
+@deffnx Procedure im-channel image n
+
+Returns, respectively the @var{width}, the @var{height}, @var{n-channel},
+@var{channels} or the @var{n}th channel for @var{image}.
+
+Caution: @code{im-channels} and @code{im-channel} return the @var{image}
+either the list of or a specific channel, and should not be used in a
+@code{repl}, unless on very small and testing images.  Otherwise, even
+on small images, it might be ok in a terminal, but will definitely will
+kill your emacs.
+@end deffn
+
+
+@anchor{im-image?}
+@anchor{im-binary?}
+@anchor{im-grey?_}
+@anchor{im-rgb?_}
+@deffn Procedure im-image? image
+@deffnx Procedure im-binary? image
+@deffnx Method im-grey? image
+@deffnx Method im-rgb? image
+
+Returns @code{#t} if @var{image} is respectively a Guile-CV image, a
+BINARY (black and white), a GREY scale or an RGB image.
+
+Notes: (a) @code{im-image?} is a relatively @samp{expensive} operation
+and offered for debugging purposes, but it is not recommended to use
+@samp{in production}; (b) because of the former, @code{im-grey?}  and
+@code{im-rgb?} do _not_ check if @var{image} is a valid Guile-CV image,
+instead, they only check for @var{n-channel=1} and @var{n-channel=3}.
+@end deffn
+
+
+@anchor{im-=?}
+@anchor{im-list=?}
+@deffn Procedure im-=? [precision] i1 i2 i3 @dots{}
+@deffnx Procedure im-list=? images [precision]
+
+Returns @code{#t} if @var{i1} @var{i2} @var{i3} @dots{} or @var{images}
+are of the same size, have the same number of channels that all
+respectively contain the same values.
+
+If the first argument for @code{im-=?} is a number, it is used as the
+precision to compare pixel values: 1.0e-4 is the default precision
+value.
+@end deffn
+
+
+@anchor{im-ref}
+@anchor{im-fast-ref}
+@deffn Procedure im-ref image i j [k]
+@deffnx Procedure im-fast-ref image i j [k]
+
+Returns the pixel value stored at position @var{i} and @var{j} of the
+@var{image} channel @var{k}.  The default value for @var{k} is 0.
+
+@var{im-fast-ref} does not check the validity of its arguments: use it
+at your own risk.
+@end deffn
+
+
+@anchor{im-set!}
+@anchor{im-fast-set!}
+@deffn Procedure im-set! image i j [k] value
+@deffnx Procedure im-fast-set! image i j [k] value
+
+Returns nothing.
+
+Sets the pixel value stored at position @var{i} and @var{j} of the
+@var{image} channel @var{k} to @var{value}.  The default value for
+@var{k} is 0.
+
+@var{im-fast-set!} does not check the validity of its arguments: use it
+at your own risk.
+@end deffn
+
+
+@anchor{im-channel-offset}
+@anchor{im-fast-channel-offset}
+@deffn Procedure im-channel-offset i j width height
+@deffnx Procedure im-fast-channel-offset i j width
+
+Returns the channel offset for the @var{i} and @var{j} indices, based on
+the @var{width} and @var{height} of the channel.
+
+This procedure converts the matrix indices @var{i} and @var{j} to a
+vector offset for a channel of size @var{width} and @var{height}.
+
+@var{im-fast-channel-offset} does not check the validity of its
+arguments: use it at your own risk.
+@end deffn
+
+
+@anchor{im-channel-ref}
+@anchor{im-fast-channel-ref}
+@deffn Procedure im-channel-ref channel i j width height
+@deffnx Procedure im-fast-channel-ref channel i j width
+
+Returns the pixel value stored at position @var{i} and @var{j} of the
+channel of size @var{width} and @var{height}.
+
+@var{im-fast-channel-ref} does not check the validity of its arguments:
+use it at your own risk.
+@end deffn
+
+
+@anchor{im-channel-set!}
+@anchor{im-fast-channel-set!}
+@deffn Procedure im-channel-set! channel i j width height value
+@deffnx Procedure im-fast-channel-set! channel i j width value
+
+Returns nothing.
+
+Sets the pixel at position @var{i} and @var{j} of @var{channel} of size
+@var{width} and @var{height} to @var{value}.
+
+@var{im-fast-channel-set!} does not check the validity of its arguments:
+use it at your own risk.
+@end deffn
+
+
+@anchor{im-collect}
+@deffn Procedure im-collect images what
+
+Returns a list of @var{what} collected from the list of @var{images}.
+
+The valid @var{what} synbols are:
+@indentedblock
+@table @code
+@item size
+@item width
+@item height
+@item n-channel
+@item channels
+@item chan-0, grey, red
+@item chan-1, green
+@item chan-2, blue
+@item chan-k (*)
+@end table
+@end indentedblock
+
+(*): whith k being a valid channel indice, [0 (- n 1)].
+@end deffn
+
+
+@anchor{im-display}
+@anchor{im-display-channel}
+@deffn Procedure im-display image @
+       [#:proc identity] [#:port (current-output-port)]
+@deffnx Procedure im-display-channel channel width height @
+        [#:proc identity] [#:port (current-output-port)]
+
+Returns nothing.
+
+Displays the content of @var{image} or @var{channel} on @var{port},
+applying @var{proc} to each pixel value.
+
+@lisp
+...
+$5 = (3 2 3 (#f32(0.0 1.0 2.0 3.0 4.0 5.0) ... ...)
+(im-display $5 #:proc inexact->exact)
+@print{}
+Channel 1
+  0  1  2
+  3  4  5
+Channel 2
+  6  7  8
+  9  10  11
+Channel 3
+  12  13  14
+  15  16  17
+@end lisp
+
+Caution: unless you specify @var{port}, both this and
+@ref{im-display-channel} procedures are ment to be used on very small
+and testing images, otherwise even on a small image, it might be ok in a
+terminal, but it will definitely will kill your emacs.
+@end deffn
