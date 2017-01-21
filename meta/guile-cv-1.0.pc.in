@@ -1,0 +1,9 @@
+# Package Information for pkg-config
+
+prefix=@prefix@
+
+module_directory=@prefix@/share/guile-cv
+
+Name: Guile-CV
+Description: a Vigra based Computer Vision library for Guile
+Version: @VERSION@

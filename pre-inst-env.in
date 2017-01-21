@@ -1,0 +1,52 @@
+#!/bin/sh
+
+####
+#### Copyright (C) 2016
+#### Free Software Foundation, Inc.
+
+#### This file is part of GNU Guile-CV
+
+#### GNU Guile-CV is free software; you can redistribute it and/or
+#### modify it under the terms of the GNU Lesser General Public
+#### License as published by the Free Software Foundation; either
+#### version 3 of the License, or (at your option) any later version.
+
+#### GNU Guile-CV is distributed in the hope that it will be
+#### useful, but WITHOUT ANY WARRANTY; without even the implied
+#### warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#### See the GNU Lesser General Public License for more details.
+
+#### You should have received a copy of the GNU Lesser General Public
+#### License along with GNU Guile-CV.  If not, see
+#### <https://www.gnu.org/licenses/lgpl.html>.
+####
+
+
+top_srcdir="@abs_top_srcdir@"
+top_builddir="@abs_top_builddir@"
+
+[ x"$top_srcdir"   = x -o ! -d "$top_srcdir" -o \
+  x"$top_builddir" = x -o ! -d "$top_builddir" ] && {
+    echo $0: bad environment
+    echo top_srcdir=$top_srcdir
+    echo top_builddir=$top_builddir
+    exit 1
+}
+
+# ggdir="@GUILE_GNOME_DIR@"
+
+if [ x"$GUILE_LOAD_PATH" = x ]
+then
+    GUILE_LOAD_PATH=$top_srcdir
+else
+    GUILE_LOAD_PATH=$top_srcdir:$GUILE_LOAD_PATH
+fi
+
+## echo $GUILE_LOAD_PATH
+export GUILE_LOAD_PATH
+
+TEST_IMAGES_PATH=$top_srcdir/cv/images
+export TEST_IMAGES_PATH
+
+
+exec "$@"
