@@ -25,7 +25,7 @@ The Guile-CV procedures and methods related to morphology.
 
 @subheading Procedures
 
-
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{im-disc-erode}
@@ -40,6 +40,7 @@ The Guile-CV procedures and methods related to morphology.
 @item @ref{im-fill-channel}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{im-disc-erode}

@@ -25,7 +25,7 @@ The Guile-CV procedures and methods to process images.
 
 @subheading Procedures
 
-
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{im-resize}
@@ -47,6 +47,7 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-complement}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{im-resize}

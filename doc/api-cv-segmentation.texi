@@ -17,7 +17,6 @@ Documentation License.''
 @end copying
 
 
-
 @node Segmentation
 @subsection Segmentation
 
@@ -25,7 +24,7 @@ The Guile-CV procedures and methods related to segmentation.
 
 @subheading Procedures
 
-
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{im-label}
@@ -36,6 +35,7 @@ The Guile-CV procedures and methods related to segmentation.
 @c @item @ref{im-watershed-channel}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{im-label}
@@ -71,7 +71,7 @@ be changed through the keyword argument @var{#:bg}, which can be either
 
 @c @ifhtml
 @ifnottex
-@image{../images/pp-17-bf,,,,png}
+@image{../images/pp-17-bf,,,,}
 @image{../images/pp-17-label,,,,png}
 @image{../images/pp-17-label-all,,,,png}
 

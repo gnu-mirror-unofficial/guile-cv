@@ -75,6 +75,7 @@ module @code{(cv idata) }of Guile-CV's source code.
 
 @subheading Procedures
 
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{im-make}
@@ -117,6 +118,7 @@ module @code{(cv idata) }of Guile-CV's source code.
 @item @ref{im-display-channel}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{im-make}

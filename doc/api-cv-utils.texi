@@ -27,11 +27,13 @@ Other Guile-CV procedures and methods utilities.
 @subheading Procedures
 
 
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{im-show}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{im-show}
@@ -92,13 +94,14 @@ these options when working with Guile-CV.
 
 @subheading Variables
 
-
+@ifhtml
 @indentedblock
 @table @code
 @item @ref{%image-cache}
 @item @ref{%image-cache-format}
 @end table
 @end indentedblock
+@end ifhtml
 
 
 @anchor{%image-cache}
