@@ -48,6 +48,7 @@
   #:use-module (cv filters)
   #:use-module (cv morphology)
   #:use-module (cv segmentation)
+  #:use-module (cv properties)
   #:use-module (cv adds)
   #:use-module (cv utils)
 
@@ -80,5 +81,6 @@
 			      (cv filters)
 			      (cv morphology)
 			      (cv segmentation)
+                              (cv properties)
 			      (cv adds)
 			      (cv utils)))
