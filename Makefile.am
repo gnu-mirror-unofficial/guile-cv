@@ -50,8 +50,8 @@ SOURCES = \
 	cv/utils.scm				\
 	cv.scm
 
-NOCOMP_SOURCES= \
-	$(wildcard cv/images/*)
+# NOCOMP_SOURCES= \
+#	$(wildcard cv/images/*)
 # 	$(wildcard cv/latex/*)	\
 # 	$(wildcard cv/gtkrc/*)	\
 # 	$(shell find $(top_srcdir)/cv/pof -type f)
@@ -68,8 +68,8 @@ EXTRA_DIST = \
 	meta/guile-cv-1.0.pc.in	\
 	$(wildcard am/*)		\
 	$(wildcard m4/*)		\
-	$(SOURCES)			\
-	$(NOCOMP_SOURCES)
+	$(SOURCES)
+#	$(NOCOMP_SOURCES)
 
 # bin_SCRIPTS = cv/cv
 
