@@ -187,9 +187,8 @@ guile-user is for general user help and discussion.
 
 @end itemize
 
-When sending emails to guile-user or guile-devel, please use
-'Guile-CV: ' to preceed the subject line of any Guile-CV related
-email, thanks!
+When sending emails to guile-user or guile-devel, please use 'Guile-CV:
+' to prefix the subject line of any Guile-CV related email, thanks!
 
 
 @subheading IRC
