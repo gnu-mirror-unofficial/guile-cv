@@ -75,10 +75,12 @@ be changed through the keyword argument @var{#:bg}, which can be either
 @image{../images/pp-17-label,,,,png}
 @image{../images/pp-17-label-all,,,,png}
 
-Here above, left being the original image (over which we first have to
-call @code{im-threshold} since both labeling procedures expect a binary
-image), you can see the difference between @code{im-label} (1 object)
-and @code{im-label-all} (6 objects).
+Here above, left being the original image, you can see the difference
+between @code{im-label} (1 object) and @code{im-label-all} (6 objects).
+Note that we had to run @code{im-threshold} on the original image first
+(all labeling procedures take a binary image (or channel) as their
+mandatory argument), for the record, we used @code{128} as the threshold
+value.
 @end ifnottex
 @c @end ifhtml
 @end deffn
