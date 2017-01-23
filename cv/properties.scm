@@ -59,7 +59,7 @@
   (let* ((n-label (or n-label
 		      (inexact->exact (f32vector-max l-channel))))
 	 (properties (im-make-channel 11 (+ n-label 1)))
-	 (result (vigra-properties g-channel l-channel
+	 (result (vigra-properties channel l-channel
                                    properties width height n-label)))
     (case result
       ((1)
