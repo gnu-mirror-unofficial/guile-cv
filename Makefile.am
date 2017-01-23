@@ -46,7 +46,7 @@ SOURCES = \
 	cv/filters.scm				\
 	cv/morphology.scm			\
 	cv/segmentation.scm			\
-	cv/properties				\
+	cv/properties.scm				\
 	cv/adds.scm				\
 	cv/utils.scm				\
 	cv.scm
