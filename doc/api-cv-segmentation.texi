@@ -60,18 +60,18 @@ The @code{im-label-all} and @code{im-label-all-channel} procedures label
 all objects in the binary @var{image}, with no specific distinction for
 any @emph{background value}. As a result, these two procedures will
 label not only the continuous background, if any, but also any
-whole(s). As an example, they are used by @ref{im-fill}, defined in the
+hole(s). As an example, they are used by @ref{im-fill}, defined in the
 module @code{(cv morphology)}, which you may have a look at for a better
 understanding of how it works.
 
 Two pixels belong to the same object if they are neighbors.  By default
 the algorithm uses 8-connectivity to define a neighborhood, but this can
-be changed through the keyword argument @var{#:bg}, which can be either
+be changed through the keyword argument @var{#:con}, which can be either
 4 or 8.
 
 @c @ifhtml
 @ifnottex
-@image{../images/pp-17-bf,,,,}
+@image{../images/pp-17-bf,,,,png}
 @image{../images/pp-17-label,,,,png}
 @image{../images/pp-17-label-all,,,,png}
 
