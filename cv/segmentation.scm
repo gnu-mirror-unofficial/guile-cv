@@ -46,7 +46,6 @@
 	    im-label-channel
 	    im-label-all
 	    im-label-all-channel
-	    im-label-properties-channel
 	    #;im-watershed
 	    #;im-watershed-channel))
 
@@ -125,19 +124,6 @@
       (else
        to))))
 
-(define* (im-label-properties-channel g-channel l-channel width height
-				      #:key (n-label #f))
-  (let* ((n-label (or n-label
-		      (inexact->exact (f32vector-max l-channel))))
-	 (properties (im-make-channel 11 (+ n-label 1)))
-	 (result (vigra-label-properties g-channel l-channel
-					 properties width height n-label)))
-    (case result
-      ((1)
-       (error "Label properties failed."))
-      (else
-       properties))))
-
 
 ;;;
 ;;; Guile vigra low level API
@@ -176,14 +162,6 @@
 		     width
 		     height))
 
-(define (vigra-label-properties from labels results width height n-label)
-  (vigra-label-properties-c (bytevector->pointer from)
-			    (bytevector->pointer labels)
-			    (bytevector->pointer results)
-			    width
-			    height
-			    n-label))
-
 
 ;;;
 ;;; Vigra_c bindings
@@ -218,14 +196,3 @@
 			    '*	     ;; to channel
 			    int	     ;; width
 			    int)))   ;; height
-
-(define vigra-label-properties-c
-  (pointer->procedure int
-		      (dynamic-func "vigra_extractfeatures_gray_c"
-				    %libvigra-c)
-		      (list '*	     ;; from channel
-			    '*	     ;; labels channel
-			    '*	     ;; results vector
-			    int	     ;; width
-			    int	     ;; height
-			    int)))   ;; n-label
