@@ -54,6 +54,8 @@ AC_CONFIG_SRCDIR([cv])
 AC_CHECK_PROG(have_makeinfo, makeinfo, yes, no)
 AM_CONDITIONAL(HAVE_MAKEINFO, test "$have_makeinfo" = yes)
 
+VIGRA_LIB([1.11.0])
+
 GUILE_PKG([2.2 2.0])
 GUILE_PROGS([2.0.13])
 GUILE_SITE_DIR
