@@ -24,7 +24,76 @@ Guile-CV Reference Manual still is a mock-up: any help is more then
 welcome to improve this situation, thanks!
 
 
-@subheading Images used Guile-CV's documentation
+@node Guile's repl-print procedure
+@section Guile's repl-print procedure
+
+Guile's repl-print procedure _must_ be modified before to start to use
+Guile-CV.  The default Guile's repl-print procedure calls (write val),
+which is inadequate for images, even very small images@footnote{Even for
+very small images, using write is inadequate, in a terminal, and will
+definitely kill your Emacs/Geiser session.  Not to mention it will raise
+your electricity bill :) - till you succeed to delete its process, Emacs
+will use one core at more then 100%, desperately trying to display
+hundreds of thousands of floating point values, heating your laptop (if
+you have a laptop) up to the point you'll be able to cook an egg on it,
+and get its fans crasy... You've been warned :).}.
+
+Unfortunately, Guile does not provide a simple way for its users to
+modify its repl-print procedure, so, for now, there is no other way but
+'getting your hands dirty' here :), but no big deal either, here are the
+steps.
+
+The module we need to modify is @code{(system repl common)}, so let's
+first figure out where it is on your system@footnote{You need write
+privileges to modify this module, contact your admin if you're not in
+charge of the system you are working on.}:
+
+@lisp
+guile
+...
+scheme@@(guile-user)> (string-append (%package-data-dir) "/" (effective-version))
+@print{}
+$2 = "/opt2/share/guile/2.2"
+@end lisp
+
+The above returned value is an example of course, just proceed with the
+value returned by your system. So, the file we need to edit, in our
+example, is here:
+
+@example
+/opt2/share/guile/2.2/system/repl/common.scm
+@end example
+
+Edit the above file and:
+
+@enumerate
+@item
+Add the following module to the list of imported modules:
+
+@lisp
+@code{#:use-module (ice-9 pretty-print)}
+@end lisp
+
+@item
+Search for the repl-print definition and, at the end of the procedure
+definition, replace:
+
+@lisp
+(write val)
+@end lisp
+
+by
+
+@lisp
+(truncated-print val)
+@end lisp
+@end enumerate
+
+Save the file of course, and your good to play with Guile-CV.
+
+
+@node Images used in Guile-CV's documentation
+@section Images used in Guile-CV's documentation
 
 All images used in Guile-CV's documentation are distributed with the
 source and installed here:
@@ -42,10 +111,10 @@ Guile-CV (example) session inialization steps would be:
 @lisp
 M-x run-guile
 ...
-@print{}
 scheme@@(guile-user)> (chdir "/opt/share/doc/guile-cv/images")
 scheme@@(guile-user)> ,use (cv)
 scheme@@(guile-user)> (im-load "lenna.png")
+@print{}
 $2 = (512 512 3 (#f32(226.0 226.0 223.0 223.0 227.0 …) …))
 @end lisp
 
