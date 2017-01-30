@@ -5,14 +5,15 @@
 * GNU Guile-CV
 
 GNU Guile-CV [1]
-a Vigra based Computer Vision library for Guile [2]
+a Computer Vision functional programming library for Guile [2]
 
 ** Description
 
-Guile-CV is a Computer Vision library for Guile Scheme, based on
-Vigra [3].  It comprises a direct binding to Vigra_c [4] (a C wrapper to
-some of the Vigra functionality), and a higher level API written in
-Guile Scheme [5].
+Guile-CV is a Computer Vision functional programming library for the
+Guile Scheme language.  Guile-CV is based on Vigra (Vision with Generic
+Algorithms) [3].  It comprises a direct binding to Vigra_c [4] (a C
+wrapper to some of the Vigra functionality), and a higher level API
+written in Guile Scheme [5].
 
 ** What else
 
