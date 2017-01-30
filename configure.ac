@@ -56,6 +56,28 @@ AM_CONDITIONAL(HAVE_MAKEINFO, test "$have_makeinfo" = yes)
 
 VIGRA_LIB([1.11.0])
 
+VIGRA_C_LIB
+VIGRA_C_FUNCTION([vigra_labelimagewithbackground_c])
+VIGRA_C_FUNCTION([vigra_labelimage_c])
+#VIGRA_C_FUNCTION([vigra_watersheds_c])
+VIGRA_C_FUNCTION([vigra_gaussiansmoothing_c])
+VIGRA_C_FUNCTION([vigra_gaussiangradientmagnitude_c])
+VIGRA_C_FUNCTION([vigra_discerosion_c])
+VIGRA_C_FUNCTION([vigra_discdilation_c])
+VIGRA_C_FUNCTION([vigra_imagewidth_c])
+VIGRA_C_FUNCTION([vigra_imageheight_c])
+VIGRA_C_FUNCTION([vigra_imagenumbands_c])
+VIGRA_C_FUNCTION([vigra_importgrayimage_c])
+VIGRA_C_FUNCTION([vigra_importrgbimage_c])
+VIGRA_C_FUNCTION([vigra_exportgrayimage_c])
+VIGRA_C_FUNCTION([vigra_exportrgbimage_c])
+VIGRA_C_FUNCTION([vigra_resizeimage_c])
+VIGRA_C_FUNCTION([vigra_rotateimage_c])
+VIGRA_C_FUNCTION([vigra_reflectimage_c])
+VIGRA_C_FUNCTION([vigra_subimage_c])
+VIGRA_C_FUNCTION([vigra_paddimage_c])
+VIGRA_C_FUNCTION([vigra_extractfeatures_gray_c])
+
 GUILE_PKG([2.2 2.0])
 GUILE_PROGS([2.0.13])
 GUILE_SITE_DIR
