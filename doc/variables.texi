@@ -40,3 +40,5 @@ Documentation License.''
 
 @set UVIGRA http://ukoethe.github.io/vigra/
 @set UVIGRAC https://github.com/BSeppke/vigra_c
+
+@set UGIT https://git-scm.com/

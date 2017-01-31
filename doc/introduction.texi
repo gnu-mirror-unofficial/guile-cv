@@ -86,9 +86,27 @@ Automake >= 1.14
 @item
 @uref{@value{UGUILE-LIB}, Guile-Lib} >= 0.2.5
 @item 
-@uref{@value{UVIGRA}, Vigra}
+@uref{@value{UVIGRA}, Vigra} >= 1.11.0
 @item
-@uref{@value{UVIGRAC}, vigra_c}
+@uref{@value{UVIGRAC}, Vigra_c}
+
+@indentedblock
+Vigra_c is a C wrapper [to some of] the Vigra functionality. It is
+currently only available by cloning its source code @uref{@value{UGIT},
+git} repository: there is no release and no versioning scheme
+either@footnote{We do our best to check that the libvigra_c installed
+library does contain the required Guile-CV functionalty though, and
+these checks are listed as part of our @code{configure} steps}.  But no
+big deal, its home page has an 'Installation' section which guides you
+step by step.
+
+@strong{Special note:} make sure the directory where
+@file{libvigra_c.so} has been installed is 'known', either because it is
+defined in @file{/etc/ld.so.conf.d}, or you set the environment variable
+@code{LD_LIBRARY_PATH}, otherwise Guile won't find it and
+@code{configure} will report an error.
+@end indentedblock
+
 @end itemize
 
 
