@@ -65,8 +65,10 @@
      (vigra-load-grey-image filename))
     ((3)
      (vigra-load-rgb-image filename))
+    ((4)
+     (vigra-load-rgba-image filename))
     (else
-     (error "Not a GREY nor an RGB image" filename))))
+     (error "Not a GREY, RGB nor an RGBA image" filename))))
 
 (define (im-save image filename)
   (case (im-n-channel image)
@@ -74,8 +76,10 @@
      (vigra-save-grey-image image filename))
     ((3)
      (vigra-save-rgb-image image filename))
+    ((4)
+     (vigra-save-rgba-image image filename))
     (else
-     (error "Not a GREY nor an RGB image" filename))))
+     (error "Not a GREY, RGB nor an RGBA image" filename))))
 
 (define-method (im-size (filename <string>))
   (list (im-width filename)
@@ -146,6 +150,26 @@
        (else
 	(error "Not an RGB image" filename))))))
 
+(define (vigra-load-rgba-image filename)
+  (match (im-size filename)
+    ((width height n-chan)
+     (case n-chan
+       ((4)
+	(let ((idata (im-make-channels width height n-chan)))
+	  (match idata
+	    ((r g b a)
+	     (case (vigra-importrgbaimage-c (bytevector->pointer r)
+                                            (bytevector->pointer g)
+                                            (bytevector->pointer b)
+                                            (bytevector->pointer a)
+                                            width
+                                            height
+                                            (string->pointer filename))
+	       ((0) (list width height n-chan idata))
+	       ((1) (error "Load RGBA image failed." filename)))))))
+       (else
+	(error "Not an RGBA image" filename))))))
+
 (define (vigra-save-grey-image image filename)
   (match image
     ((width height n-chan idata)
@@ -182,6 +206,26 @@
        (else
 	(error "Not an RGB image" filename))))))
 
+(define (vigra-save-rgba-image image filename)
+  (match image
+    ((width height n-chan idata)
+     (case n-chan
+       ((4)
+	(match idata
+	  ((r g b a)
+	   (case (vigra-exportrgbaimage-c (bytevector->pointer r)
+                                          (bytevector->pointer g)
+                                          (bytevector->pointer b)
+                                          (bytevector->pointer a)
+                                          width
+                                          height
+                                          (string->pointer filename))
+	     ((0) #t)
+	     (else
+	      (error "Image could not be saved." filename))))))
+       (else
+	(error "Not an RGBA image" filename))))))
+
 
 ;;;
 ;;; Vigra_c bindings
@@ -217,6 +261,12 @@
 				    %libvigra-c)
 		      (list '* '* '* int int '*)))
 
+(define vigra-importrgbaimage-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_importrgbaimage_c"
+				    %libvigra-c)
+		      (list '* '* '* '* int int '*)))
+
 (define vigra-exportgrayimage-c
   (pointer->procedure int
 		      (dynamic-func "vigra_exportgrayimage_c"
@@ -228,3 +278,9 @@
 		      (dynamic-func "vigra_exportrgbimage_c"
 				    %libvigra-c)
 		      (list '* '* '* int int '*)))
+
+(define vigra-exportrgbaimage-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_exportrgbaimage_c"
+				    %libvigra-c)
+		      (list '* '* '* '* int int '*)))
