@@ -24,8 +24,8 @@ Guile-CV Reference Manual still is a mock-up: any help is more then
 welcome to improve this situation, thanks!
 
 
-@node Guile's repl-print procedure
-@section Guile's repl-print procedure
+@node Configuring Guile's repl-print procedure
+@section Configuring Guile's repl-print procedure
 
 Guile's repl-print procedure _must_ be modified before to start to use
 Guile-CV.  The default Guile's repl-print procedure calls (write val),
