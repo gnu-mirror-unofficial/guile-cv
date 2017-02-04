@@ -194,5 +194,39 @@
     (assert-equal diamond (im-and square diamond))
     (assert-equal empty (im-and diamond center))))
 
+(define (make-a)
+  (let ((a (im-make 2 3 1)))
+    (match a
+      ((width height nchan idata)
+       (match idata
+         ((c)
+          (f32vector-set! c 0 1.0)
+          (f32vector-set! c 1 2.0)
+          (f32vector-set! c 2 3.0)
+          (f32vector-set! c 3 4.0)
+          (f32vector-set! c 4 5.0)
+          (f32vector-set! c 5 6.0)))))
+    a))
+
+(define (make-a')
+  (let ((a' (im-make 3 2 1)))
+    (match a'
+      ((width height nchan idata)
+       (match idata
+         ((c)
+          (f32vector-set! c 0 1.0)
+          (f32vector-set! c 1 3.0)
+          (f32vector-set! c 2 5.0)
+          (f32vector-set! c 3 2.0)
+          (f32vector-set! c 4 4.0)
+          (f32vector-set! c 5 6.0)))))
+    a'))
+
+(define-method (test-adds-1 (self <guile-cv-tests-cv>))
+  (let ((a (make-a))
+        (a' (make-a')))
+    (assert-true (im-=? (im-transpose a) a'))
+    (assert-true (im-=? (im-transpose a') a))))
+
 
 (exit-with-summary (run-all-defined-test-cases))
