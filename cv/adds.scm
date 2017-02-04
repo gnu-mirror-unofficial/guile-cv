@@ -44,21 +44,26 @@
 
   #:export (#;im-map
 	    im-rgb->grey
+            im-rgba->rgb
+            im-rgba->grey
 	    im-threshold
 	    im-and
 	    im-or
 	    im-complement
 	    im-min
-	    im-max))
+	    im-max
+            im-transpose
+            im-transpose-chnnel
+            im-normalize
+            im-normalize-channel))
 
 
 #;(g-export )
 
+
 ;;;
 ;;; Guile-CV additional API
 ;;;
-
-;;(define (im-map 
 
 (define (im-rgb->grey-1 c r g b i mini maxi total n-cell)
   (if (= i n-cell)
@@ -91,13 +96,75 @@
        (else
 	(error "Not an RGB (nor a GREY) image."))))))
 
+#!
+Source => Target = (BGColor + Source) =
+Target.R = ((1 - Source.A) * BGColor.R) + (Source.A * Source.R)
+Target.G = ((1 - Source.A) * BGColor.G) + (Source.A * Source.G)
+Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
+!#
+
+(define* (im-rgba->rgb image #:key (bg '(0.0 0.0 0.0)))
+  (match bg
+    ((bg-r bg-g bg-b)
+     (match image
+       ((width height n-chan idata)
+        (case n-chan
+          ((4)
+           (match idata
+             ((r g b a)
+              (let ((a-norm (im-normalize-channel a width height)))
+                (list width height 3
+                      (par-map (lambda (vals)
+                                 (match vals
+                                   ((c bg)
+                                    (im-rgba-channel->rgb-channel c width height
+                                                                  a-norm #:bg bg))))
+                          (list (list r bg-r)
+                                (list g bg-g)
+                                (list b bg-b))))))))
+          (else
+           (error "Not an RGBA image."))))))
+    (else
+     (error "Invalid background colour: " bg))))
+
+(define* (im-rgba-channel->rgb-channel c width height a-norm #:key (bg 0.0))
+  (let ((c-norm (im-normalize-channel c width height))
+        (bg-norm (/ bg 255.0))
+        (to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (f32vector-set! to i
+                      (* (if (= bg 0.0)
+                             (* (f32vector-ref a-norm i) (f32vector-ref c-norm i))
+                             (+ (* (- 1.0 (f32vector-ref a-norm i)) bg-norm)
+                                (* (f32vector-ref a-norm i) (f32vector-ref c-norm i))))
+                         255.0)))
+    to))
+
+(define* (im-rgba->grey image #:key (bg '(0.0 0.0 0.0)))
+  (match image
+    ((_ _ n-chan idata)
+     (case n-chan
+       ((3 1)
+        (im-rgb->grey image))
+       ((4)
+        (im-rgb->grey (im-rgba->rgb image #:bg bg)))
+       (else
+	(error "Not an RGBA (nor an RGB neither a GREY) image."))))))
 
 (define* (im-threshold image threshold #:key (bg 'dark) (prec 1.0e-4))
   (if (and (>= threshold 0.0)
 	   (<= threshold 255.0))
-      (match (if (im-grey? image)
-		 image
-		 (im-rgb->grey image))
+      (match (match image
+               ((_ _ n-chan _)
+                (case n-chan
+                  ((1) image)
+                  ((3) (im-rgb->grey image))
+                  ((4) (im-rgba->grey image))
+                  (else
+                   (error "Not a GREY, RGB, nor an RGBA image.")))))
 	((width height n-chan idata)
 	 (match idata
 	   ((c)
@@ -191,3 +258,44 @@
 	(lambda (channel)
 	  (f32vector-max channel))
 	idata)))))
+
+(define (im-transpose image)
+  (match image
+    ((width height n-chan idata)
+     (list height width n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-transpose-channel channel width height))
+	       idata))))))
+
+(define (im-transpose-channel channel width height)
+  (let ((t-width height)
+        (to (im-make-channel height width)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i height))
+      (do ((j 0
+	      (+ j 1)))
+	  ((= j width))
+        (im-fast-channel-set! to j i t-width
+                              (im-fast-channel-ref channel i j width))))
+    to))
+
+(define (im-normalize image)
+  (match image
+    ((width height n-chan idata)
+     (list height width n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-normalize-channel channel width height))
+	       idata))))))
+
+(define (im-normalize-channel channel width height)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (f32vector-set! to i (/ (f32vector-ref channel i)
+                              255)))
+    to))
