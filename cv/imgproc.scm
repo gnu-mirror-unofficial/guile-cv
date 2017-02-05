@@ -124,30 +124,33 @@
     (else
      (error "No such rotate interpolation mode: " i-mode))))
 
-(define (im-flip image axis)
+(define (im-flip image plane)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
 	   (let ((map-proc (if (> n-chan 1) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-flip-channel channel width height axis))
+			 (im-flip-channel channel width height plane))
 	       idata))))))
 
-(define (im-flip-channel channel width height axis)
+(define (im-flip-channel channel width height plane)
   (let ((to (im-make-channel width height)))
     (case (vigra-flip-channel channel to width height
-			      (flip-axis->number axis))
+			      (flip-plane->axis plane))
       ((0) to)
       (else
        (error "Flip failed.")))))
 
-(define (flip-axis->number axis)
-  (case axis
-    ((hori horizontal) 1)
-    ((vert vertical) 2)
+(define (flip-plane->axis plane)
+  (case plane
+    ;; vigra uses axis, not plane, so:
+    ;;   horizontal plane -> vigra vertical axis, which is the integer 2
+    ;;   vertical plane -> vigra horizontal axis, which is the integer 1
+    ((hori horizontal) 2)
+    ((vert vertical) 1)
     ((both) 3)
     (else
-     (error "No such flip axis: " axis))))
+     (error "No such flip plane: " plane))))
 
 (define (im-crop-size width height left top right bottom)
   (let ((new-w (- right left))

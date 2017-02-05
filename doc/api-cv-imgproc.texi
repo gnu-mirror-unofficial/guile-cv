@@ -108,17 +108,18 @@ be floats.  The 'next neighbor' interpolation possible modes,
 
 @anchor{im-flip}
 @anchor{im-flip-channel}
-@deffn Procedure im-flip image axis
-@deffnx Procedure im-flip-channel channel width height axis
+@deffn Procedure im-flip image plane
+@deffnx Procedure im-flip-channel channel width height plane
 
-Returns a new image or channel flipped by @var{axis}.
+Returns a new image or channel flipped according to the selected
+@var{plane}.
 
-The rotation @var{axis} can be one of:
+Valid flipping @var{plane} values are:
 
 @indentedblock
 @table @code
-@item horizontal
-@item vertical
+@item hori horizontal
+@item vert vertical
 @item both
 @end table
 @end indentedblock
