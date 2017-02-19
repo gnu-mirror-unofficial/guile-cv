@@ -19,7 +19,6 @@ written in Guile Scheme [5].
 
 Guile-CV is entirely written in Guile, no C code.
 
-
 ** Savannah
 
 GNU Guile-CV also has a Savannah [6] project page.
