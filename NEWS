@@ -4,7 +4,61 @@
 
 * Latest News
 
-** dd Month year
+** Februrary the 18th, 2017
+
+GNU Guile-CV version 0.1.1 is released, the next maintenance release for
+the 0.1 series.
+
+	Special note:
+	-------------
+
+	(a) that this release is not made 'public' yet, because it is
+	still under evaluation to see whether it will be part of GNU or
+	not: if yes, fine; if not, I would need to change all
+	occurrences of 'GNU Guile-CV' to 'Guile-CV' and all copyright
+	notices from 'Free Software Foundation, Inc.' to myself;
+
+	(b) see INSTALL for tarball location during the evaluation
+	period.
+
+** Changes since 0.1.0
+
+Incompatible API change:
+------------------------
+
+	Fixing im-flip to refer to a plane rather then an axis: Vigra
+    flips (their terminology is reflect, not flip) images and channels
+    with respect to an axis, not by reference to a plane. In our
+    opinion, this is [unnecessarily] confusing, so we decided to go
+    ahead and fix this in Guile-CV.  See the manual (and commit ff62dfa
+    for further details and if you are interested to read the source
+    code modifications).
+
+New functionality:
+------------------
+
+	im-load, im-save: support for RGBA images has been added
+
+	support for image transposition and normalization
+
+New procedures:
+---------------
+
+	im-rgba->rgb, im-rgba->grey
+
+	im-transpose, im-transpose-channel, im-normalize,
+	im-normalize-channel
+
+	im-add, im-add-channel, im-substract, im-substract-channel,
+	im-multiply, im-multiply-channel, im-divide, im-divide-channel
+
+** Special note
+
+The text below as well as 'Older News' are kept as a 'prototype' that we
+will use once the project effectively becomes part of GNU, if it does of
+course...
+
+*** dd Month year
 
 GNU Guile-CV version 0.1.0-alpha is released.
 
