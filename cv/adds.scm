@@ -47,13 +47,21 @@
             im-rgba->rgb
             im-rgba->grey
 	    im-threshold
+            im-add
+            im-add-channel
+            im-substract
+            im-substract-channel
+            im-multiply
+            im-multiply-channel
+            im-divide
+            im-divide-channel
 	    im-and
 	    im-or
 	    im-complement
 	    im-min
 	    im-max
             im-transpose
-            im-transpose-chnnel
+            im-transpose-channel
             im-normalize
             im-normalize-channel))
 
@@ -181,6 +189,82 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		(when (op (f32vector-ref c i) threshold prec)
 		  (f32vector-set! c-copy i 255.0))))))))
       (error "Invalid threshold: " threshold)))
+
+(define (im-add image val)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-add-channel channel width height val))
+	       idata))))))
+
+(define (im-add-channel channel width height val)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((new-val (+ (f32vector-ref channel i) val)))
+        (f32vector-set! to i (if (float>=? new-val 255.0) 255.0 new-val))))
+    to))
+
+(define (im-substract image val)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-substract-channel channel width height val))
+	       idata))))))
+
+(define (im-substract-channel channel width height val)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((new-val (- (f32vector-ref channel i) val)))
+        (f32vector-set! to i (if (float<=? new-val 0.0) 0.0 new-val))))
+    to))
+
+(define (im-multiply image val)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-multiply-channel channel width height val))
+	       idata))))))
+
+(define (im-multiply-channel channel width height val)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((new-val (* (f32vector-ref channel i) val)))
+        (f32vector-set! to i (if (float>=? new-val 255.0) 255.0 new-val))))
+    to))
+
+(define (im-divide image val)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+	   (let ((map-proc (if (> n-chan 1) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-divide-channel channel width height val))
+	       idata))))))
+
+(define (im-divide-channel channel width height val)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((new-val (/ (f32vector-ref channel i) val)))
+        (f32vector-set! to i (if (float<=? new-val 0.0) 0.0 new-val))))
+    to))
 
 (define (im-and . images)
   (match images

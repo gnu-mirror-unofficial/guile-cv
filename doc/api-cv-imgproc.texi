@@ -48,6 +48,14 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-rgba->grey}
 @item @ref{im-rgb->grey}
 @item @ref{im-threshold}
+@item @ref{im-add}
+@item @ref{im-add-channel}
+@item @ref{im-substract}
+@item @ref{im-substract-channel}
+@item @ref{im-multiply}
+@item @ref{im-multiply-channel}
+@item @ref{im-divide}
+@item @ref{im-divide-channel}
 @item @ref{im-and}
 @item @ref{im-or}
 @item @ref{im-complement}
@@ -251,6 +259,58 @@ called.
 Pixels for which the original value is @code{>=} @var{threshold} are set
 to 255.0 if @var{#:bg} is @code{'dark}, and set to 0.0 if @var{#:bg} is
 @code{'light}. The other pixels are set to 0.0 or 255.0 respectively.
+@end deffn
+
+
+@anchor{im-add}
+@anchor{im-add-channel}
+@deffn Procedure im-add image val
+@deffnx Procedure im-add-channel channel width height val
+
+Returns a new image or channel.
+
+Each pixel of the new image or channel adds @var{val} to the
+corresponding original pixel value from @var{image} or
+@var{channel}. Results greater than 255.0 are set to 255.0
+@end deffn
+
+
+@anchor{im-substract}
+@anchor{im-substract-channel}
+@deffn Procedure im-substract image val
+@deffnx Procedure im-substract-channel channel width height val
+
+Returns a new image or channel.
+
+Each pixel of the new image or channel substracts @var{val} to the
+corresponding original pixel value from @var{image} or
+@var{channel}. Results inferior to 0.0 are set to 0.0
+@end deffn
+
+
+@anchor{im-multiply}
+@anchor{im-multiply-channel}
+@deffn Procedure im-multiply image val
+@deffnx Procedure im-multiply-channel channel width height val
+
+Returns a new image or channel.
+
+Each pixel of the new image or channel multiplies the corresponding
+original pixel value from @var{image} or @var{channel} by
+@var{val}. Results greater than 255.0 are set to 255.0
+@end deffn
+
+
+@anchor{im-divide}
+@anchor{im-divide-channel}
+@deffn Procedure im-divide image val
+@deffnx Procedure im-divide-channel channel width height val
+
+Returns a new image or channel.
+
+Each pixel of the new image or channel divides the corresponding original
+pixel value from @var{image} or @var{channel} by @var{val}. Results
+inferior to 0.0 are set to 0.0
 @end deffn
 
 

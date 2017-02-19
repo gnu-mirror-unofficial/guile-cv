@@ -116,6 +116,7 @@
 	  ))
     img))
 
+
 (define-method (test-idata-1 (self <guile-cv-tests-cv>))
   (let ((img-1 (make-test-image-rgb 4 3)))
     (assert-exception (im-ref img-1 -1 0))
@@ -126,6 +127,7 @@
     (assert-exception (im-ref img-1 0 4 1))
     (assert-exception (im-ref img-1 0 0 -1))
     (assert-exception (im-ref img-1 0 0 3))))
+
 
 (define-method (test-idata-2 (self <guile-cv-tests-cv>))
   (let* ((img-1 (make-test-image-rgb 3 2))
@@ -151,6 +153,7 @@
     (assert-true (im-collect list-1 'blue))
     (assert-true (im-collect (list img-6) 'chan-3))))
 
+
 (define-method (test-idata-3 (self <guile-cv-tests-cv>))
   (let* ((empty (make-test-image-grey 'empty))
 	 (center (make-test-image-grey 'center))
@@ -170,6 +173,7 @@
     (im-fast-set! empty 0 0 256.0)
     (assert-equal #f (im-image? empty))))
 
+
 (define-method (test-impex (self <guile-cv-tests-cv>))
   (let* ((i-dir (getenv "TEST_IMAGES_PATH"))
 	 (t-file "/tmp/test.png")
@@ -186,6 +190,7 @@
       (assert-equal '(512 512 3) (im-size lenna))
       (assert-true ((@@ (cv impex) vigra-save-rgb-image) lenna t-file)))))
 
+
 (define-method (test-improc (self <guile-cv-tests-cv>))
   (let* ((empty (make-test-image-grey 'empty))
 	 (center (make-test-image-grey 'center))
@@ -194,39 +199,37 @@
     (assert-equal diamond (im-and square diamond))
     (assert-equal empty (im-and diamond center))))
 
-(define (make-a)
-  (let ((a (im-make 2 3 1)))
-    (match a
-      ((width height nchan idata)
-       (match idata
-         ((c)
-          (f32vector-set! c 0 1.0)
-          (f32vector-set! c 1 2.0)
-          (f32vector-set! c 2 3.0)
-          (f32vector-set! c 3 4.0)
-          (f32vector-set! c 4 5.0)
-          (f32vector-set! c 5 6.0)))))
-    a))
 
-(define (make-a')
-  (let ((a' (im-make 3 2 1)))
-    (match a'
-      ((width height nchan idata)
-       (match idata
-         ((c)
-          (f32vector-set! c 0 1.0)
-          (f32vector-set! c 1 3.0)
-          (f32vector-set! c 2 5.0)
-          (f32vector-set! c 3 2.0)
-          (f32vector-set! c 4 4.0)
-          (f32vector-set! c 5 6.0)))))
-    a'))
+(define (make-add-1-a)
+  `(2 3 1 (,#f32(1.0 2.0 3.0 4.0 5.0 6.0))))
+
+(define (make-add-1-a')
+  `(3 2 1 (,#f32(1.0 3.0 5.0 2.0 4.0 6.0))))
 
 (define-method (test-adds-1 (self <guile-cv-tests-cv>))
-  (let ((a (make-a))
-        (a' (make-a')))
+  (let ((a (make-add-1-a))
+        (a' (make-add-1-a')))
     (assert-true (im-=? (im-transpose a) a'))
     (assert-true (im-=? (im-transpose a') a))))
+
+
+(define (make-add-2-a)
+  `(2 3 1 (,#f32(1.0 2.0 3.0 4.0 5.0 6.0))))
+
+(define (make-add-2-b)
+  `(2 3 1 (,#f32(2.0 3.0 4.0 5.0 6.0 7.0))))
+
+(define (make-add-2-c)
+  `(2 3 1 (,#f32(2.0 4.0 6.0 8.0 10.0 12.0))))
+
+(define-method (test-adds-2 (self <guile-cv-tests-cv>))
+  (let ((a (make-add-2-a))
+        (b (make-add-2-b))
+        (c (make-add-2-c)))
+    (assert-true (im-=? (im-add a 1.0) b))
+    (assert-true (im-=? (im-substract b 1.0) a))
+    (assert-true (im-=? (im-multiply a 2.0) c))
+    (assert-true (im-=? (im-divide c 2.0) a))))
 
 
 (exit-with-summary (run-all-defined-test-cases))
