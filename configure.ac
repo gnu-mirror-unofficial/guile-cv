@@ -4,7 +4,7 @@ dnl   configuration script for GNU Guile-CV
 dnl   Process this file with autoconf to produce configure.
 dnl
 
-define(G_GOLF_CONFIGURE_COPYRIGHT,[[
+define(GUILE_CV_CONFIGURE_COPYRIGHT,[[
 
 Copyright (C) 2016
 Free Software Foundation, Inc.
@@ -48,7 +48,7 @@ dnl AC_PROG_CC
 dnl AC_STDC_HEADERS
 dnl LT_INIT([disable-static])
 
-AC_COPYRIGHT(G_GOLF_CONFIGURE_COPYRIGHT)
+AC_COPYRIGHT(GUILE_CV_CONFIGURE_COPYRIGHT)
 AC_CONFIG_SRCDIR([cv])
 
 AC_CHECK_PROG(have_makeinfo, makeinfo, yes, no)
