@@ -79,6 +79,7 @@ VIGRA_C_FUNCTION([vigra_reflectimage_c])
 VIGRA_C_FUNCTION([vigra_subimage_c])
 VIGRA_C_FUNCTION([vigra_paddimage_c])
 VIGRA_C_FUNCTION([vigra_extractfeatures_gray_c])
+VIGRA_C_FUNCTION([vigra_extractfeatures_rgb_c])
 
 GUILE_PKG([2.2 2.0])
 GUILE_PROGS([2.0.13])

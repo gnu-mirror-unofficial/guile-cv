@@ -1,0 +1,99 @@
+@c -*-texinfo-*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 Free Software Foundation, Inc.
+
+
+@copying
+This manual documents GNU Guile-CV version @value{VERSION}.
+
+Copyright (C) 2016 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end copying
+
+
+
+@node Properties
+@subsection Properties
+
+The Guile-CV procedures and methods related to image properties.
+
+
+@subheading Procedures
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{im-properties}
+@c @item @ref{im-properties-channel}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{im-properties}
+@c @anchor{im-properties-channel}
+@deffn Procedure im-properties image l-image [#:n-label #f]
+@c @deffnx Procedure im-properties-channel channel l-channel width height @
+@c         [#:n-label #f]
+@cindex Properties
+
+Returns a list of properties.
+
+Notes: (a) @var{image} can either be an RGB or a GREY image; (b)
+@var{l-image} is the @samp{corresponding} labeled image; (c) when used,
+the @var{#:n-label} optional keyword argument must be the total number
+of labeled objects from @var{l-image}.
+
+The GREY property list values are:
+
+@indentedblock
+@table @code
+@item area
+The labeled object area in pixel
+
+@item left top right bottom
+The coordinates of the labeled object@footnote{Note that when passed to
+@ref{im-crop}, @code{right} and @code{bottom} must be increased by 1:
+@code{(im-crop image left top (+ right 1) (+ bottom 1))}.}
+
+@item mean-x mean-y
+The coordinates of the mean value of the labeled object. These two
+coordinate values are floating points, the @samp{mathematical} position
+of the mean value in @var{image}
+
+
+@item min max mean std-dev
+The minimum, maximum, mean and standard grey deviaton labeled object
+values
+@end table
+@end indentedblock
+
+The RGB property list values are:
+
+@indentedblock
+@table @code
+@item area
+The labeled object area in pixel
+
+@item left top right bottom
+The coordinates of the labeled object (the corresponding GREY
+property footnote applies here too of course)
+
+@item mean-x mean-y
+The coordinates of the mean (red green blue) values of the labeled
+object. These two coordinate values are floating points, the
+@samp{mathematical} position of the mean value in @var{image}
+
+
+@item min-r min-g min-b max-r max-g max-b mean-r mean-g mean-b std-dev-r std-dev-g std-dev-b
+The minimum, maximum, mean and standard deviaton labeled object values of
+the red, green and blue channels
+@end table
+@end indentedblock
+@end deffn
