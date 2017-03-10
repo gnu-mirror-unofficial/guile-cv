@@ -38,6 +38,7 @@ SOURCES = \
 	cv/support/push.scm			\
 	cv/support/keyword.scm			\
 	cv/support/f32vector.scm		\
+	cv/support/libguile-cv.scm		\
 	cv/support.scm				\
 	cv/init.scm				\
 	cv/idata.scm				\
@@ -46,7 +47,7 @@ SOURCES = \
 	cv/filters.scm				\
 	cv/morphology.scm			\
 	cv/segmentation.scm			\
-	cv/properties.scm				\
+	cv/properties.scm			\
 	cv/adds.scm				\
 	cv/utils.scm				\
 	cv.scm
@@ -84,6 +85,7 @@ ETAGS_ARGS = \
 # guile-cv
 
 SUBDIRS = \
+	libguile-cv			\
 	test-suite			\
 	doc
 
@@ -97,6 +99,11 @@ distclean-local:
 	rm -f *~
 	rm -f guile-cv-*.tar.gz
 	rm -f guile-cv-*.tar.gz.sig
+	rm -f libguile-cv/Makefile
+	rm -f libguile-cv/Makefile.in
+	rm -f libguile-cv/libguile-cv.la
+	rm -f libguile-cv/libguile-cv.lo
+	rm -f libguile-cv/libguile-cv.so
 	rm -rf doc/guile-cv
 	rm -f doc/*.info
 	rm -f doc/*.pdf

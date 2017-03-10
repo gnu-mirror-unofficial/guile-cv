@@ -44,9 +44,9 @@ AM_INIT_AUTOMAKE([1.14 gnu -Wall -Werror -Wno-portability -Wno-syntax \
 AM_MAINTAINER_MODE([enable])
 AM_SILENT_RULES([yes])
 
-dnl AC_PROG_CC
-dnl AC_STDC_HEADERS
-dnl LT_INIT([disable-static])
+AC_PROG_CC
+AC_STDC_HEADERS
+LT_INIT([disable-static])
 
 AC_COPYRIGHT(GUILE_CV_CONFIGURE_COPYRIGHT)
 AC_CONFIG_SRCDIR([cv])
@@ -95,6 +95,7 @@ AC_CONFIG_FILES(
 AC_CONFIG_FILES([
   meta/guile-cv-1.0.pc
   Makefile
+  libguile-cv/Makefile
   doc/Makefile
   test-suite/Makefile
 ])

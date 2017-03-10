@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016
+;;;; Copyright (C) 2017
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV
@@ -26,33 +26,15 @@
 ;;; Code:
 
 
-(define-module (cv support)
-  #:use-module (oop goops)
-  #:use-module (cv support goops)
-  #:use-module (cv support g-export)
-  #:use-module (cv support utils)
-  #:use-module (cv support float)
-  #:use-module (cv support push)
-  #:use-module (cv support keyword)
-  #:use-module (cv support modules)
-  #:use-module (cv support f32vector)
-  #:use-module (cv support libguile-cv)
+(define-module (cv support libguile-cv)
+  #:use-module (system foreign)
+  #:use-module (cv init)
 
-  #:duplicates (merge-generics
-		replace
-		warn-override-core
-		warn
-		last))
+  #:export (float->int))
 
 
-(eval-when (expand load eval)
-  (re-export-public-interface (oop goops)
-			      (cv support goops)
-			      (cv support g-export)
-			      (cv support utils)
-			      (cv support float)
-			      (cv support push)
-			      (cv support keyword)
-			      (cv support modules)
-			      (cv support f32vector)
-                              (cv support libguile-cv)))
+(define float->int
+  (pointer->procedure int
+                      (dynamic-func "floattoint"
+                                    %libguile-cv)
+                      (list float)))

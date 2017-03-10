@@ -29,7 +29,10 @@
 (define-module (cv init)
   #:use-module (system foreign)
   
-  #:export (%libvigra-c))
+  #:export (%libvigra-c
+            %libguile-cv))
 
 
 (define %libvigra-c (dynamic-link "libvigra_c"))
+
+(define %libguile-cv (dynamic-link "libguile-cv"))

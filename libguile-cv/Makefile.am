@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016
+#### Copyright (C) 2017
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV
@@ -21,28 +21,25 @@
 ####
 
 
-GOBJECTS = $(SOURCES:%.scm=%.go)
-
-nobase_mod_DATA = $(SOURCES) $(NOCOMP_SOURCES)
-nobase_go_DATA = $(GOBJECTS)
-
-AM_CFLAGS = -I. -I$(srcdir) $(WARN_CFLAGS) $(DEBUG_CFLAGS)
-
-# For overriding from the command line (e.g. --debug)
-GUILE_FLAGS =
+#include $(top_srcdir)/am/guile.mk
 
 
-# Make sure source files are installed first, so that the mtime of
-# installed compiled files is greater than that of installed source
-# files.  See
-# <http://lists.gnu.org/archive/html/guile-devel/2010-07/msg00125.html>
-# for details.
-guile_install_go_files = install-nobase_goDATA
-$(guile_install_go_files): install-nobase_modDATA
+lib_LTLIBRARIES = \
+	libguile-cv.la
 
-GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch -Wformat
 
-SUFFIXES = .scm .go
-.scm.go:
-	$(AM_V_GEN)$(top_builddir)/pre-inst-env \
-	guild compile $(GUILE_WARNINGS) -o "$@" "$<"
+nodist_libguile_cv_SOURCES = \
+	libguile-cv.c
+
+libguile_cv_SOURCES = \
+	libguile-cv.c		\
+	libguile-cv.h
+
+libguile_cv_CFLAGS = \
+	$(AM_CFLAGS) $(GUILE_CFLAGS)
+
+libguile_cv_LIBADD = $(GUILE_LIBS)
+
+libguile_cv_LDFLAGS = -module
+
+# Makefile.am ends here
