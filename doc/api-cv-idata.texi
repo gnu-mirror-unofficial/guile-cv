@@ -83,6 +83,7 @@ module @code{(cv idata) }of Guile-CV's source code.
 @item @ref{im-make-channel}
 
 @item @ref{im-copy}
+@item @ref{im-copy-channel}
 
 @item @ref{im-size_}
 @item @ref{im-width_}
@@ -137,9 +138,11 @@ Each channel is an srfi-4 homogeneous vector of 32 bit floats
 
 
 @anchor{im-copy}
+@anchor{im-copy-channel}
 @deffn Procedure im-copy image
+@deffnx Procedure im-copy-channel channel width height
 
-Returns a new fresh copy of @var{image}.
+Returns a new fresh copy of @var{image} or @var{channel}.
 @end deffn
 
 
@@ -164,12 +167,6 @@ Returns the list of @code{(@var{width} @var{height} @var{n-channel})for
 
 Returns, respectively the @var{width}, the @var{height}, @var{n-channel},
 @var{channels} or the @var{n}th channel for @var{image}.
-
-Caution: @code{im-channels} and @code{im-channel} return the @var{image}
-either the list of or a specific channel, and should not be used in a
-@code{repl}, unless on very small and testing images.  Otherwise, even
-on small images, it might be ok in a terminal, but will definitely will
-kill your emacs.
 @end deffn
 
 

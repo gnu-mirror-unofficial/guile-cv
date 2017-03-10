@@ -54,6 +54,7 @@
 	    im-make
 
 	    im-copy
+	    im-copy-channel
 
 	    im-channel
 	    
@@ -95,11 +96,13 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (case n-chan
-	     ((1)
-	      (map f32vector-copy idata))
-	     (else
-	      (par-map f32vector-copy idata)))))))
+           (let ((map-proc (if (> n-chan 1) par-map map)))
+             (map-proc (lambda (channel)
+                         (im-copy-channel channel width height))
+                       idata))))))
+
+(define (im-copy-channel channel width height)
+  (f32vector-copy channel #:n-cell (* width height)))
 
 
 ;;;
