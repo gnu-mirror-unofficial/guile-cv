@@ -30,6 +30,8 @@
   #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-4)
+  #:use-module (system foreign)
+  #:use-module (cv init)
   #:use-module (cv support utils)
   #:use-module (cv support float)
 
@@ -77,13 +79,29 @@
 	     (when (float>? val maxi)
 	       (set! maxi val)))))))))
 
-(define (f32vector-copy vector)
-  (let* ((n-cell (f32vector-length vector))
+#!
+;; nice but too slow
+(define (f32vector-copy from)
+  (let* ((n-cell (f32vector-length from))
 	 (copy (make-f32vector n-cell)))
     (do ((i 0
 	    (+ i 1)))
 	((= i n-cell) copy)
-      (f32vector-set! copy i (f32vector-ref vector i)))))
+      (f32vector-set! copy i (f32vector-ref from i)))))
+!#
+
+(define* (f32vector-copy from #:key (n-cell #f))
+  (let* ((n-cell (or n-cell (f32vector-length from)))
+	 (to (make-f32vector n-cell)))
+    (case (vigra-copy-float-array from to n-cell)
+      ((0) to)
+      (else
+       (error "Vector copy failed.")))))
+
+(define (vigra-copy-float-array from to size)
+  (vigra-copy-float-array-c (bytevector->pointer from)
+                            (bytevector->pointer to)
+                            size))
 
 (define* (f32vector-complement vector #:key (of 255.0))
   (let* ((n-cell (f32vector-length vector))
@@ -217,3 +235,16 @@
 	     (unless (float-member val vals prec)
 	       (set! vals
 		     (cons val vals))))))))))
+
+
+;;;
+;;; Vigra_c bindings
+;;;
+
+(define vigra-copy-float-array-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_copy_float_array_c"
+				    %libvigra-c)
+		      (list '*		;; from channel
+			    '*		;; to channel
+			    int)))	;; size
