@@ -30,11 +30,15 @@
   #:use-module (oop goops)
   #:use-module (system foreign)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 receive)
   #:use-module (ice-9 threads)
   #:use-module (srfi srfi-1)
+  #:use-module (search basic)
   #:use-module (cv init)
   #:use-module (cv support)
   #:use-module (cv idata)
+  #:use-module (cv segmentation)
+  #:use-module (cv properties)
   
   #:duplicates (merge-generics
 		replace
@@ -63,7 +67,8 @@
             im-transpose
             im-transpose-channel
             im-normalize
-            im-normalize-channel))
+            im-normalize-channel
+            im-scrap))
 
 
 #;(g-export )
@@ -382,4 +387,77 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	((= i n-cell))
       (f32vector-set! to i (/ (f32vector-ref channel i)
                               255)))
+    to))
+
+(define* (im-scrap image val #:key (pred <) (con 8) (bg 'dark))
+  ;; (im-binary? image) is rather expensive
+  (match image
+    ((width height n-chan idata)
+     ;; so we only check for n-chan
+     (match idata
+       ((channel)
+        (receive (l-image n-label)
+            (im-label image #:con con #:bg bg)
+          (match l-image
+            ((_ _ _ l-idata)
+             (match l-idata
+               ((l-channel)
+                (let* ((properties (im-properties image l-image #:n-label n-label))
+                       (n-property (length properties))
+                       (to-scrap (fold (lambda (property i prev)
+                                         (match property
+                                           ((area . rest)
+                                            (if (pred area val)
+                                                (cons i prev)
+                                                prev))))
+                                       '()
+                                       properties
+                                       (iota n-property))))
+                  (list width height 1
+                        (list (im-scrap-channel channel l-channel width height
+                                                to-scrap n-label))))))))))
+       (else
+        (error "Not a binary image."))))))
+
+#!
+;; nice but too slow
+(define (im-scrap-channel channel l-channel width height to-scrap)
+  (let ((to (im-copy-channel channel width height))
+        (n-cell (* width height))
+        (to-scrap (list->vector (reverse! to-scrap))))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((val (f32vector-ref l-channel i)))
+        (f32vector-set! to i
+                        (if (or (= val 0.0)
+                                (binary-search-sorted-vector to-scrap val))
+                            0.0
+                            (f32vector-ref channel i)))))
+    to))
+!#
+
+(define (scrap-cache to-scrap n-label)
+  (let ((n-scrap (length to-scrap))
+         (cache (make-vector (+ n-label 1) #f)))
+    (do ((i 0
+            (+ i 1)))
+	((= i n-scrap))
+      (vector-set! cache (list-ref to-scrap i) #t))
+    cache))
+
+(define* (im-scrap-channel channel l-channel width height to-scrap n-label)
+  (let* ((to (im-copy-channel channel width height))
+         (n-cell (* width height))
+         (cache (scrap-cache to-scrap n-label)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((val #;(inexact->exact (f32vector-ref l-channel i))
+                 (float->int (f32vector-ref l-channel i))))
+        (f32vector-set! to i
+                        (if (or (zero? val)
+                                (vector-ref cache val))
+                            0.0
+                            (f32vector-ref channel i)))))
     to))
