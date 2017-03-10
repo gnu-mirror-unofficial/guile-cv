@@ -58,11 +58,11 @@
   (match image
     ((width height n-chan idata)
      (match l-image
-       ((_ _ _ _ l-idata)
+       ((_ _ _ l-idata)
         (match l-idata
           ((l-channel)
            (let ((n-label (or n-label
-                              (inexact->exact (f32vector-max l-channel)))))
+                              (float->int (f32vector-max l-channel)))))
              (match idata
                ((c)
                 (im-properties-grey c l-channel width height #:n-label n-label))
@@ -74,7 +74,7 @@
 
 (define* (im-properties-grey channel l-channel width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (inexact->exact (f32vector-max l-channel))))
+		      (float->int (f32vector-max l-channel))))
          (n-prop (+ n-label 1))
 	 (properties (im-make-channel %vigra-property-length-grey n-prop))
 	 (result (vigra-extract-features-grey channel l-channel
@@ -89,7 +89,7 @@
 
 (define* (im-properties-rgb r g b l-channel width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (inexact->exact (f32vector-max l-channel))))
+		      (float->int (f32vector-max l-channel))))
          (n-prop (+ n-label 1))
 	 (properties (im-make-channel %vigra-property-length-rgb n-prop))
 	 (result (vigra-extract-features-rgb r g b l-channel
@@ -143,11 +143,11 @@
         mean-x mean-y
         mini maxi meani
         std-dev)
-       (list (inexact->exact (float-round area 0))
-             (inexact->exact (float-round left 0))
-             (inexact->exact (float-round top 0))
-             (inexact->exact (float-round right 0))
-             (inexact->exact (float-round bottom 0))
+       (list (float->int (float-round area 0))
+             (float->int (float-round left 0))
+             (float->int (float-round top 0))
+             (float->int (float-round right 0))
+             (float->int (float-round bottom 0))
              mean-x mean-y
              mini maxi meani
              std-dev)))))
@@ -179,11 +179,11 @@
         max-r max-g max-b
         mean-r mean-g mean-b
         std-dev-r std-dev-g std-dev-b)
-       (list (inexact->exact (float-round area 0))
-             (inexact->exact (float-round left 0))
-             (inexact->exact (float-round top 0))
-             (inexact->exact (float-round right 0))
-             (inexact->exact (float-round bottom 0))
+       (list (float->int (float-round area 0))
+             (float->int (float-round left 0))
+             (float->int (float-round top 0))
+             (float->int (float-round right 0))
+             (float->int (float-round bottom 0))
              mean-x mean-y
              min-r min-g min-b
              max-r max-g max-b
