@@ -80,5 +80,10 @@
     (assert-numeric-= 0 (f32vector-index pred2 v3 v4) 1.0e-1)
     (assert-false (f32vector-index pred3 v3 v4))))
 
+(define-method (test-libguile-cv (self <guile-cv-tests-support>))
+  (assert-true (= 1 (float->int 1.0)))
+  (assert-true (= 1 (float->int 1.52)))
+  (assert-true (= 1 (float->int 1.99))))
+
 
 (exit-with-summary (run-all-defined-test-cases))
