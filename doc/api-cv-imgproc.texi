@@ -59,6 +59,7 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-and}
 @item @ref{im-or}
 @item @ref{im-complement}
+@item @ref{im-scrap}
 @end table
 @end indentedblock
 @end ifhtml
@@ -344,4 +345,21 @@ Returns a new image.
 This procedure computes the mathematical complement of @var{image},
 which for Guile-CV means that for each pixel of each channel, the new
 value is @code{(- 255.0 pixel-value)}.
+@end deffn
+
+@anchor{im-scrap}
+@deffn Procedure scrap image val [#:pred <] [#:con 8] [#:bg 'dark]
+
+Returns a new image.
+
+Scraping an image is the operation of removing objects of size
+@var{val}, according to @var{con}, @var{bg} and @var{pred}.
+
+Using the above mentioned arguments, @code{im-scrap} first calls
+@ref{im-label} using @var{con} and @var{bg}, then calls
+@ref{im-properties}.  The @code{area} property of each object is then
+compared to @var{val} using @var{pred}, and the object is eliminated if
+the result is @code{#t}.
+
+Note that @var{image} must be a binary image.
 @end deffn
