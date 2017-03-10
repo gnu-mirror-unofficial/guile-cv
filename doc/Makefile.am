@@ -47,6 +47,7 @@ guile_cv_TEXINFOS = \
   api-cv-filters.texi		\
   api-cv-morphology.texi	\
   api-cv-segmentation.texi	\
+  api-cv-properties.texi	\
   api-cv-utils.texi		\
   api-support-modules.texi	\
   api-support.texi		\
