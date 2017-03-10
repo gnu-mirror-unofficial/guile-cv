@@ -14,6 +14,16 @@ meta/guile-cv-1.0.pc
 doc/version.texi
 doc/stamp-vti
 doc/guile-cv.t2p
+libtool
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4
+libguile-cv/.deps/
+libguile-cv/.libs/
+libguile-cv/libguile-cv.la
+libguile-cv/libguile-cv.lo
 *~
 *.aux
 *.cp
