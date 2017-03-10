@@ -4,6 +4,24 @@
 
 * Latest News
 
+** March the 9th, 2017
+
+GNU Guile-CV version 0.1.2 is released, the next maintenance release for
+the 0.1 series.
+
+	Special note:
+	-------------
+
+	The special note written for GUle-CV version 0.1.1 is still
+	applicable to this release, see below.
+
+*** Changes since 0.1.1
+
+New procedures:
+---------------
+
+	im-copy-channel, im-properties, im-scrap
+
 ** Februrary the 18th, 2017
 
 GNU Guile-CV version 0.1.1 is released, the next maintenance release for
@@ -21,7 +39,7 @@ the 0.1 series.
 	(b) see INSTALL for tarball location during the evaluation
 	period.
 
-** Changes since 0.1.0
+*** Changes since 0.1.0
 
 Incompatible API change:
 ------------------------
@@ -65,7 +83,6 @@ GNU Guile-CV version 0.1.0-alpha is released.
 Here is a summary of the changes since version 0.0.0. See GNU
 Guile-CV's git summary [1] and git log [2] for a complete
 description:
-
 
 [1] http://git.savannah.gnu.org/cgit/guile-cv.git
 [2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/

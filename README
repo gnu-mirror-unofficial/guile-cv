@@ -17,7 +17,11 @@ written in Guile Scheme [5].
 
 ** What else
 
-Guile-CV is entirely written in Guile, no C code.
+Guile-CV is almost entirely written in Guile Scheme, though for
+performance reasons, some basic operations are implemented in C (see
+libguile-cv if you are interested).  This C code is kept to the very
+strict minimum and _not_ part of the API: as Guile Scheme evolves,
+targeting an AOT compiler, we may rewrite these in scheme at any moment.
 
 ** Savannah
 
