@@ -1,7 +1,7 @@
-\input texinfo
-@c -*- mode: texinfo; coding: utf-8 -*-
-@c This is part of the Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>.
+@c The GNU Free Documentation License.
+@center Version 1.3, 3 November 2008
+
+@c This file is intended to be included within another document,
 @c hence no sectioning command or @node.
 
 @display

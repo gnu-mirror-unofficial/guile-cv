@@ -17,9 +17,9 @@
 
 
 @copying
-This manual documents GNU Guile-CV version @value{VERSION}.
+This manual documents Guile-CV version @value{VERSION}.
 
-Copyright (C) 2016 Free Software Foundation, Inc.
+Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -32,7 +32,7 @@ Documentation License.''
 
 @dircategory Software
 @direntry
-* GNU Guile-CV: (guile-cv).  
+* Guile-CV: (guile-cv).  
 @end direntry
 
 @c Choices for setchapternewpage are {on,off,odd}.
@@ -49,12 +49,12 @@ Documentation License.''
 
 @titlepage
 @sp 10
-@title GNU Guile-CV
+@title Guile-CV
 @subtitle @
   Edition @value{EDITION}, @
   revision @value{MANUAL-REVISION}, @
-  for use with GNU Guile-CV @value{VERSION}
-@author The GNU Guile-CV Developpers
+  for use with Guile-CV @value{VERSION}
+@author The Guile-CV Developpers
 
 @c the next two commands start the copyright
 @page
