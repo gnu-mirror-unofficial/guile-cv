@@ -3,7 +3,7 @@
 @c This is part of the Guile-CV Reference Manual.
 @c Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>.
 
-@insertcopying
+@c @insertcopying
 
 
 @node Utilities
