@@ -1,15 +1,15 @@
 # ;; -*- mode: org; coding: utf-8 -*-
 
-#+TITLE: GNU Guile-CV INSTALL
+#+TITLE: Guile-CV INSTALL
 
-* GNU Guile-CV
+* Guile-CV
 
-GNU Guile-CV
+Guile-CV
 a Computer Vision functional programming library for Guile
 
 ** Dependencies
 
-GNU Guile-CV needs the following software to run:
+Guile-CV needs the following software to run:
 
 	Autoconf	>= 2.69
 	Automake	>= 1.14
@@ -72,10 +72,10 @@ Happy Guile-CV!
 
 		configure --prefix=/opt
 
-[2] To install GNU Guile-CV, you must have write permissions for
+[2] To install Guile-CV, you must have write permissions for
     $prefix, Guile’s global site and site-ccache directories.
 
-[3] GNU Guile-CV’s modules are installed in Guile’s global site
+[3] Guile-CV’s modules are installed in Guile’s global site
     directory. If you want to know its location, enter the following
     expression in a terminal:
 
