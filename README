@@ -35,11 +35,11 @@ is no warranty whatsoever for Guile-CV. This is described in full in
 the license.
 
 
-[1] http://www.gnu.org/software/guile-cv/
+[1] http://www.nongnu.org/guile-cv/
 [2] GNU Guile
     an interpreter and compiler for the Scheme [6] programming language
     http://www.gnu.org/software/guile/
 [3] http://ukoethe.github.io/vigra/
-[4] https://github.com/BSeppke/vigra_c
+[4] https://github.com/BSeppke/vigra_c/
 [5] http://schemers.org/
-[6] http://www.nongnu.org/guile-cv/index.html
+[6] https://savannah.nongnu.org/projects/guile-cv/

@@ -31,8 +31,8 @@ entity. Right now, the contributor to this manual is:
 
 who is also the author and maintainer of Guile-CV.
 
-You are most welcome to join and help.  Visit Guile-CV's web site at
-@uref{@value{UGUILE-CV}} to find out how to get involved.
+You are most welcome to join and help.  Visit @uref{@value{UGUILE-CV},
+Guile-CV} web site to find out how to get involved.
 
 
 @node Guile-CV License

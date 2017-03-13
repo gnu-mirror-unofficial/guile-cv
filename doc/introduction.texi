@@ -40,8 +40,12 @@ written in Guile Scheme.
 
 @subheading What else
 
-Guile-CV is entirely written in @uref{@value{UGUILE}, Guile}, no C
-code.
+Guile-CV is almost entirely written in @uref{@value{UGUILE}, Guile}
+Scheme, though for performance reasons, some basic operations are
+implemented in C (see libguile-cv if you are interested).  This C code
+is kept to the very strict minimum and _not_ part of the API: as Guile
+Scheme evolves, targeting an AOT compiler, we may rewrite these in
+scheme at any moment.
 
 
 @subheading Savannah
@@ -53,10 +57,10 @@ page.
 @node Obtaining and Installing Guile-CV
 @section Obtaining and Installing Guile-CV
 
-Guile-CV can be obtained from the following archive site
-@uref{@value{UGUILE-CV-RELEASES}}.  The file will be named
-guile-cv-version.tar.gz. The current version is @value{VERSION}, so
-the file you should grab is:
+Guile-CV can be obtained from the following archive
+@uref{@value{UGUILE-CV-RELEASES}, site}.  The file will be named
+guile-cv-version.tar.gz. The current version is @value{VERSION}, so the
+file you should grab is:
 
 @tie{}@tie{}@tie{}@tie{}@uref{@value{UGUILE-CV-LATEST}}
 
@@ -184,27 +188,28 @@ Guile-CV uses the following mailing list:
 @itemize @bullet
 
 @item
-bug-guile-cv is used for Guile-CV bug reports.
+guile-user at gnu dot org is for general user help and discussion.
 
 @item
-guile-devel is used to discuss most aspects of Guile-CV, including
-development and enhancement requests.
+guile-devel at gnu dot org is used to discuss most aspects of Guile-CV,
+including development and enhancement requests.
 
 @item
-guile-user is for general user help and discussion.
+bug-guile-cv at nongnu dot org is used for Guile-CV bug reports.
 
 @end itemize
 
-When sending emails to guile-user or guile-devel, please use 'Guile-CV:
-' to prefix the subject line of any Guile-CV related email, thanks!
+When sending emails to guile-user and/or guile-devel, please use
+'Guile-CV: ' to prefix the subject line of any Guile-CV related email,
+thanks!
 
 
 @subheading IRC
 
 Most of the time you can find me on irc, channel @emph{#guile},
 @emph{#guix} and @emph{#scheme} on @emph{irc.freenode.net},
-@emph{#clutter} on @emph{irc.gnome.org}, under the nickname
-@strong{daviid}.
+@emph{#clutter} and @emph{#introspection} on @emph{irc.gnome.org}, under
+the nickname @strong{daviid}.
 
 
 
@@ -215,7 +220,7 @@ Guile-CV has a @uref{@value{UGUILE-CV-BUGS-TRACKER}, bugs tracker}. You
 may send your bugs report here:
 
 @itemize @bullet
-@item bug-guile-cv at gnu dot org
+@item bug-guile-cv at nongnu dot org
 @end itemize
 
 You can (un)subscribe to the bugs report list by following instructions
