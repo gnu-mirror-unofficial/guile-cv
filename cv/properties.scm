@@ -55,29 +55,33 @@
 ;;;
 
 (define* (im-properties image l-image #:key (n-label #f))
-  (match image
-    ((width height n-chan idata)
-     (match l-image
-       ((_ _ _ l-idata)
-        (match l-idata
-          ((l-channel)
-           (let ((n-label (or n-label
-                              (float->int (f32vector-max l-channel)))))
+  (match l-image
+    ((_ _ _ l-idata)
+     (match l-idata
+       ((l-c)
+        (let ((n-label (or n-label
+                           (float->int (f32vector-max l-c)))))
+          (match image
+            ((width height n-chan idata)
              (match idata
                ((c)
-                (im-properties-grey c l-channel width height #:n-label n-label))
+                (im-properties-grey c l-c width height #:n-label n-label))
                ((r g b)
-                (im-properties-rgb r g b l-channel width height
-                                   #:n-label n-label)))))))))))
+                (im-properties-rgb r g b l-c width height
+                                   #:n-label n-label))
+               (else
+                (error "Not a GREY neither an RGB image.")))))))
+       (else
+        (error "Not a labeled image."))))))
 
 (define %vigra-property-length-grey 11)
 
-(define* (im-properties-grey channel l-channel width height #:key (n-label #f))
+(define* (im-properties-grey channel l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (float->int (f32vector-max l-channel))))
+		      (float->int (f32vector-max l-c))))
          (n-prop (+ n-label 1))
 	 (properties (im-make-channel %vigra-property-length-grey n-prop))
-	 (result (vigra-extract-features-grey channel l-channel
+	 (result (vigra-extract-features-grey channel l-c
                                               properties width height n-label)))
     (case result
       ((1)
@@ -87,12 +91,12 @@
 
 (define %vigra-property-length-rgb 19)
 
-(define* (im-properties-rgb r g b l-channel width height #:key (n-label #f))
+(define* (im-properties-rgb r g b l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (float->int (f32vector-max l-channel))))
+		      (float->int (f32vector-max l-c))))
          (n-prop (+ n-label 1))
 	 (properties (im-make-channel %vigra-property-length-rgb n-prop))
-	 (result (vigra-extract-features-rgb r g b l-channel
+	 (result (vigra-extract-features-rgb r g b l-c
                                              properties width height n-label)))
     (case result
       ((1)
