@@ -30,6 +30,7 @@
   #:use-module (oop goops)
   #:use-module (rnrs bytevectors)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 receive)
   #:use-module (unit-test)
   #:use-module (cv))
 
@@ -297,6 +298,38 @@
     (assert-true (im-=? (im-scrap a 5) b))
     (assert-true (im-=? (im-scrap a 9 #:pred =) c))
     (assert-true (im-=? (im-scrap a 9 #:pred >) d))))
+
+(define (make-properties-images)
+  (let ((idx '((0 0)
+               (0 1) (0 2) (0 3)
+               (1 0) (2 0) (3 0)
+               (1 3) (2 3) (3 3)
+               (3 0) (3 1) (3 2)
+               (3 3)))
+        (img-1 (im-make 4 4 1 1.0))
+        (img-2 (im-make 4 4 3 1.0))
+        (img-3 (im-make 4 4 4 1.0)))
+    (for-each (lambda (pos)
+		(match pos
+		  ((i j)
+                   (im-set! img-1 i j 0.0))))
+	idx)
+    (for-each (lambda (pos)
+		(match pos
+		  ((i j)
+                   (im-set! img-2 i j 0 0.0)
+                   (im-set! img-2 i j 1 0.0)
+                   (im-set! img-2 i j 2 0.0))))
+	idx)
+    (values img-1 img-2 img-3)))
+
+(define-method (test-properties (self <guile-cv-tests-cv>))
+  (receive (img-1 img-2 img-3)
+      (make-properties-images)
+    (let ((l-img (im-label img-1)))
+      (assert-exception (im-properties img-3 l-img))
+      (assert-exception (im-properties img-1 img-2))
+      (assert (im-properties img-1 l-img)))))
 
 
 (exit-with-summary (run-all-defined-test-cases))
