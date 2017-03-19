@@ -2,6 +2,20 @@
 
 #+TITLE: Guile-CV NEWS
 
+#+BEGIN_COMMENT
+
+Copyright (C) 2016 - 2017
+David Pirotte <david at altosw dot be>
+
+This document is part of Guile-CV.
+
+Copying and distribution of this file, with or without modification, are
+permitted in any medium without royalty provided the copyright notice
+and this notice are preserved.  This file is offered as-is, without any
+warranty.
+
+#+END_COMMENT
+
 * Latest News
 
 ** March the 12th, 2017

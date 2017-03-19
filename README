@@ -2,6 +2,20 @@
 
 #+TITLE: Guile-CV README
 
+#+BEGIN_COMMENT
+
+Copyright (C) 2016 - 2017
+David Pirotte <david at altosw dot be>
+
+This document is part of Guile-CV.
+
+Copying and distribution of this file, with or without modification, are
+permitted in any medium without royalty provided the copyright notice
+and this notice are preserved.  This file is offered as-is, without any
+warranty.
+
+#+END_COMMENT
+
 * Guile-CV
 
 Guile-CV [1]
