@@ -2,8 +2,7 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the Guile-CV Reference Manual.
 @c Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>.
-
-@c @insertcopying
+@c See the file guile-cv.texi for copying conditions.
 
 
 @node Image Processing
