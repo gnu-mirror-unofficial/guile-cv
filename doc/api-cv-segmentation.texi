@@ -57,8 +57,7 @@ the algorithm uses 8-connectivity to define a neighborhood, but this can
 be changed through the keyword argument @var{#:con}, which can be either
 4 or 8.
 
-@c @ifhtml
-@ifnottex
+@c @ifnottex
 @image{../images/pp-17-bf,,,,png}
 @image{../images/pp-17-label,,,,png}
 @image{../images/pp-17-label-all,,,,png}
@@ -69,8 +68,7 @@ Note that we had to run @code{im-threshold} on the original image first
 (all labeling procedures take a binary image (or channel) as their
 mandatory argument), for the record, we used @code{128} as the threshold
 value.
-@end ifnottex
-@c @end ifhtml
+@c @end ifnottex
 @end deffn
 
 
