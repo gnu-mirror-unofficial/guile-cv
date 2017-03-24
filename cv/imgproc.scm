@@ -70,7 +70,8 @@
   (match image
     ((width height n-chan idata)
      (list new-w new-h n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-resize-channel channel width height new-w new-h
 					    #:i-mode i-mode))
@@ -100,7 +101,8 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-rotate-channel channel width height angle
 					    #:i-mode i-mode))
@@ -128,7 +130,8 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-flip-channel channel width height plane))
 	       idata))))))
@@ -168,7 +171,8 @@
      (match (im-crop-size width height left top right bottom)
        ((new-w new-h)
 	(list new-w new-h n-chan
-	      (let ((map-proc (if (> n-chan 1) par-map map)))
+	      (let ((map-proc (if (and (> n-chan 1)
+                                       (%use-par-map)) par-map map)))
 		(map-proc (lambda (channel)
 			    (im-crop-channel channel width height left top right bottom
 					     #:new-w new-w #:new-h new-h))
@@ -199,7 +203,8 @@
      (match (im-padd-size width height left top right bottom)
        ((new-w new-h)
 	(list new-w new-h n-chan
-	      (let ((map-proc (if (> n-chan 1) par-map map)))
+              (let ((map-proc (if (and (> n-chan 1)
+                                       (%use-par-map)) par-map map)))
 		(map-proc (lambda (channel)
 			    (im-padd-channel channel width height left top right bottom
 					     #:new-w new-w #:new-h new-h))
@@ -230,7 +235,8 @@
      (match (im-unpadd-size width height left top right bottom)
        ((new-w new-h)
 	(list new-w new-h n-chan
-	      (let ((map-proc (if (> n-chan 1) par-map map)))
+	      (let ((map-proc (if (and (> n-chan 1)
+                                       (%use-par-map)) par-map map)))
 		(map-proc (lambda (channel)
 			    (im-unpadd-channel channel width height left top right bottom
 					       #:new-w new-w #:new-h new-h))

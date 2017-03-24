@@ -58,7 +58,8 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-gaussian-blur-channel channel width height sigma))
 		       idata))))))
@@ -74,7 +75,8 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-gaussian-gradient-channel channel width height sigma))
 		       idata))))))

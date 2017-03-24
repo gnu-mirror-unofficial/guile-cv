@@ -35,7 +35,9 @@
   #:use-module (ice-9 receive)
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-4)
+  #:use-module (cv init)
   #:use-module (cv support)
+
 
   #:duplicates (merge-generics
 		replace
@@ -96,7 +98,8 @@
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-           (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
              (map-proc (lambda (channel)
                          (im-copy-channel channel width height))
                        idata))))))
@@ -216,25 +219,23 @@
 ;;; Channels
 ;;;
 
-(define* (im-make width height n #:optional (init-val 0.0))
-  (list width height n
-	(im-make-channels width height n init-val)))
+(define* (im-make width height n-chan #:optional (init-val 0.0))
+  (list width height n-chan
+        (im-make-channels width height n-chan init-val)))
 
-(define* (im-make-channels width height n #:optional (init-val 0.0))
-  (case n
-    ((1) (list (im-make-channel width height init-val)))
-    (else
-     (par-map (lambda (i)
-		(im-make-channel width height init-val))
-	 (iota n)))))
+(define* (im-make-channels width height n-chan #:optional (init-val 0.0))
+  (let ((map-proc (if (and (> n-chan 1)
+                           (%use-par-map)) par-map map)))
+    (map-proc (lambda (i)
+                (im-make-channel width height init-val))
+              (iota n-chan))))
 
 (define* (im-make-channel width height #:optional (init-val 0.0))
-  (make-f32vector (* width height)
-                  init-val))
+  (make-f32vector (* width height) init-val))
 
-(define (im-channel image n)
+(define (im-channel image k)
   (match image
-    ((width height n-chan idata) (list-ref idata n))))
+    ((width height n-chan idata) (list-ref idata k))))
 
 
 ;;;

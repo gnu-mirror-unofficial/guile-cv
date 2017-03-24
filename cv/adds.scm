@@ -37,6 +37,7 @@
   #:use-module (cv init)
   #:use-module (cv support)
   #:use-module (cv idata)
+  #:use-module (cv imgproc)
   #:use-module (cv segmentation)
   #:use-module (cv properties)
   
@@ -127,14 +128,15 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
              ((r g b a)
               (let ((a-norm (im-normalize-channel a width height)))
                 (list width height 3
-                      (par-map (lambda (vals)
-                                 (match vals
-                                   ((c bg)
-                                    (im-rgba-channel->rgb-channel c width height
-                                                                  a-norm #:bg bg))))
-                          (list (list r bg-r)
-                                (list g bg-g)
-                                (list b bg-b))))))))
+                      (let ((map-proc (if (%use-par-map) par-map map)))
+                        (map-proc (lambda (vals)
+                                    (match vals
+                                      ((c bg)
+                                       (im-rgba-channel->rgb-channel c width height
+                                                                     a-norm #:bg bg))))
+                                  (list (list r bg-r)
+                                        (list g bg-g)
+                                        (list b bg-b)))))))))
           (else
            (error "Not an RGBA image."))))))
     (else
@@ -199,7 +201,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-add-channel channel width height val))
 	       idata))))))
@@ -218,7 +221,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-substract-channel channel width height val))
 	       idata))))))
@@ -237,7 +241,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-multiply-channel channel width height val))
 	       idata))))))
@@ -256,7 +261,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-divide-channel channel width height val))
 	       idata))))))
@@ -282,7 +288,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		  (n-cell (* width height))
 		  (c-channels (im-collect (map im-rgb->grey rest) 'grey)))
 	      (list width height n-chan
-		    (let ((map-proc (if (> n-chan 1) par-map map)))
+                    (let ((map-proc (if (and (> n-chan 1)
+                                             (%use-par-map)) par-map map)))
 		      (map-proc
 		       (lambda (channel)
 			 (do ((i 0
@@ -306,7 +313,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		  (n-cell (* width height))
 		  (c-channels (im-collect (map im-rgb->grey rest) 'grey)))
 	      (list width height n-chan
-		    (let ((map-proc (if (> n-chan 1) par-map map)))
+                    (let ((map-proc (if (and (> n-chan 1)
+                                             (%use-par-map)) par-map map)))
 		      (map-proc
 		       (lambda (channel)
 			 (do ((i 0
@@ -324,7 +332,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc
 	      (lambda (channel)
 		(f32vector-complement channel))
@@ -332,27 +341,30 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (im-min image)
     (match image
-    ((width height n-chan idata)
-     (let ((map-proc (if (> n-chan 1) par-map map)))
-       (map-proc
-	(lambda (channel)
-	  (f32vector-min channel))
-	idata)))))
+      ((width height n-chan idata)
+       (let ((map-proc (if (and (> n-chan 1)
+                                (%use-par-map)) par-map map)))
+         (map-proc
+          (lambda (channel)
+            (f32vector-min channel))
+          idata)))))
 
 (define (im-max image)
     (match image
-    ((width height n-chan idata)
-     (let ((map-proc (if (> n-chan 1) par-map map)))
-       (map-proc
-	(lambda (channel)
-	  (f32vector-max channel))
-	idata)))))
+      ((width height n-chan idata)
+       (let ((map-proc (if (and (> n-chan 1)
+                                (%use-par-map)) par-map map)))
+         (map-proc
+          (lambda (channel)
+            (f32vector-max channel))
+          idata)))))
 
 (define (im-transpose image)
   (match image
     ((width height n-chan idata)
      (list height width n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-transpose-channel channel width height))
 	       idata))))))
@@ -374,7 +386,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (match image
     ((width height n-chan idata)
      (list height width n-chan
-	   (let ((map-proc (if (> n-chan 1) par-map map)))
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-normalize-channel channel width height))
 	       idata))))))

@@ -30,9 +30,12 @@
   #:use-module (system foreign)
   
   #:export (%libvigra-c
-            %libguile-cv))
+            %libguile-cv
+            %use-par-map))
 
 
 (define %libvigra-c (dynamic-link "libvigra_c"))
 
 (define %libguile-cv (dynamic-link "libguile-cv"))
+
+(define %use-par-map (make-parameter #t))
