@@ -29,7 +29,7 @@ the C type @code{float}.
 
 The external representation (ie. read syntax) for @var{idata} vectors is
 @code{#f32(@dots{})}. As an example, a grey scale image of width 3 and
-height 2, initialized to 0.0 is represnented by the following list:
+height 2, initialized to 0.0 is represented by the following expression:
 
 @lisp
 (3 2 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0)))
@@ -55,9 +55,14 @@ often, you will need them all, in which case your best friend is
       ... your code here ...))))
 @end lisp
 
-Note that the @code{(cv)} module imports and re-exports the public
-interface of @code{(ice-9 match)}. You will find other examples the
-module @code{(cv idata) }of Guile-CV's source code.
+You will find many examples of such a @samp{pattern} in Guile-CV's
+source code itself of course, along with some other @samp{techniques}
+that might be useful, so we invite you to read it, and if you do so:
+feedback, design and code review is more then welcome! This section
+describes what is in the module @code{(cv idata)}.
+
+Note that the @code{(cv)} module imports and re-exports, among may
+others, the public interface of @code{(ice-9 match)}.
 
 
 @subheading Procedures
