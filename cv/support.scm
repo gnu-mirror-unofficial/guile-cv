@@ -37,6 +37,7 @@
   #:use-module (cv support modules)
   #:use-module (cv support f32vector)
   #:use-module (cv support libguile-cv)
+  #:use-module (cv support utils)
 
   #:duplicates (merge-generics
 		replace
@@ -55,4 +56,5 @@
 			      (cv support keyword)
 			      (cv support modules)
 			      (cv support f32vector)
-                              (cv support libguile-cv)))
+                              (cv support libguile-cv)
+                              (cv support utils)))
