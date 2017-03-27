@@ -1,4 +1,3 @@
-\input texinfo
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the Guile-CV Reference Manual.
 @c Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>.
@@ -47,6 +46,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-or}
 @item @ref{im-complement}
 @item @ref{im-scrap}
+@item @ref{im-particles}
+@item @ref{im-particle-clean}
 @end table
 @end indentedblock
 @end ifhtml
@@ -335,7 +336,7 @@ value is @code{(- 255.0 pixel-value)}.
 @end deffn
 
 @anchor{im-scrap}
-@deffn Procedure scrap image val [#:pred <] [#:con 8] [#:bg 'dark]
+@deffn Procedure im-scrap image val [#:pred <] [#:con 8] [#:bg 'dark]
 
 Returns a new image.
 
@@ -349,4 +350,43 @@ compared to @var{val} using @var{pred}, and the object is eliminated if
 the result is @code{#t}.
 
 Note that @var{image} must be a binary image.
+@end deffn
+
+
+@anchor{im-particles}
+@deffn Procedure im-particles image properties [#:clean #t]
+@c @cindex Image split
+@cindex Image decompose
+
+Returns a list of images.
+
+Each returned image is a @samp{particle}, which is a subpart of
+@var{image} determined by its bounding box, given by the @code{left}
+@code{top} @code{right} @code{bottom} values of the corresponding
+@samp{entry} in @var{properties} (see @ref{im-properties} for a complete
+description of a property value list.
+
+When @var{#:clean} is @code{#t}, which is the default,
+@ref{im-particle-clean} is called upon each particle (see below for a
+description of the expected result).
+@end deffn
+
+
+@anchor{im-particle-clean}
+@deffn Procedure im-particle-clean particle
+
+Returns a new image.
+
+Cleaning a @var{particle} (which is an image) means detecting and
+removing any object(s) that is(are) not connected to the
+@samp{particle} itself.
+
+This procedure is based on the property that in a @samp{particle}, which
+is an (sub)image resulting from a @ref{im-crop} based on the bounding
+box coordinates as returned by @code{im-properties}, there precisely is
+one object that, if you call @code{im-properties} upon @var{particle},
+would have its bounding box coordinates being the entire
+@var{particle}. In other words, if you call @code{im-particle-clean}
+upon an image that is not a @samp{particle}, the result will just be a
+black image.
 @end deffn

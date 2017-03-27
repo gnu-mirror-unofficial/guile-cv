@@ -69,7 +69,9 @@
             im-transpose-channel
             im-normalize
             im-normalize-channel
-            im-scrap))
+            im-scrap
+            im-particles
+            im-particle-clean))
 
 
 #;(g-export )
@@ -474,3 +476,50 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                             0.0
                             (f32vector-ref channel i)))))
     to))
+
+(define* (im-particles image properties #:key (clean #t))
+  (let ((map-proc (if (%use-par-map) par-map map)))
+    (map-proc (lambda (prop)
+                (match prop
+                  ((area left top right bottom . rest)
+                   (parameterize ((%use-par-map #f))
+                     (let ((particle (im-crop image left top (+ right 1) (+ bottom 1))))
+                       (if clean
+                           (im-particle-clean particle)
+                           particle))))))
+              (cdr properties))))
+
+(define (im-particle-clean particle)
+  (let* ((binary? (im-binary? particle))
+         (binary (if binary? particle (im-threshold particle 1.0)))
+         (cleaned (match binary
+                    ((width height n-chan idata)
+                     (receive (label-im n-label)
+                         (im-label binary)
+                       (let* ((r (- width 1))
+                              (b (- height 1))
+                              (l-channel (im-channel label-im 0))
+                              (n-cel (* width height))
+                              (to-remove (fold (lambda (prop i prev)
+                                                 (match prop
+                                                   ((size left top right bottom . rest)
+                                                    (if (or (not (= left 0))
+                                                            (not (= top 0))
+                                                            (not (= right r))
+                                                            (not (= bottom b)))
+                                                        (cons i prev)
+                                                        prev))))
+                                               '()
+                                               (im-properties binary label-im
+                                                              #:n-label n-label)
+                                               (iota (+ n-label 1))))
+                              (cache (scrap-cache to-remove n-label)))
+                         (do ((i 0
+                                 (+ i 1)))
+                             ((= i n-cel)
+                              (list width height n-chan (list l-channel)))
+                           (let ((val
+                                  (float->int (f32vector-ref l-channel i))))
+                             (when (vector-ref cache val)
+                               (f32vector-set! l-channel i 0.0))))))))))
+    (if binary? cleaned (im-and particle cleaned))))
