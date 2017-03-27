@@ -45,7 +45,7 @@
 	    system-get
 	    mk-dir
 	    read-config
-	    interleavs
+	    interleave
 	    expand-tilde))
 
 
