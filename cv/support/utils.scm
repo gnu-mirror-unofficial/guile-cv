@@ -166,8 +166,12 @@ put these in the test-suite
     (lambda (key . parameters)
       #f)))
 
+;; zip in srfi-1
+#;(define (combine . lls)
+  (apply map list lls))
+
 (define (interleave . lls)
-  (concatenate (apply map list lls)))
+  (concatenate (apply zip lls)))
 
 (define (expand-tilde path)
   (match (string-split path #\/)
