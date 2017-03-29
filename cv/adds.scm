@@ -52,14 +52,6 @@
             im-rgba->rgb
             im-rgba->grey
 	    im-threshold
-            im-add
-            im-add-channel
-            im-substract
-            im-substract-channel
-            im-multiply
-            im-multiply-channel
-            im-divide
-            im-divide-channel
 	    im-and
 	    im-or
 	    im-complement
@@ -74,7 +66,14 @@
             im-particle-clean))
 
 
-#;(g-export )
+(g-export im-add
+          im-add-channel
+          im-subtract
+          im-subtract-channel
+          im-multiply
+          im-multiply-channel
+          im-divide
+          im-divide-channel)
 
 
 ;;;
@@ -199,85 +198,118 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		  (f32vector-set! c-copy i 255.0))))))))
       (error "Invalid threshold: " threshold)))
 
-(define (im-add image val)
+(define (im-scalar-op image val op)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-add-channel channel width height val))
-	       idata))))))
+			 (im-scalar-channel-op channel width height val op))
+                       idata))))))
 
-(define (im-add-channel channel width height val)
+(define (im-scalar-channel-op channel width height val op)
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
     (do ((i 0
 	    (+ i 1)))
-	((= i n-cell))
-      (let ((new-val (+ (f32vector-ref channel i) val)))
-        (f32vector-set! to i (if (float>=? new-val 255.0) 255.0 new-val))))
-    to))
+	((= i n-cell) to)
+      (f32vector-set! to i (op (f32vector-ref channel i) val)))))
 
-(define (im-substract image val)
+(define (im-matrix-op image img-2 op)
   (match image
     ((width height n-chan idata)
-     (list width height n-chan
-           (let ((map-proc (if (and (> n-chan 1)
-                                    (%use-par-map)) par-map map)))
-	     (map-proc (lambda (channel)
-			 (im-substract-channel channel width height val))
-	       idata))))))
+     (match img-2
+       ((width-2 height-2 n-chan-2 idata-2)
+        (if (and (= width width-2)
+                 (= height height-2)
+                 (= n-chan n-chan-2))
+            (list width height n-chan
+                  (let ((map-proc (if (and (> n-chan 1)
+                                           (%use-par-map)) par-map map)))
+                    (map-proc (lambda (channels)
+                                (match channels
+                                  ((c1 c2)
+                                   (op c1 width height c2))))
+                              (zip idata idata-2))))
+            (error "Size missmatch.")))))))
 
-(define (im-substract-channel channel width height val)
+(define (im-matrix-channel-op channel width height channel-2 op)
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
     (do ((i 0
 	    (+ i 1)))
-	((= i n-cell))
-      (let ((new-val (- (f32vector-ref channel i) val)))
-        (f32vector-set! to i (if (float<=? new-val 0.0) 0.0 new-val))))
-    to))
+	((= i n-cell) to)
+    (f32vector-set! to i (op (f32vector-ref channel i)
+                             (f32vector-ref channel-2 i))))))
 
-(define (im-multiply image val)
-  (match image
-    ((width height n-chan idata)
-     (list width height n-chan
-           (let ((map-proc (if (and (> n-chan 1)
-                                    (%use-par-map)) par-map map)))
-	     (map-proc (lambda (channel)
-			 (im-multiply-channel channel width height val))
-	       idata))))))
 
-(define (im-multiply-channel channel width height val)
-  (let ((to (im-make-channel width height))
-        (n-cell (* width height)))
-    (do ((i 0
-	    (+ i 1)))
-	((= i n-cell))
-      (let ((new-val (* (f32vector-ref channel i) val)))
-        (f32vector-set! to i (if (float>=? new-val 255.0) 255.0 new-val))))
-    to))
+(define-method (im-add image (val <number>))
+  (im-scalar-op image val +))
 
-(define (im-divide image val)
-  (match image
-    ((width height n-chan idata)
-     (list width height n-chan
-           (let ((map-proc (if (and (> n-chan 1)
-                                    (%use-par-map)) par-map map)))
-	     (map-proc (lambda (channel)
-			 (im-divide-channel channel width height val))
-	       idata))))))
+(define-method (im-add-channel channel width height (val <number>))
+  (im-scalar-channel-op channel width height val +))
 
-(define (im-divide-channel channel width height val)
-  (let ((to (im-make-channel width height))
-        (n-cell (* width height)))
-    (do ((i 0
-	    (+ i 1)))
-	((= i n-cell))
-      (let ((new-val (/ (f32vector-ref channel i) val)))
-        (f32vector-set! to i (if (float<=? new-val 0.0) 0.0 new-val))))
-    to))
+(define-method (im-add image (img-2 <list>))
+  (im-matrix-op image img-2 +))
+
+(define-method (im-add-channel channel width height (channel-2 <uvec>))
+  (im-matrix-channel-op channel width height channel-2 +))
+
+
+(define-method (im-subtract image (val <number>))
+  (im-scalar-op image val -))
+
+(define-method (im-subtract-channel channel width height (val <number>))
+  (im-scalar-channel-op channel width height val -))
+
+(define-method (im-subtract image (img-2 <list>))
+  (im-matrix-op image img-2 -))
+
+(define-method (im-subtract-channel channel width height (channel-2 <uvec>))
+  (im-matrix-channel-op channel width height channel-2 -))
+
+
+(define-method (im-multiply image (val <number>))
+  (im-scalar-op image val *))
+
+(define-method (im-multiply-channel channel width height (val <number>))
+  (im-scalar-channel-op channel width height val *))
+
+(define-method (im-multiply img-1 (img-2 <list>))
+  ;; The product is defined only if the number of columns in img-1 is
+  ;; equal to the number of rows in img-2.
+  (match img-1
+    ((width-1 height-1 n-chan-1 idata-1)
+     (match img-2
+       ((width-2 height-2 n-chan-2 idata-2)
+        (if (= width-1 height-2)
+            (list width-2 height-1 n-chan-1
+                  (let ((map-proc (if (and (> n-chan-1 1)
+                                           (%use-par-map)) par-map map)))
+                    (map-proc (lambda (channels)
+                                (match channels
+                                  ((c1 c2)
+                                   (im-multiply-channel c1 width-1 height-1 width-2 c2))))
+                              (zip idata-1 idata-2))))
+            (error "Size missmatch.")))))))
+
+(define-method (im-multiply-channel c1 width-1 height-1 width-2 (c2 <uvec>))
+  (f32vector-multiply c1 c2 width-1 height-1 width-2))
+
+
+(define-method (im-divide image (val <number>))
+  (im-scalar-op image val /))
+
+(define-method (im-divide-channel channel width height (val <number>))
+  (im-scalar-channel-op channel width height val /))
+
+#;(define-method (im-divide image (img-2 <list>))
+  (im-matrix-op image img-2 /))
+
+#;(define-method (im-divide-channel channel width height (channel-2 <uvec>))
+  (im-matrix-channel-op channel width height channel-2 /))
+
 
 (define (im-and . images)
   (match images
