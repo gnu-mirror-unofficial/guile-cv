@@ -228,7 +228,7 @@
         (b (make-add-2-b))
         (c (make-add-2-c)))
     (assert-true (im-=? (im-add a 1.0) b))
-    (assert-true (im-=? (im-substract b 1.0) a))
+    (assert-true (im-=? (im-subtract b 1.0) a))
     (assert-true (im-=? (im-multiply a 2.0) c))
     (assert-true (im-=? (im-divide c 2.0) a))))
 
