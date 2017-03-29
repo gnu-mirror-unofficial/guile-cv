@@ -48,7 +48,8 @@
 	    f32vector=?
 	    f32vector-pred-at-offset?
 	    f32vector-index
-	    f32vector-count-distinct))
+	    f32vector-count-distinct
+            f32vector-multiply))
 
 
 (define* (f32vector-min v #:optional (prec 1.0e-4))
@@ -235,6 +236,31 @@
 	     (unless (float-member val vals prec)
 	       (set! vals
 		     (cons val vals))))))))))
+
+
+;;;
+;;; Matrix ops
+;;;
+
+(define (f32vector-multiply v1 v2 m n p)
+  ;; this is a 'naive' implementation, till we call cblas
+  ;; m = v1-width, n = v1-height, p= v2-width
+  (let* ((n-cell (* n p))
+	 (to (make-f32vector n-cell)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n) to)
+      (do ((j 0
+              (+ j 1)))
+          ((= j p))
+        (do ((sub 0)
+             (k 0
+                (+ k 1)))
+            ((= k m)
+             (f32vector-set! to (+ (* i n) j) sub))
+          (set! sub
+                (+ sub (* (f32vector-ref v1 (+ (* i m) k))
+                          (f32vector-ref v2 (+ (* k p) j))))))))))
 
 
 ;;;
