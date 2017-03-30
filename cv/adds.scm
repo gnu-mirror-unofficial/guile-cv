@@ -230,7 +230,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                     (map-proc (lambda (channels)
                                 (match channels
                                   ((c1 c2)
-                                   (op c1 width height c2))))
+                                   (im-matrix-channel-op c1 width height c2 op))))
                               (zip idata idata-2))))
             (error "Size missmatch.")))))))
 
