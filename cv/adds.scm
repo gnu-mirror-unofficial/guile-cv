@@ -290,12 +290,12 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                     (map-proc (lambda (channels)
                                 (match channels
                                   ((c1 c2)
-                                   (im-multiply-channel c1 width-1 height-1 width-2 c2))))
+                                   (im-multiply-channel c1 width-1 height-1 c2 width-2))))
                               (zip idata-1 idata-2))))
             (error "Size missmatch.")))))))
 
-(define-method (im-multiply-channel c1 width-1 height-1 width-2 (c2 <uvec>))
-  (f32vector-multiply c1 c2 width-1 height-1 width-2))
+(define-method (im-multiply-channel c1 width-1 height-1 (c2 <uvec>) width-2)
+  (f32vector-matrix-multiply c1 width-1 height-1 c2 width-2))
 
 
 (define-method (im-divide image (val <number>))

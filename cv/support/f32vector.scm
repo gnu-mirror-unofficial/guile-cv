@@ -49,7 +49,7 @@
 	    f32vector-pred-at-offset?
 	    f32vector-index
 	    f32vector-count-distinct
-            f32vector-multiply))
+            f32vector-matrix-multiply))
 
 
 (define* (f32vector-min v #:optional (prec 1.0e-4))
@@ -242,14 +242,31 @@
 ;;; Matrix ops
 ;;;
 
-(define (f32vector-multiply v1 v2 m n p)
-  ;; this is a 'naive' implementation, till we call cblas
-  ;; m = v1-width, n = v1-height, p= v2-width
-  (let* ((n-cell (* n p))
-	 (to (make-f32vector n-cell)))
+(define (f32vector-matrix-multiply v1 width-1 height-1 v2 width-2)
+  ;; In math, we'd write:
+  ;; 	A[n,m] and B[m,p]
+  ;;	n = the number of lines of A
+  ;;	m = the number of columns of A
+  ;;	    the number of lines of B
+  ;;	p = the number of columns of B
+  ;; In guile-cv, an image is represented as a list
+  ;;	(width height n-chan idata)
+  ;; So:
+  ;;	n = height-1
+  ;;	m = width-1
+  ;;	p = width-2
+  ;; Here is a 'naive' implementation, till we bind a fast linear algebra
+  ;; library, gsl or cblas, but this is a rabbit hole task!
+  (let* ((a v1)
+         (b v2)
+         (n height-1)
+         (m width-1)
+         (p width-2)
+         (n-cell (* n p))
+	 (ab (make-f32vector n-cell)))
     (do ((i 0
 	    (+ i 1)))
-	((= i n) to)
+	((= i n) ab)
       (do ((j 0
               (+ j 1)))
           ((= j p))
@@ -257,10 +274,10 @@
              (k 0
                 (+ k 1)))
             ((= k m)
-             (f32vector-set! to (+ (* i n) j) sub))
+             (f32vector-set! ab (+ (* i n) j) sub))
           (set! sub
-                (+ sub (* (f32vector-ref v1 (+ (* i m) k))
-                          (f32vector-ref v2 (+ (* k p) j))))))))))
+                (+ sub (* (f32vector-ref a (+ (* i m) k))
+                          (f32vector-ref b (+ (* k p) j))))))))))
 
 
 ;;;
