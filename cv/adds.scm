@@ -57,6 +57,8 @@
 	    im-complement
 	    im-min
 	    im-max
+            im-inverse
+            im-inverse-channel
             im-transpose
             im-transpose-channel
             im-normalize
@@ -243,6 +245,26 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-set! to i (op (f32vector-ref channel i)
                              (f32vector-ref channel-2 i))))))
 
+(define (im-matrix-multdiv-op img-1 img-2 op)
+  ;; The product is defined only if the number of columns in img-1 is
+  ;; equal to the number of rows in img-2.
+  ;; The division is a multiplication by the inverse (of img-2)
+  (match img-1
+    ((width-1 height-1 n-chan-1 idata-1)
+     (match img-2
+       ((width-2 height-2 n-chan-2 idata-2)
+        (if (= width-1 height-2)
+            (list width-2 height-1 n-chan-1
+                  (let ((map-proc (if (and (> n-chan-1 1)
+                                           (%use-par-map)) par-map map)))
+                    (map-proc (lambda (channels)
+                                (match channels
+                                  ((c1 c2)
+                                   (op c1 width-1 height-1 c2 width-2))))
+                              (zip idata-1 idata-2))))
+            (error "Size missmatch.")))))))
+
+
 
 (define-method (im-add image (val <number>))
   (im-scalar-op image val +))
@@ -277,22 +299,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (im-scalar-channel-op channel width height val *))
 
 (define-method (im-multiply img-1 (img-2 <list>))
-  ;; The product is defined only if the number of columns in img-1 is
-  ;; equal to the number of rows in img-2.
-  (match img-1
-    ((width-1 height-1 n-chan-1 idata-1)
-     (match img-2
-       ((width-2 height-2 n-chan-2 idata-2)
-        (if (= width-1 height-2)
-            (list width-2 height-1 n-chan-1
-                  (let ((map-proc (if (and (> n-chan-1 1)
-                                           (%use-par-map)) par-map map)))
-                    (map-proc (lambda (channels)
-                                (match channels
-                                  ((c1 c2)
-                                   (im-multiply-channel c1 width-1 height-1 c2 width-2))))
-                              (zip idata-1 idata-2))))
-            (error "Size missmatch.")))))))
+  (im-matrix-multdiv-op img-1 img-2 im-multiply-channel))
 
 (define-method (im-multiply-channel c1 width-1 height-1 (c2 <uvec>) width-2)
   (f32vector-matrix-multiply c1 width-1 height-1 c2 width-2))
@@ -304,11 +311,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define-method (im-divide-channel channel width height (val <number>))
   (im-scalar-channel-op channel width height val /))
 
-#;(define-method (im-divide image (img-2 <list>))
-  (im-matrix-op image img-2 /))
+(define-method (im-divide img-1 (img-2 <list>))
+  (im-matrix-multdiv-op img-1 img-2 im-divide-channel))
 
-#;(define-method (im-divide-channel channel width height (channel-2 <uvec>))
-  (im-matrix-channel-op channel width height channel-2 /))
+(define-method (im-divide-channel c1 width-1 height-1 (c2 <uvec>) width-2)
+  (f32vector-matrix-multiply c1 width-1 height-1 (f32vector-inverse c2) width-2))
 
 
 (define (im-and . images)
@@ -415,6 +422,19 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
         (im-fast-channel-set! to j i t-width
                               (im-fast-channel-ref channel i j width))))
     to))
+
+(define (im-inverse image)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-inverse-channel channel width height))
+                       idata))))))
+
+(define (im-inverse-channel channel width height)
+  (f32vector-inverse channel))
 
 (define (im-normalize image)
   (match image
