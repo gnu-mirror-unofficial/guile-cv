@@ -20,6 +20,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-rotate-channel}
 @item @ref{im-flip}
 @item @ref{im-flip-channel}
+@item @ref{im-inverse}
+@item @ref{im-inverse-channel}
 @item @ref{im-transpose}
 @item @ref{im-transpose-channel}
 @item @ref{im-normalize}
@@ -36,8 +38,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-threshold}
 @item @ref{im-add}
 @item @ref{im-add-channel}
-@item @ref{im-substract}
-@item @ref{im-substract-channel}
+@item @ref{im-subtract}
+@item @ref{im-subtract-channel}
 @item @ref{im-multiply}
 @item @ref{im-multiply-channel}
 @item @ref{im-divide}
@@ -120,6 +122,19 @@ Valid flipping @var{plane} values are:
 @item both
 @end table
 @end indentedblock
+@end deffn
+
+
+@anchor{im-inverse}
+@anchor{im-inverse-channel}
+@deffn Procedure im-inverse image
+@deffnx Procedure im-inverse-channel channel width height
+
+Returns a new inversed image or channel.
+
+Calculating the inverse of an @var{image} or a @var{channel} consist of
+applying the exponent function, @code{expt}, to all pixel values,
+raising them to the power of -1.
 @end deffn
 
 
@@ -253,53 +268,72 @@ to 255.0 if @var{#:bg} is @code{'dark}, and set to 0.0 if @var{#:bg} is
 
 @anchor{im-add}
 @anchor{im-add-channel}
-@deffn Procedure im-add image val
-@deffnx Procedure im-add-channel channel width height val
+@deffn Method im-add image val
+@deffnx Method im-add image image-2
+@deffnx Method im-add-channel channel width height val
+@deffnx Method im-add-channel channel width height channel-2
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel adds @var{val} to the
-corresponding original pixel value from @var{image} or
-@var{channel}. Results greater than 255.0 are set to 255.0
+Each pixel of the new image or channel respectively adds @var{val} or
+the corresponding pixel value from @var{image-2} to the (corresponding)
+original pixel value from @var{image} or @var{channel}.
 @end deffn
 
 
-@anchor{im-substract}
-@anchor{im-substract-channel}
-@deffn Procedure im-substract image val
-@deffnx Procedure im-substract-channel channel width height val
+@anchor{im-subtract}
+@anchor{im-subtract-channel}
+@deffn Method im-subtract image val
+@deffnx Method im-subtract image image-2
+@deffnx Method im-subtract-channel channel width height val
+@deffnx Method im-subtract-channel channel width height channel-2
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel substracts @var{val} to the
-corresponding original pixel value from @var{image} or
-@var{channel}. Results inferior to 0.0 are set to 0.0
+Each pixel of the new image or channel respectively subtracts @var{val}
+or the corresponding pixel value from @var{image-2} to the
+(corresponding) original pixel value from @var{image} or @var{channel}.
 @end deffn
 
 
 @anchor{im-multiply}
 @anchor{im-multiply-channel}
-@deffn Procedure im-multiply image val
-@deffnx Procedure im-multiply-channel channel width height val
+@deffn Method im-multiply image val
+@deffnx Method im-multiply image image-2
+@deffnx Method im-multiply-channel channel width height val
+@deffnx Method im-multiply-channel channel width height channel-2
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel multiplies the corresponding
-original pixel value from @var{image} or @var{channel} by
-@var{val}. Results greater than 255.0 are set to 255.0
+The scalar method multiplies each pixel of @var{image} or @var{channel}
+by @var{val}.  The matrix methods performs the linear algebra matrix
+multiplication of @var{image} by @var{image-2}, or @var{channel} by
+@var{channel-2}.  The matrix multiplication method will check that the
+number of lines of @var{image-2} is equal to the number of columns of
+@var{image}.
 @end deffn
 
 
 @anchor{im-divide}
 @anchor{im-divide-channel}
-@deffn Procedure im-divide image val
-@deffnx Procedure im-divide-channel channel width height val
+@deffn Method im-divide image val
+@deffnx Method im-divide image image-2
+@deffnx Method im-divide-channel channel width height val
+@deffnx Method im-divide-channel channel width height channel-2
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel divides the corresponding original
-pixel value from @var{image} or @var{channel} by @var{val}. Results
-inferior to 0.0 are set to 0.0
+The scalar method divides each pixel of @var{image} or @var{channel} by
+@var{val}.
+
+Technically speaking, there is no such thing as matrix division.
+Dividing a matrix by another matrix is an undefined function.  The
+closest equivalent is multiplying by the inverse of another matrix.
+
+So, the matrix methods performs the linear algebra matrix multiplication
+of @var{image} by the inverse of @var{image-2}, or @var{channel} by the
+inverse of @var{channel-2}.  It will check that the number of lines of
+@var{image-2} is equal to the number of columns of @var{image}.
 @end deffn
 
 
