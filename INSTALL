@@ -49,13 +49,12 @@ Guile-CV needs the following software to run:
 
 ** Quickstart
 
-Till Guile-CV has its Savannah own project pages, releases are
-uploaded here:
+Guile-CV releases are here:
 
-	http://download.savannah.gnu.org/releases/grip/guile-cv/
+	http://download.savannah.gnu.org/releases/guile-cv
 
-		guile-cv-0.1.3.tar.gz
-		guile-cv-0.1.3.tar.gz.sig
+		guile-cv-0.1.3.2.tar.gz
+		guile-cv-0.1.3.2.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -64,8 +63,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.1.3.tar.gz
-	cd guile-cv-0.1.3
+	tar zxf guile-cv-0.1.3.2.tar.gz
+	cd guile-cv-0.1.3.2
 	./configure [--prefix=/your/prefix]
 	make
 	make install
@@ -75,31 +74,29 @@ Happy Guile-CV!
 *** Notes
 
 [1] In the above configure step, --prefix=/your/prefix is optional. The
-    default value is /usr/local. As an example, you could use:
+    default value is /usr/local.
 
-		configure --prefix=/opt
+[2] To install Guile-CV, you must have write permissions to the
+    following directories:
 
-[2] To install Guile-CV, you must have write permissions for
-    $prefix, Guile’s global site and site-ccache directories.
+		$prefix and its subdirs
+		Guile’s global site directory
+		Guile's site ccache directory
 
-[3] Guile-CV’s modules are installed in Guile’s global site
-    directory. If you want to know its location, enter the following
-    expression in a terminal:
+	  You may check the above two latest directories location using:
 
 		guile -c "(display (%global-site-dir)) (newline)"
-
-[4] Guile-CV’s compiled modules are installed in the Guile’s site-ccache
-    directory. If you want to know its location, enter the following
-    expression in a terminal:
-
 		guile -c "(display (%site-ccache-dir)) (newline)"
 
-[5] Like for any other GNU Tool Chain compatible software, you may
-    install the documentation locally using make install-info, make
-    install-html and/or make install-pdf. The documentation is installed
-    in $prefix/share/doc/guile-cv
+    Guile-CV’s modules are installed in Guile’s global site directory.
+    Guile-CV’s compiled modules are installed in the Guile’s site-ccache
+    directory.
 
-[6] Last but not least :), Guile-CV comes with a tests suite, which we
+[3] Like for any other GNU Tool Chain compatible software, you may
+    install the documentation locally using make install-info, make
+    install-html and/or make install-pdf.
+
+[5] Last but not least :), Guile-CV comes with a tests suite, which we
     recommend you to run (especially before Reporting Bugs):
 
 		make check
