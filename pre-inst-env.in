@@ -60,7 +60,7 @@ else
     LD_LIBRARY_PATH=$top_srcdir/libguile-cv:$LD_LIBRARY_PATH
 fi
 
-echo $LD_LIBRARY_PATH
+## echo $LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
 
 TEST_IMAGES_PATH=$top_srcdir/doc/images
