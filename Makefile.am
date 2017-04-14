@@ -117,6 +117,7 @@ distclean-local:
 	rm -f test-suite/Makefile
 	rm -f test-suite/Makefile.in
 
+ACLOCAL_AMFLAGS = -I m4
 
 # * .PHONY: gen-pof:
 
