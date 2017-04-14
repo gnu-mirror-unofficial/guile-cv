@@ -58,7 +58,7 @@ Edit the above file and:
 Add the following module to the list of imported modules:
 
 @lisp
-@code{#:use-module (ice-9 pretty-print)}
+#:use-module (ice-9 pretty-print)
 @end lisp
 
 @item
