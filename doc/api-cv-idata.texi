@@ -70,8 +70,8 @@ others, the public interface of @code{(ice-9 match)}.
 @indentedblock
 @table @code
 @item @ref{im-make}
-@item @ref{im-make-channels}
 @item @ref{im-make-channel}
+@item @ref{im-make-channels}
 
 @item @ref{im-copy}
 @item @ref{im-copy-channel}
@@ -114,11 +114,11 @@ others, the public interface of @code{(ice-9 match)}.
 
 
 @anchor{im-make}
-@anchor{im-make-channels}
 @anchor{im-make-channel}
+@anchor{im-make-channels}
 @deffn Procedure im-make width height n [value]
-@deffnx Procedure im-make-channels width height n [value]
 @deffnx Procedure im-make-channel width height [value]
+@deffnx Procedure im-make-channels width height n [value]
 
 Returns a new image, list of channels or channel.
 
