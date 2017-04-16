@@ -32,6 +32,8 @@ DOC_IMAGES = \
 #	images/pp-17-label.png		\
 #	images/pp-17-label-all.png
 
+DOC_CSS = \
+	$(wildcard css/*)
 
 guile_cv_TEXINFOS = \
   version.texi			\
@@ -54,13 +56,18 @@ guile_cv_TEXINFOS = \
   api.texi			\
   indices.texi			\
   fdl.texi			\
-  $(DOC_IMAGES)
+  $(DOC_IMAGES)			\
+  $(DOC_CSS)
 
 nobase_doc_DATA = \
-	$(DOC_IMAGES)
+	$(DOC_IMAGES)		\
+	$(DOC_CSS)
 
 EXTRA_DIST = \
-	$(DOC_IMAGES)
+	$(DOC_IMAGES)		\
+	$(DOC_CSS)
+
+AM_MAKEINFOHTMLFLAGS = --css-ref=../css/manual.css
 
 printenv:
 	printf '$(DOC_IMAGES)\n'
