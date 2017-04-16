@@ -31,6 +31,7 @@
   #:use-module (system foreign)
   #:use-module (ice-9 match)
   #:use-module (ice-9 threads)
+  #:use-module (srfi srfi-1)
   #:use-module (cv init)
   #:use-module (cv support)
   #:use-module (cv idata)
@@ -191,32 +192,39 @@
        (error "Crop failed.")))))
 
 (define (im-padd-size width height left top right bottom)
-  (if (and-l (map (lambda (padd) (>= padd 0.0))
+  (if (and-l (map (lambda (padd) (>= padd 0))
 	       (list left top right bottom)))
       (list (+ left width right)
 	    (+ top height bottom))
       (error "Invalid padd value(s): " left top right bottom)))
 
-(define (im-padd image left top right bottom)
+(define* (im-padd image left top right bottom #:key (colour '(0.0 0.0 0.0)))
   (match image
     ((width height n-chan idata)
      (match (im-padd-size width height left top right bottom)
        ((new-w new-h)
 	(list new-w new-h n-chan
-              (let ((map-proc (if (and (> n-chan 1)
-                                       (%use-par-map)) par-map map)))
-		(map-proc (lambda (channel)
-			    (im-padd-channel channel width height left top right bottom
-					     #:new-w new-w #:new-h new-h))
-			  idata))))))))
+              (match idata
+                ((c)
+                 (list (im-padd-channel c width height left top right bottom
+                                        #:new-w new-w #:new-h new-h
+                                        #:value (/ (reduce + 0 colour) 3))))
+                ((r g b)
+                 (let ((map-proc (if (%use-par-map) par-map map)))
+                   (map-proc (lambda (chaco)
+                               (match chaco
+                                 ((channel value)
+                               (im-padd-channel channel width height left top right bottom
+                                                #:new-w new-w #:new-h new-h #:value value))))
+			  (zip idata colour)))))))))))
 
 (define* (im-padd-channel channel width height left top right bottom
-			  #:key (new-w #f) (new-h #f))
+			  #:key (new-w #f) (new-h #f) (value 0.0))
   (let ((to (if (and new-w new-h)
-		(im-make-channel new-w new-h)
+		(im-make-channel new-w new-h value)
 		(match (im-padd-size width height left top right bottom)
 		  ((new-w new-h)
-		   (im-make-channel new-w new-h))))))
+		   (im-make-channel new-w new-h value))))))
     (case (vigra-padd-channel channel to width height left top right bottom)
       ((0) to)
       (else

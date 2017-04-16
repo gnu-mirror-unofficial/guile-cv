@@ -190,12 +190,19 @@ raises an error.
 
 @anchor{im-padd}
 @anchor{im-padd-channel}
-@deffn Procedure im-padd image left top right bottom
+@deffn Procedure im-padd image left top right bottom [#:colour '(0.0 0.0 0.0)]
 @deffnx Procedure im-padd-channel channel width height left top right bottom @
-        [#:new-w #f] [#:new-h #f]
+        [#:new-w #f] [#:new-h #f] [#:value 0.0]
 
-Returns a new image, resulting of the padding of @var{image} by @var{left},
-@var{top}, @var{right} and @var{bottom} pixels initialized to 0.0 
+Returns a new image or channel, respectively padding @var{image} or
+@var{channel} by @var{left}, @var{top}, @var{right} and @var{bottom}
+pixels initialized respectively to @var{colour} or @var{value}. Note
+that when @code{im-padd} is called upon a @code{GREY} image,
+@var{colour} is reduced to its corresponding grey @var{value}:
+
+@lisp
+@code{(/ (reduce + 0 colour) 3)}
+@end lisp
 @end deffn
 
 
@@ -206,7 +213,7 @@ Returns a list, @code{(new-width new-height)}.
 
 Given the original image @var{width} and @var{height}, this procedure
 checks that @var{left}, @var{top}, @var{right} and @var{bottom} are
-@code{>= 0.0} and return a list, @code{(new-width new-height)},
+@code{>= 0} and return a list, @code{(new-width new-height)},
 otherwise, it raises an error.
 @end deffn
 
