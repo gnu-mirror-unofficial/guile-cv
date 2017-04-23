@@ -195,7 +195,7 @@
 		   (for-each (lambda (k)
 			       (let* ((chan-k (n-chan->symbol k))
 				      (channels (im-collect images chan-k)))
-				 (unless (f32vector-list=? channels prec)
+				 (unless (f32vector-list=? channels #:prec prec)
 				   (throw 'exit #f))))
 		       (iota n-chan))
 		   #t))

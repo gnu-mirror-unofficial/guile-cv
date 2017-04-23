@@ -37,6 +37,9 @@
 
   #:export (f32vector-min
 	    f32vector-max
+            f32vector-reduce
+            f32vector-mean
+            f32vector-std-dev
 	    f32vector-copy
 	    f32vector-complement
 	    f32vector-and-at-offset
@@ -53,8 +56,9 @@
             f32vector-matrix-multiply))
 
 
-(define* (f32vector-min v #:optional (prec 1.0e-4))
-  (let ((n-cell (f32vector-length v)))
+(define* (f32vector-min v #:key (prec 1.0e-4))
+  (let ((n-cell (f32vector-length v))
+        (pos -1))
     (case n-cell
       ((0) (error "Empty vector: " v))
       ((1) (f32vector-ref v 0))
@@ -62,13 +66,15 @@
        (let ((mini (f32vector-ref v 0)))
 	 (do ((i 1
 		 (+ i 1)))
-	     ((= i n-cell) mini)
+	     ((= i n-cell) (values mini pos))
 	   (let ((val (f32vector-ref v i)))
-	     (when (float<?  val mini prec)
-	       (set! mini val)))))))))
+	     (when (float<? val mini prec)
+	       (set! mini val)
+               (set! pos i)))))))))
 
-(define* (f32vector-max v #:optional (prec 1.0e-4))
-  (let ((n-cell (f32vector-length v)))
+(define* (f32vector-max v #:key (prec 1.0e-4))
+  (let ((n-cell (f32vector-length v))
+        (pos -1))
     (case n-cell
       ((0) (error "Empty vector: " v))
       ((1) (f32vector-ref v 0))
@@ -76,10 +82,35 @@
        (let ((maxi (f32vector-ref v 0)))
 	 (do ((i 1
 		 (+ i 1)))
-	     ((= i n-cell) maxi)
+	     ((= i n-cell) (values maxi pos))
 	   (let ((val (f32vector-ref v i)))
 	     (when (float>? val maxi)
-	       (set! maxi val)))))))))
+	       (set! maxi val)
+               (set! pos i)))))))))
+
+(define* (f32vector-reduce init op v #:key (n-cell #f))
+  (let ((n-cell (or n-cell
+                    (f32vector-length v)))
+        (result init))
+    (do ((i 0
+            (+ i 1)))
+        ((= i n-cell) result)
+      (set! result (op result (f32vector-ref v i))))))
+
+(define* (f32vector-mean v #:key (n-cell #f))
+  (let ((n-cell (f32vector-length v)))
+    (/ (f32vector-reduce 0 + v #:n-cell n-cell) n-cell)))
+
+(define* (f32vector-std-dev v #:key (n-cell #f) (mean #f))
+  (let* ((n-cell (or n-cell (f32vector-length v)))
+         (mean (or mean (f32vector-mean v #:n-cell n-cell)))
+         (deviations 0.0))
+    (do ((i 0
+            (+ i 1)))
+        ((= i n-cell)
+         (sqrt (/ deviations n-cell)))
+      (set! deviations
+            (+ deviations (expt (- (f32vector-ref v i) mean) 2))))))
 
 #!
 ;; nice but too slow
@@ -115,7 +146,7 @@
 		      (- of (f32vector-ref vector i))))))
 
 (define* (f32vector-and-at-offset vectors i
-				  #:optional (prec 1.0e-4))
+				  #:key (prec 1.0e-4))
   (let ((n-vec (length vectors))
 	(result #t))
     (do ((j 0
@@ -126,7 +157,7 @@
 	(set! result #f)))))
 
 (define* (f32vector-or-at-offset vectors i
-				 #:optional (prec 1.0e-4))
+				 #:key (prec 1.0e-4))
   (float>? (f32vector-sum-at-offset vectors i) 0.0 prec))
 
 (define (f32vector-sum-at-offset vectors i)
@@ -142,7 +173,7 @@
        n-vec)))
 
 (define* (f32vector=-at-offset? vectors i
-				#:optional (prec 1.0e-4))
+				#:key (prec 1.0e-4))
   ;; this procedure assumes:
   ;;   all vectors are of the same length
   ;;   vectors length > 0
@@ -159,7 +190,7 @@
 	(set! result #f)))))
 
 (define* (f32vector-list=? vectors
-			   #:optional (prec 1.0e-4))
+			   #:key (prec 1.0e-4))
   ;; this procedure assumes:
   ;;   all vectors are of the same length
   (match vectors
@@ -173,7 +204,7 @@
 		  (+ i 1)))
 	      ((or (= i n-cell)
 		   (not result)) result)
-	    (unless (f32vector=-at-offset? vectors i prec)
+	    (unless (f32vector=-at-offset? vectors i #:prec prec)
 	      (set! result #f)))))))
     ((vector) #t)
     (() #t)))
@@ -184,7 +215,7 @@
   (match vectors
     ((precision . rest)
      (if (number? precision)
-	 (f32vector-list=? rest precision)
+	 (f32vector-list=? rest #:prec precision)
 	 (f32vector-list=? vectors)))
     ((vector) #t)
     (() #t)))
@@ -223,7 +254,7 @@
       (when (f32vector-pred-at-offset? pred vectors i)
 	(set! result i)))))
 
-(define* (f32vector-count-distinct v #:optional (prec 1.0e-4))
+(define* (f32vector-count-distinct v #:key (prec 1.0e-4))
   (let ((n-cell (f32vector-length v)))
     (case n-cell
       ((0) (values 0 '()))

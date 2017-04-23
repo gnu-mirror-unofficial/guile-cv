@@ -80,6 +80,23 @@
     (assert-numeric-= 0 (f32vector-index pred2 v3 v4) 1.0e-1)
     (assert-false (f32vector-index pred3 v3 v4))))
 
+(define %v1 #f32(2.0 4.0 4.0 4.0 5.0 5.0 7.0 9.0))
+
+(define-method (test-f32vector-reduce (self <guile-cv-tests-support>))
+  (let ((v1 %v1))
+    (assert-numeric-= 40.0 (f32vector-reduce 0 + v1) 0)))
+
+(define-method (test-f32vector-mean (self <guile-cv-tests-support>))
+  (let* ((v1 %v1)
+         (mean (f32vector-mean v1)))
+    (assert-numeric-= 5.0 mean 0)))
+
+(define-method (test-f32vector-std-dev (self <guile-cv-tests-support>))
+  (let* ((v1 %v1)
+         (std-dev (f32vector-std-dev v1)))
+    (assert-numeric-= 2.0 std-dev 0)))
+
+
 (define-method (test-libguile-cv (self <guile-cv-tests-support>))
   (assert-true (= 1 (float->int 1.0)))
   (assert-true (= 1 (float->int 1.52)))
