@@ -1,15 +1,16 @@
-Guile-CV is covered under the terms of the GNU Lesser General Public
+GNU Guile-CV is covered under the terms of the GNU General Public
 License as published by the Free Software Foundation, either version 3
-of the License, or (at your option) any later version.  See
-COPYING.LESSER.
+of the License, or (at your option) any later version.  See COPYING.
 
 
 Images
 ======
 
-All images that comes with Guile-CV are:
+Unless otherwise specifed (here below for specific), all images that
+come with Guile-CV are:
 
-Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>
+Copyright (C) 2016 - 2017
+David Pirotte <david at altosw dot be>
 
 Permission is granted to copy, distribute and/or modify these images
 under the terms under the terms of the GNU General Public License as

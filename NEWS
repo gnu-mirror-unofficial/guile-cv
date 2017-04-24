@@ -5,9 +5,9 @@
 #+BEGIN_COMMENT
 
 Copyright (C) 2016 - 2017
-David Pirotte <david at altosw dot be>
+Free Software Foundation, Inc.
 
-This document is part of Guile-CV.
+This document is part of GNU Guile-CV.
 
 Copying and distribution of this file, with or without modification, are
 permitted in any medium without royalty provided the copyright notice

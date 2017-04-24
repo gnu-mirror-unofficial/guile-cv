@@ -5,9 +5,9 @@
 #+BEGIN_COMMENT
 
 Copyright (C) 2016 - 2017
-David Pirotte <david at altosw dot be>
+Free Software Foundation, Inc.
 
-This document is part of Guile-CV.
+This document is part of GNU Guile-CV.
 
 Copying and distribution of this file, with or without modification, are
 permitted in any medium without royalty provided the copyright notice
@@ -18,20 +18,20 @@ warranty.
 
 * Guile-CV
 
-Guile-CV [1]
+GNU Guile-CV [1]
 a Computer Vision functional programming library for Guile [2]
 
 ** Description
 
-Guile-CV is a Computer Vision functional programming library for the
-Guile Scheme language.  Guile-CV is based on Vigra (Vision with Generic
+GNU Guile-CV is a Computer Vision functional programming library for the
+Guile Scheme language.  GNU Guile-CV is based on Vigra (Vision with Generic
 Algorithms) [3].  It comprises a direct binding to Vigra_c [4] (a C
 wrapper to some of the Vigra functionality), and a higher level API
 written in Guile Scheme [5].
 
 ** What else
 
-Guile-CV is almost entirely written in Guile Scheme, though for
+GNU Guile-CV is almost entirely written in Guile Scheme, though for
 performance reasons, some basic operations are implemented in C (see
 libguile-cv if you are interested).  This C code is kept to the very
 strict minimum and _not_ part of the API: as Guile Scheme evolves,
@@ -39,21 +39,21 @@ targeting an AOT compiler, we may rewrite these in scheme at any moment.
 
 ** Savannah
 
-Guile-CV also has a Savannah [6] project page.
+GNU Guile-CV also has a Savannah project page [6].
 
 ** License
 
-Guile-CV is a free software, distributed under the terms of the GNU
-Lesser General Public License LGPLv3 or higher. You must be aware there
-is no warranty whatsoever for Guile-CV. This is described in full in
-the license.
+GNU Guile-CV is a free software, distributed under the terms of the GNU
+General Public License GPLv3 or higher. You must be aware there is no
+warranty whatsoever for GNU Guile-CV. This is described in full in the
+license.
 
 
-[1] http://www.nongnu.org/guile-cv/
+[1] http://www.gnu.org/software/guile-cv/
 [2] GNU Guile
     an interpreter and compiler for the Scheme [6] programming language
     http://www.gnu.org/software/guile/
 [3] http://ukoethe.github.io/vigra/
 [4] https://github.com/BSeppke/vigra_c/
 [5] http://schemers.org/
-[6] https://savannah.nongnu.org/projects/guile-cv/
+[6] https://savannah.gnu.org/projects/guile-cv/
