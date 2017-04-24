@@ -185,14 +185,14 @@ Guile-CV uses the following mailing list:
 @itemize @bullet
 
 @item
-guile-user at gnu dot org is for general user help and discussion.
+@value{GUILE-USER} is for general user help and discussion.
 
 @item
-guile-devel at gnu dot org is used to discuss most aspects of Guile-CV,
+@value{GUILE-DEVEL} is used to discuss most aspects of Guile-CV,
 including development and enhancement requests.
 
 @item
-bug-guile-cv at nongnu dot org is used for Guile-CV bug reports.
+@value{GUILE-CV-BUGS} is used for Guile-CV bug reports.
 
 @end itemize
 
@@ -203,9 +203,9 @@ thanks!
 
 @subheading IRC
 
-Most of the time you can find me on irc, channel @emph{#guile},
-@emph{#guix} and @emph{#scheme} on @emph{irc.freenode.net},
-@emph{#clutter} and @emph{#introspection} on @emph{irc.gnome.org}, under
+Most of the time you can find me on irc, channel @code{#guile},
+@code{#guix} and @code{#scheme} on @emph{irc.freenode.net},
+@code{#clutter} and @code{#introspection} on @emph{irc.gnome.org}, under
 the nickname @strong{daviid}.
 
 
@@ -213,11 +213,10 @@ the nickname @strong{daviid}.
 @node Reporting Bugs
 @section Reporting Bugs
 
-Guile-CV has a @uref{@value{UGUILE-CV-BUGS-TRACKER}, bugs tracker}. You
-may send your bugs report here:
+You may send your Guile-CV bugs report here:
 
 @itemize @bullet
-@item bug-guile-cv at nongnu dot org
+@item @value{GUILE-CV-BUGS}
 @end itemize
 
 You can (un)subscribe to the bugs report list by following instructions

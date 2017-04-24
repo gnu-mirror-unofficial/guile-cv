@@ -11,16 +11,21 @@
 @set UGUILE http://www.gnu.org/software/guile
 @set UGUILE-LIB http://www.nongnu.org/guile-lib
 
+@set GUILE-USER @email{guile-user@@gnu.org}
+@set GUILE-DEVEL @email{guile-devel@@gnu.org}
+
 @set USCHEME http://schemers.org
 
 @set UGUILE-CV http://www.gnu.org/software/guile-cv
 @set UGUILE-CV-SAVANNAH http://savannah.gnu.org/projects/guile-cv 
 @set UGUILE-CV-RELEASES http://ftp.gnu.org/gnu/guile-cv
-@set UGUILE-CV-LATEST http://ftp.gnu.org/gnu/guile-cv
+@set UGUILE-CV-LATEST http://ftp.gnu.org/gnu/guile-cv-@value{VERSION}.tar.gz
+
+@set GUILE-CV-BUGS @email{bugs-guile-cv@@gnu.org}
 
 @set UGUILE-CV-LISTINFO FIXME
 @set UGUILE-CV-BUGS-TRACKER FIXME
-@set UGUILE-CV-BUGS-LISTINFO FIXME
+@set UGUILE-CV-BUGS-LISTINFO https://lists.gnu.org/mailman/listinfo/bug-guile-cv
 
 @set UEMACS https://www.gnu.org/software/emacs
 @set UGEISER http://www.nongnu.org/geiser
