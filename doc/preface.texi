@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
-@c This is part of the Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2017 David Pirotte <david at altosw dot be>.
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -38,15 +38,13 @@ Guile-CV} web site to find out how to get involved.
 @cindex GPL
 @cindex license
 
-Guile-CV is Free Software.  Guile-CV is copyrighted, not
-public domain, and there are restrictions on its distribution or
-redistribution:
+Guile-CV is Free Software. Guile-CV is copyrighted, not public domain,
+and there are restrictions on its distribution or redistribution:
 
 @itemize @bullet
 @item
-Guile-CV and supporting files are published under the terms of
-the GNU Lesser General Public License version 3 or later.  See the file
-@file{LICENSE}.
+Guile-CV and supporting files are published under the terms of the GNU
+General Public License version 3 or later.  See the file @file{LICENSE}.
 
 @item
 This manual is published under the terms of the GNU Free Documentation
