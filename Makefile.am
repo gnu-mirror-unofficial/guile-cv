@@ -113,9 +113,16 @@ distclean-local:
 	rm -f doc/Makefile
 	rm -f doc/Makefile.in
 	rm -f doc/stamp-vti
+	rm -f doc/version.texi
 	rm -f cv/*~
 	rm -f test-suite/Makefile
 	rm -f test-suite/Makefile.in
+	rm -f m4/libtool.m4
+	rm -f m4/ltoptions.m4
+	rm -f m4/ltsugar.m4
+	rm -f m4/ltversion.m4
+	rm -f m4/lt~obsolete.m4
+
 
 ACLOCAL_AMFLAGS = -I m4
 
