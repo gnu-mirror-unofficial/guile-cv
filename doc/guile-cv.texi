@@ -1,4 +1,4 @@
-input texinfo
+\input texinfo
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
 @c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
