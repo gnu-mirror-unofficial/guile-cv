@@ -56,10 +56,10 @@ the algorithm uses 8-connectivity to define a neighborhood, but this can
 be changed through the keyword argument @var{#:con}, which can be either
 4 or 8.
 
-@c @ifnottex
-@image{../images/pp-17-bf,,,,png}
-@image{../images/pp-17-label,,,,png}
-@image{../images/pp-17-label-all,,,,png}
+@ifnottex
+@image{images/pp-17-bf,,,pp-17-bf,png}
+@image{images/pp-17-label,,,pp-17-bf-label,png}
+@image{images/pp-17-label-all,,,pp-17-bf-label-all,png}
 
 Here above, left being the original image, you can see the difference
 between @code{im-label} (1 object) and @code{im-label-all} (6 objects).
@@ -67,7 +67,7 @@ Note that we had to run @code{im-threshold} on the original image first
 (all labeling procedures take a binary image (or channel) as their
 mandatory argument), for the record, we used @code{128} as the threshold
 value.
-@c @end ifnottex
+@end ifnottex
 @end deffn
 
 
