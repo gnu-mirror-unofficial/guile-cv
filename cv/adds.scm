@@ -67,7 +67,7 @@
             im-particles
             im-particle-clean
             im-histogram
-            im-glue))
+            im-compose))
 
 
 (g-export im-add
@@ -609,7 +609,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                                                     %h-height-grey)))
                                   0 0 0 %hl-padd #:colour %h-padd-colour))
               (legend (make-histogram-legend 'grey)))
-          (im-padd (im-glue histogram legend 'below 'left)
+          (im-padd (im-compose histogram legend 'below 'left)
                    %hl-padd 13 %hl-padd %hl-padd #:colour %h-padd-colour)))))))
 
 (define (im-histogram-rgb image)
@@ -637,9 +637,9 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                 (im-histogram-rgb-with-legend h-channel c-type))))))
                   (zip h-channels '(red green blue)))
          ((hr hg hb)
-          (im-padd (im-glue hr
-                            (im-glue hg
-                                     hb 'below 'left) 'below 'left)
+          (im-padd (im-compose hr
+                               (im-compose hg
+                                           hb 'below 'left) 'below 'left)
                    hl-padd 0 hl-padd hl-padd #:colour h-padd-colour)))))))
 
 (define (im-histogram-rgb-with-legend h-channel c-type)
@@ -650,9 +650,9 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                       (im-copy-channel h-channel width height)
                       (im-copy-channel h-channel width height)))
         (legend (make-histogram-legend c-type)))
-    (im-glue (im-padd (list width height 3 idata)
-                      0 0 0 %hl-padd #:colour h-padd-colour)
-             legend 'below 'left)))
+    (im-compose (im-padd (list width height 3 idata)
+                         0 0 0 %hl-padd #:colour h-padd-colour)
+                legend 'below 'left)))
 
 #!
 (do ((i 0
@@ -733,10 +733,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 
 ;;;
-;;; Glue
+;;; Compose
 ;;;
 
-(define (im-glue img-1 img-2 position alignment)
+(define (im-compose img-1 img-2 position alignment)
   (match img-1
     ((width-1 height-1 n-chan-1 idata-1)
      (match img-2
@@ -744,19 +744,19 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
         (if (= n-chan-1 n-chan-2)
             (case position
               ((above)
-               (im-glue-below img-2 img-1 alignment))
+               (im-compose-below img-2 img-1 alignment))
               ((below)
-               (im-glue-below img-1 img-2 alignment))
+               (im-compose-below img-1 img-2 alignment))
               ((left)
-               (im-glue-right img-2 img-1 alignment))
+               (im-compose-right img-2 img-1 alignment))
               ((right)
-               (im-glue-right img-1 img-2 alignment)))
+               (im-compose-right img-1 img-2 alignment)))
             (error "Channel number mismatch: " n-chan-1 n-chan-2)))))))
 
-(define (im-glue-above img-1 img-2 alignment)
-  (im-glue-below img-2 img-1 alignment))
+(define (im-compose-above img-1 img-2 alignment)
+  (im-compose-below img-2 img-1 alignment))
 
-(define (im-glue-below img-1 img-2 alignment)
+(define (im-compose-below img-1 img-2 alignment)
   (match img-1
     ((width-1 height-1 n-chan-1 idata-1)
      (match img-2
@@ -767,15 +767,15 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                 (map-proc (lambda (channels)
                             (match channels
                               ((c1 c2)
-                               (im-glue-below-channel c1 width-1 height-1
+                               (im-compose-below-channel c1 width-1 height-1
                                                       c2 width-2 height-2))))
                     (zip idata-1 idata-2)))))))))
 
-(define (im-glue-above-channel c1 width-1 height-1
+(define (im-compose-above-channel c1 width-1 height-1
                                c2 width-2 height-2)
-  (im-glue-below-channel c2 width-2 height-2 c1 width-1 height-1))
+  (im-compose-below-channel c2 width-2 height-2 c1 width-1 height-1))
 
-(define (im-glue-below-channel c1 width-1 height-1
+(define (im-compose-below-channel c1 width-1 height-1
                                c2 width-2 height-2)
   (let ((n-cell-1 (* width-1 height-1))
         (n-cell-2 (* width-2 height-2))
@@ -790,10 +790,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (f32vector-set! to (+ i n-cell-1) (f32vector-ref c2 i)))
     to))
 
-(define (im-glue-left img-1 img-2 alignment)
-  (im-glue-right img-2 img-1 alignment))
+(define (im-compose-left img-1 img-2 alignment)
+  (im-compose-right img-2 img-1 alignment))
 
-(define (im-glue-right img-1 img-2 alignment)
+(define (im-compose-right img-1 img-2 alignment)
   (match img-1
     ((width-1 height-1 n-chan-1 idata-1)
      (match img-2
@@ -804,16 +804,16 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                 (map-proc (lambda (channels)
                             (match channels
                               ((c1 c2)
-                               (im-glue-right-channel c1 width-1 height-1
+                               (im-compose-right-channel c1 width-1 height-1
                                                       c2 width-2 height-2))))
                     (zip idata-1 idata-2)))))))))
 
-(define (im-glue-left-channel c1 width-1 height-1
-                              c2 width-2 height-2)
-  (im-glue-right-channel c2 width-2 height-2 c1 width-1 height-1))
+(define (im-compose-left-channel c1 width-1 height-1
+                                 c2 width-2 height-2)
+  (im-compose-right-channel c2 width-2 height-2 c1 width-1 height-1))
 
-(define (im-glue-right-channel c1 width-1 height-1
-                               c2 width-2 height-2)
+(define (im-compose-right-channel c1 width-1 height-1
+                                  c2 width-2 height-2)
   (let* ((to-width (+ width-1 width-2))
          (to (im-make-channel to-width height-1)))
     (do ((i 0
