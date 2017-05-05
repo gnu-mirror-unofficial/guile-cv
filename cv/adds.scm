@@ -637,8 +637,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                 (im-histogram-rgb-with-legend h-channel c-type))))))
                   (zip h-channels '(red green blue)))
          ((hr hg hb)
-          (im-padd (im-glue hr (im-glue hg hb 'below 'left) 'below 'left)
-                   hl-padd hl-padd hl-padd hl-padd #:colour h-padd-colour)))))))
+          (im-padd (im-glue hr
+                            (im-glue hg
+                                     hb 'below 'left) 'below 'left)
+                   hl-padd 0 hl-padd hl-padd #:colour h-padd-colour)))))))
 
 (define (im-histogram-rgb-with-legend h-channel c-type)
   (let* ((width %h-width)
@@ -648,7 +650,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                       (im-copy-channel h-channel width height)
                       (im-copy-channel h-channel width height)))
         (legend (make-histogram-legend c-type)))
-    (im-glue (im-padd (list width height 3 idata) 0 0 0 %hl-padd #:colour h-padd-colour)
+    (im-glue (im-padd (list width height 3 idata)
+                      0 0 0 %hl-padd #:colour h-padd-colour)
              legend 'below 'left)))
 
 #!
@@ -743,7 +746,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
               ((above)
                (im-glue-below img-2 img-1 alignment))
               ((below)
-               (im-glue-below img-1 img-2 alignment)))
+               (im-glue-below img-1 img-2 alignment))
+              ((left)
+               (im-glue-right img-2 img-1 alignment))
+              ((right)
+               (im-glue-right img-1 img-2 alignment)))
             (error "Channel number mismatch: " n-chan-1 n-chan-2)))))))
 
 (define (im-glue-above img-1 img-2 alignment)
@@ -781,4 +788,47 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
             (+ i 1)))
         ((= i n-cell-2))
       (f32vector-set! to (+ i n-cell-1) (f32vector-ref c2 i)))
+    to))
+
+(define (im-glue-left img-1 img-2 alignment)
+  (im-glue-right img-2 img-1 alignment))
+
+(define (im-glue-right img-1 img-2 alignment)
+  (match img-1
+    ((width-1 height-1 n-chan-1 idata-1)
+     (match img-2
+       ((width-2 height-2 n-chan-2 idata-2)
+        (list (+ width-1 width-2) height-1 n-chan-1
+              (let ((map-proc (if (and (> n-chan-1 1)
+                                       (%use-par-map)) par-map map)))
+                (map-proc (lambda (channels)
+                            (match channels
+                              ((c1 c2)
+                               (im-glue-right-channel c1 width-1 height-1
+                                                      c2 width-2 height-2))))
+                    (zip idata-1 idata-2)))))))))
+
+(define (im-glue-left-channel c1 width-1 height-1
+                              c2 width-2 height-2)
+  (im-glue-right-channel c2 width-2 height-2 c1 width-1 height-1))
+
+(define (im-glue-right-channel c1 width-1 height-1
+                               c2 width-2 height-2)
+  (let* ((to-width (+ width-1 width-2))
+         (to (im-make-channel to-width height-1)))
+    (do ((i 0
+            (+ i 1)))
+        ((= i height-1))
+      (do ((j 0
+              (+ j 1)))
+          ((= j width-1))
+        (f32vector-set! to
+                        (+ (* i to-width) j)
+                        (f32vector-ref c1 (+ (* i width-1) j))))
+      (do ((j 0
+              (+ j 1)))
+          ((= j width-2))
+        (f32vector-set! to
+                        (+ (* i to-width) (+ j width-1))
+                        (f32vector-ref c2 (+ (* i width-2) j)))))
     to))
