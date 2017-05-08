@@ -51,7 +51,7 @@ Guile-CV needs the following software to run:
 
 Guile-CV releases are here:
 
-	http://download.savannah.gnu.org/releases/guile-cv
+	http://ftp.gnu.org/gnu/guile-cv/
 
 		guile-cv-0.1.3.2.tar.gz
 		guile-cv-0.1.3.2.tar.gz.sig
