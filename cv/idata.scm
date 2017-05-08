@@ -188,7 +188,7 @@
 	((width height n-chan _)
 	 (if (and (apply = (cons width (im-collect rest 'width)))
 		  (apply = (cons height (im-collect rest 'height)))
-		  (apply = (im-collect rest 'n-channel)))
+		  (apply = (cons n-chan (im-collect rest 'n-channel))))
 	     (catch 'exit
 	       (lambda ()
 		 (let ((n-cell (* width height)))
