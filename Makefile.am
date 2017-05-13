@@ -50,6 +50,7 @@ SOURCES = \
 	cv/segmentation.scm			\
 	cv/properties.scm			\
 	cv/adds.scm				\
+	cv/histogram.scm			\
 	cv/utils.scm				\
 	cv.scm
 

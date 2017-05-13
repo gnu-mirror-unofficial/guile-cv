@@ -66,7 +66,6 @@
             im-scrap
             im-particles
             im-particle-clean
-            im-histogram
             im-compose))
 
 
@@ -580,161 +579,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 
 ;;;
-;;; Histograms
-;;;
-
-(define %h-width 256)
-(define %h-height-grey 130)
-(define %h-height-rgb 80)
-(define %h-padd 11)
-(define %h-padd-colour '(255 255 255))
-
-(define %hl-height 14)
-(define %hl-padd 2)
-
-(define (im-histogram image)
-  (case (im-n-channel image)
-    ((1) (im-histogram-grey image))
-    ((3) (im-histogram-rgb image))
-    (else
-     (error "Not a GREY not an RGB image."))))
-
-(define (im-histogram-grey image)
-  (match image
-    ((width height n-chan idata)
-     (match idata
-       ((channel)
-        (let ((histogram (im-padd (list %h-width %h-height-grey n-chan
-                                        (list (im-histogram-channel channel width height
-                                                                    %h-height-grey)))
-                                  0 0 0 %hl-padd #:colour %h-padd-colour))
-              (legend (make-histogram-legend 'grey)))
-          (im-padd (im-compose histogram legend 'below 'left)
-                   %hl-padd 13 %hl-padd %hl-padd #:colour %h-padd-colour)))))))
-
-(define (im-histogram-rgb image)
-  (match image
-    ((width height n-chan idata)
-     (let* ((h-padd %h-padd) ;; pixels
-            (h-padd-colour %h-padd-colour)
-            (hl-padd %hl-padd)
-            (map-proc (if (%use-par-map) par-map map))
-            (h-channels
-             (map-proc (lambda (channel)
-                         (im-histogram-channel channel width height %h-height-rgb))
-                 idata)))
-       (match (map-proc (lambda (h-channel-c-type)
-                          (match h-channel-c-type
-                            ((h-channel c-type)
-                             (case c-type
-                               ((red)
-                                (im-padd (im-histogram-rgb-with-legend h-channel c-type)
-                                         0 h-padd 0 h-padd #:colour h-padd-colour))
-                               ((green)
-                                (im-padd (im-histogram-rgb-with-legend h-channel c-type)
-                                         0 0 0 h-padd #:colour h-padd-colour))
-                               ((blue)
-                                (im-histogram-rgb-with-legend h-channel c-type))))))
-                  (zip h-channels '(red green blue)))
-         ((hr hg hb)
-          (im-padd (im-compose hr
-                               (im-compose hg
-                                           hb 'below 'left) 'below 'left)
-                   hl-padd 0 hl-padd hl-padd #:colour h-padd-colour)))))))
-
-(define (im-histogram-rgb-with-legend h-channel c-type)
-  (let* ((width %h-width)
-         (height %h-height-rgb)
-         (h-padd-colour %h-padd-colour)
-         (idata (list h-channel
-                      (im-copy-channel h-channel width height)
-                      (im-copy-channel h-channel width height)))
-        (legend (make-histogram-legend c-type)))
-    (im-compose (im-padd (list width height 3 idata)
-                         0 0 0 %hl-padd #:colour h-padd-colour)
-                legend 'below 'left)))
-
-#!
-(do ((i 0
-        (+ i 1)))
-    ((= i n-grey))
-  (f32vector-set! h-vals i
-                  (/ (f32vector-ref h-vals i) n-cell)))
-!#
-
-(define (im-histogram-channel channel width height hi-height)
-  (let* ((n-grey 256)
-         (n-cell (* width height))
-         (h-vals (make-f32vector n-grey 0.0)))
-    (do ((i 0
-            (+ i 1)))
-        ((= i n-cell))
-      (let ((val #;(inexact->exact (f32vector-ref channel i))
-             (float->int (f32vector-ref channel i))))
-        (f32vector-set! h-vals val
-                        (+ (f32vector-ref h-vals val) 1))))
-    (let ((c-min (f32vector-min channel))
-          (c-max (f32vector-max channel))
-          (c-mean (float-round (f32vector-mean channel #:n-cell n-cell) 3))
-          (c-std-dev (float-round (f32vector-std-dev channel #:n-cell n-cell) 3)))
-      (receive (maxi mode)
-          (f32vector-max h-vals)
-        (values (make-histogram-channel h-vals hi-height)
-                n-cell
-                c-min
-                c-max
-                c-mean
-                c-std-dev
-                h-vals
-                mode
-                maxi)))))
-
-(define (make-histogram-channel h-vals hi-height)
-  (let* ((hi-width %h-width)
-         (h-max (f32vector-max h-vals))
-         (hi-max (- hi-height 1))
-         (factor (/ hi-max h-max))
-         (hi-chan (im-make-channel hi-width hi-height 255.0)))
-    (do ((k 0
-            (+ k 1)))
-        ((= k 256))
-      (let* ((h-val (f32vector-ref h-vals k))
-             (hi-val (float->int (* h-val factor)))
-             (start #;(if (= hi-val 0) hi-height (- hi-max hi-val))
-              (- hi-height hi-val)))
-        (do ((i start
-                (+ i 1)))
-            ((= i hi-height))
-          (f32vector-set! hi-chan (+ (* i hi-width) k) 0.0))))
-    hi-chan))
-
-(define* (make-histogram-legend #:optional (type 'grey))
-  (let* ((hl-width %h-width)
-         (hl-height %hl-height)
-         (hl-chan (im-make-channel hl-width hl-height)))
-    (do ((k 0
-            (+ k 1)))
-        ((= k 256))
-      (do ((i 0
-              (+ i 1)))
-          ((= i hl-height))
-        (f32vector-set! hl-chan (+ (* i hl-width) k) k)))
-    (case type
-      ((grey)
-       (list 256 14 1 (list hl-chan)))
-      (else
-       (let ((ec1 (im-make-channel hl-width hl-height))
-             (ec2 (im-make-channel hl-width hl-height)))
-         (list 256 14 3
-               (case type
-                 ((red) (list hl-chan ec1 ec2))
-                 ((green) (list ec1 hl-chan ec2))
-                 ((blue) (list ec1 ec2 hl-chan)))))))))
-
-
-;;;
 ;;; Compose
 ;;;
+
+#;(define (im-compose position alignment . images)
+  (match images
+    ((image . rest)
+     (match image
+       ((width height n-chan _)
+        (if (apply = (cons n-chan (im-collect rest 'n-channel)))
+            (let ((map-proc (if (and (> n-chan 1)
+                                     (%use-par-map)) par-map map)))
+              (map-proc (lambda (channels)
+                          (im-compose-channel width height init-val))
+                  (iota n-chan)))
+            (error "Channel number mismatch")))))
+    ((image) image)
+    (()
+     (error "The list of images to compose can't be empty"))))
 
 (define (im-compose img-1 img-2 position alignment)
   (match img-1
@@ -768,15 +630,15 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                             (match channels
                               ((c1 c2)
                                (im-compose-below-channel c1 width-1 height-1
-                                                      c2 width-2 height-2))))
+                                                         c2 width-2 height-2))))
                     (zip idata-1 idata-2)))))))))
 
 (define (im-compose-above-channel c1 width-1 height-1
-                               c2 width-2 height-2)
+                                  c2 width-2 height-2)
   (im-compose-below-channel c2 width-2 height-2 c1 width-1 height-1))
 
 (define (im-compose-below-channel c1 width-1 height-1
-                               c2 width-2 height-2)
+                                  c2 width-2 height-2)
   (let ((n-cell-1 (* width-1 height-1))
         (n-cell-2 (* width-2 height-2))
         (to (im-make-channel width-1 (+ height-1 height-2))))
