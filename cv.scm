@@ -54,6 +54,7 @@
   #:use-module (cv segmentation)
   #:use-module (cv properties)
   #:use-module (cv adds)
+  #:use-module (cv compose)
   #:use-module (cv histogram)
   #:use-module (cv utils)
 
@@ -92,5 +93,6 @@
 			      (cv segmentation)
                               (cv properties)
 			      (cv adds)
+                              (cv compose)
                               (cv histogram)
 			      (cv utils)))

@@ -40,6 +40,7 @@
   #:use-module (cv impex)
   #:use-module (cv imgproc)
   #:use-module (cv adds)
+  #:use-module (cv compose)
   
   #:duplicates (merge-generics
 		replace
