@@ -94,14 +94,8 @@
                           (iota 2))))
           (match (apply append items)
             ((h-title h-legend histogram h-vals h-table)
-             (values (im-compose (im-padd h-title
-                                          0 0 0 13 #:colour '(255 255 255))
-                                 (im-compose (im-compose histogram
-                                                         h-legend 'below 'left)
-                                             (im-padd h-table
-                                                      0 0 0 2 #:colour '(255 255 255))
-                                             'below 'left)
-                                 'below 'left)
+             (values (im-compose 'below 'center #:colour %h-padd-colour
+                                 h-title h-legend histogram h-table)
                      h-vals)))))))))
 
 (define* (im-histogram-rgb image #:key (subtitle "Untitled"))
@@ -142,29 +136,25 @@
                                    ((blue)
                                     (im-histogram-rgb-with-legend h-channel c-type))))))
                       (zip h-channels '(red green blue)))
-             ((hr hg hb)
-              (let ((histogram (im-compose hr
-                                           (im-compose hg
-                                                       hb 'below 'left) 'below 'left)))
-                (im-compose h-title
-                            (im-compose histogram
-                                        (im-padd h-table
-                                                 0 0 0 2 #:colour '(255 255 255))
-                                        'below 'left)
-                            'below 'left))))))
+             ((h-red h-green h-blue)
+              (im-compose 'below 'center #:colour h-padd-colour
+                          h-title
+                          h-red
+                          h-green
+                          h-blue
+                          h-table)))))
         h-vals)))))
 
 (define (im-histogram-rgb-with-legend h-channel c-type)
   (let* ((width %h-width)
          (height %h-height-rgb)
-         (h-padd-colour %h-padd-colour)
          (idata (list h-channel
                       (im-copy-channel h-channel width height)
                       (im-copy-channel h-channel width height)))
         (legend (make-histogram-legend c-type)))
-    (im-compose (im-padd (list width height 3 idata)
-                         13 0 13 0 #:colour h-padd-colour)
-                legend 'below 'left)))
+    (im-compose 'below 'center #:colour %h-padd-colour
+                (list width height 3 idata)
+                legend)))
 
 (define (im-histogram-channel channel width height hi-height)
   (let* ((n-grey 256)
@@ -250,7 +240,8 @@
   (set! make-histogram-legend
         (lambda* (#:optional (type 'grey))
           (or (assq-ref type h-legend-cache)
-              (let* ((header (let* ((hl-width %h-width)
+              (let* ((h-padd-colour %h-padd-colour)
+                     (header (let* ((hl-width %h-width)
                                     (hl-height %hl-height)
                                     (hl-chan (im-make-channel hl-width hl-height)))
                                (do ((k 0
@@ -275,24 +266,24 @@
                                 (im-rgb->grey (make-histogram-legend-footer)))
                                (else
                                 (make-histogram-legend-footer))))
-                     (h-legend (im-compose (im-padd header 13 2 13 2
-                                                    #:colour '(255 255 255))
-                                           footer 'below 'left)))
+                     (h-legend (im-compose 'below 'center #:colour h-padd-colour
+                                           (im-padd header 13 2 13 2 #:colour h-padd-colour)
+                                           footer)))
                 (set! h-legend-cache
                       (assq-set! h-legend-cache type h-legend))
                 h-legend)))))
 
 (define (make-histogram-legend-footer)
-  (let ((n0 (im-load (latex-pdftoppm
+  (let ((h-padd-colour %h-padd-colour)
+        (n0 (im-load (latex-pdftoppm
                       (latex-compile
                        (latex-write-text %latex-cache "0")))))
         (n255 (im-load (latex-pdftoppm
                         (latex-compile
                          (latex-write-text %latex-cache "255"))))))
-    (im-compose (im-padd n0
-                         5 0 229 0 #:colour '(255 255 255))
-                n255
-                'right 'left)))
+    (im-compose 'right 'top #:colour h-padd-colour
+                (im-padd n0 5 0 229 0 #:colour h-padd-colour)
+                n255)))
 
 (define (make-histogram-table vals)
   (let ((table (im-load (latex-pdftoppm
