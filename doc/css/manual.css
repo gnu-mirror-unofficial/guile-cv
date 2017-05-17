@@ -65,6 +65,8 @@ a { /* add :link for external links */
     text-decoration: none; /* don't underline links by default */
     outline-style: none;   /* don't put dotted box around clicked links */
     color: #547eaa;
+    !color: #7a9b8f;
+    !color: #6c8c80;
 }
 
 a:hover {
@@ -73,6 +75,7 @@ a:hover {
 
 a code {
     color: #547eaa;
+    !color: #6c8c80;
 }
 
 /*
