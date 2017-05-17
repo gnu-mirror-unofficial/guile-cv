@@ -178,7 +178,7 @@ make check
 @section Contact
 
 
-@subheading Mailing list
+@subheading Mailing lists
 
 Guile-CV uses the following mailing list:
 
@@ -191,8 +191,8 @@ Guile-CV uses the following mailing list:
 @value{GUILE-DEVEL} is used to discuss most aspects of Guile-CV,
 including development and enhancement requests.
 
-@item
-@value{GUILE-CV-BUGS} is used for Guile-CV bug reports.
+@c @item
+@c @value{GUILE-CV-BUGS} is used for Guile-CV bug reports.
 
 @end itemize
 
@@ -213,7 +213,7 @@ the nickname @strong{daviid}.
 @node Reporting Bugs
 @section Reporting Bugs
 
-You may send your Guile-CV bugs report here:
+Guile-CV uses the following bug reports mailing list:
 
 @itemize @bullet
 @item @value{GUILE-CV-BUGS}
