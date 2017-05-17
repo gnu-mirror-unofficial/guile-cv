@@ -56,6 +56,18 @@
 	      (iota n-cell))))))
     image))
 
+(define (make-test-image-grey w h)
+  (let ((image (im-make w h 1))
+	(n-cell (* w h)))
+    (match image
+      ((width height n-chan idata)
+       (match idata
+	 ((c)
+	  (for-each (lambda (i)
+		      (f32vector-set! c i (* i 1.0)))
+	      (iota n-cell))))))
+    image))
+
 (define (make-test-image-grey type)
     (let* ((img (im-make 3 3 1))
 	 (chan (im-channel img 0)))
