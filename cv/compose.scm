@@ -32,11 +32,14 @@
   #:use-module (ice-9 match)
   #:use-module (ice-9 receive)
   #:use-module (ice-9 threads)
+  #:use-module (ice-9 pretty-print)
   #:use-module (srfi srfi-1)
   #:use-module (search basic)
   #:use-module (cv init)
   #:use-module (cv support)
   #:use-module (cv idata)
+  #:use-module (cv imgproc)
+  #:use-module (cv adds)
   
   #:duplicates (merge-generics
 		replace
@@ -51,115 +54,163 @@
 ;;; Compose
 ;;;
 
-#;(define (im-compose position alignment . images)
-  (match images
-    ((image . rest)
-     (match image
-       ((width height n-chan _)
-        (if (apply = (cons n-chan (im-collect rest 'n-channel)))
-            (let ((map-proc (if (and (> n-chan 1)
-                                     (%use-par-map)) par-map map)))
-              (map-proc (lambda (channels)
-                          (im-compose-channel width height init-val))
-                  (iota n-chan)))
-            (error "Channel number mismatch")))))
-    ((image) image)
-    (()
-     (error "The list of images to compose can't be empty"))))
+(define* (im-compose position alignment #:key (colour '(0 0 0)) . images)
+  ;; ... when #:key is used together with a rest argument, the keyword
+  ;; parameters in a call all remain in the rest list. This is the same
+  ;; as Common Lisp ...
+  ;; =>
+  ;; so let's make sure images does not include the kw
+  (let ((images (match images
+                  ((#:colour val . rest) rest)
+                  (else
+                   images))))
+    (match images
+      ((image . rest)
+       (match image
+         ((_ _ n-chan _)
+          (if (apply = (im-collect images 'n-channel))
+              (let* ((map-proc (if (and (> n-chan 1)
+                                        (%use-par-map)) par-map map))
+                     (composed-channels
+                      (map-proc (lambda (chaval)
+                                  (match chaval
+                                    ((channels value)
+                                     (im-compose-channels position
+                                                          alignment
+                                                          channels
+                                                          (im-collect images 'width)
+                                                          (im-collect images 'height)
+                                                          #:value value))))
+                          (zip (apply zip (im-collect images 'channels))
+                               (if (> n-chan 1)
+                                   colour
+                                   (list (/ (reduce + 0 colour) 3)))))))
+                (match (car composed-channels)
+                  ((width height _)
+                   (list width height n-chan
+                         (map (lambda (item)
+                                (match item
+                                  ((_ _ c-chan) c-chan)))
+                           composed-channels)))))
+              (error "Channel number mismatch")))))
+      ((image) image)
+      (()
+       (error "The list of images to compose can't be empty")))))
 
-(define (im-compose img-1 img-2 position alignment)
-  (match img-1
-    ((width-1 height-1 n-chan-1 idata-1)
-     (match img-2
-       ((width-2 height-2 n-chan-2 idata-2)
-        (if (= n-chan-1 n-chan-2)
-            (case position
-              ((above)
-               (im-compose-below img-2 img-1 alignment))
-              ((below)
-               (im-compose-below img-1 img-2 alignment))
+(define* (im-compose-channels position alignment channels widths heights
+                              #:key (value 0.0))
+  (case position
+    ((above)
+     (im-compose-channels-below alignment
+                                (reverse! channels)
+                                (reverse! widths)
+                                (reverse! heights)
+                                #:value value))
+    ((below)
+     (im-compose-channels-below alignment channels widths heights
+                                #:value value))
+    ((left)
+     (im-compose-channels-right alignment
+                                (reverse! channels)
+                                (reverse! widths)
+                                (reverse! heights)
+                                #:value value))
+    ((right)
+     (im-compose-channels-right alignment channels widths heights
+                                #:value value))
+    (else
+     (error "No such compose position: " position))))
+
+(define* (im-compose-channels-below alignment channels widths heights
+                                    #:key (value 0.0))
+  (let* ((max-width (apply max widths))
+         (total-height (reduce + 0 heights))
+         (to (im-make-channel max-width total-height)))
+    (match (fold (lambda (c w h prev)
+                   (match prev
+                     ((start . to)
+                      (do ((ac (if (= w max-width)
+                                   c
+                                   (im-adjust-channel-width alignment c w h max-width
+                                                            #:value value)))
+                           (n-cell (* max-width h))
+                           (i 0
+                              (+ i 1)))
+                          ((= i n-cell)
+                           (cons (+ start n-cell) to))
+                        (f32vector-set! to (+ start i) (f32vector-ref ac i))))))
+                 `(0 . ,to)
+                 channels
+                 widths
+                 heights)
+      ((start . to)
+       (list max-width total-height to)))))
+
+(define* (im-adjust-channel-width alignment channel width height to-width
+                                  #:key (value 0.0))
+  (if (= width to-width)
+      channel
+      (receive (total left right)
+          (im-adjust-channel-padd width to-width)
+        (if (> left 0)
+            (case alignment
+              ((center)
+               (im-padd-channel channel width height left 0 right 0 #:value value))
               ((left)
-               (im-compose-right img-2 img-1 alignment))
+               (im-padd-channel channel width height 0 0 total 0 #:value value))
               ((right)
-               (im-compose-right img-1 img-2 alignment)))
-            (error "Channel number mismatch: " n-chan-1 n-chan-2)))))))
+               (im-padd-channel channel width height total 0 0 0 #:value value)))
+            (im-crop-channel channel width height (abs left) 0 (abs right) 0)))))
 
-(define (im-compose-above img-1 img-2 alignment)
-  (im-compose-below img-2 img-1 alignment))
+(define* (im-compose-channels-right alignment channels widths heights
+                                    #:key (value 0.0))
+  (let* ((total-width (reduce + 0 widths))
+         (max-height (apply max heights))
+         (to (im-make-channel total-width max-height)))
+    (match (fold (lambda (c w h prev)
+                   (match prev
+                     ((start . to)
+                      (do ((ac (if (= h max-height)
+                                   c
+                                   (im-adjust-channel-height alignment c w h max-height
+                                                             #:value value)))
+                           (n-cell (* w max-height))
+                           (i 0
+                              (+ i 1)))
+                          ((= i max-height)
+                           (cons (+ start w) to))
+                        (do ((j 0
+                                (+ j 1)))
+                            ((= j w))
+                          (f32vector-set! to
+                                          (+ (* i total-width) j start)
+                                          (f32vector-ref ac (+ (* i w) j))))))))
+                 `(0 . ,to)
+                 channels
+                 widths
+                 heights)
+      ((start . to)
+       (list total-width max-height to)))))
 
-(define (im-compose-below img-1 img-2 alignment)
-  (match img-1
-    ((width-1 height-1 n-chan-1 idata-1)
-     (match img-2
-       ((width-2 height-2 n-chan-2 idata-2)
-        (list width-1 (+ height-1 height-2) n-chan-1
-              (let ((map-proc (if (and (> n-chan-1 1)
-                                       (%use-par-map)) par-map map)))
-                (map-proc (lambda (channels)
-                            (match channels
-                              ((c1 c2)
-                               (im-compose-below-channel c1 width-1 height-1
-                                                         c2 width-2 height-2))))
-                    (zip idata-1 idata-2)))))))))
+(define* (im-adjust-channel-height alignment channel width height to-height
+                            #:key (value 0.0))
+  (receive (total top bottom)
+      (im-adjust-channel-padd height to-height)
+    (if (> top 0)
+        (case alignment
+          ((center)
+           (im-padd-channel channel width height 0 top 0 bottom #:value value))
+          ((top)
+           (im-padd-channel channel width height 0 0 0 total #:value value))
+          ((bottom)
+           (im-padd-channel channel width height 0 total 0 0 #:value value)))
+        (im-crop-channel channel width height 0 (abs top) 0 (abs bottom)))))
 
-(define (im-compose-above-channel c1 width-1 height-1
-                                  c2 width-2 height-2)
-  (im-compose-below-channel c2 width-2 height-2 c1 width-1 height-1))
-
-(define (im-compose-below-channel c1 width-1 height-1
-                                  c2 width-2 height-2)
-  (let ((n-cell-1 (* width-1 height-1))
-        (n-cell-2 (* width-2 height-2))
-        (to (im-make-channel width-1 (+ height-1 height-2))))
-    (do ((i 0
-            (+ i 1)))
-        ((= i n-cell-1))
-      (f32vector-set! to i (f32vector-ref c1 i)))
-    (do ((i 0
-            (+ i 1)))
-        ((= i n-cell-2))
-      (f32vector-set! to (+ i n-cell-1) (f32vector-ref c2 i)))
-    to))
-
-(define (im-compose-left img-1 img-2 alignment)
-  (im-compose-right img-2 img-1 alignment))
-
-(define (im-compose-right img-1 img-2 alignment)
-  (match img-1
-    ((width-1 height-1 n-chan-1 idata-1)
-     (match img-2
-       ((width-2 height-2 n-chan-2 idata-2)
-        (list (+ width-1 width-2) height-1 n-chan-1
-              (let ((map-proc (if (and (> n-chan-1 1)
-                                       (%use-par-map)) par-map map)))
-                (map-proc (lambda (channels)
-                            (match channels
-                              ((c1 c2)
-                               (im-compose-right-channel c1 width-1 height-1
-                                                      c2 width-2 height-2))))
-                    (zip idata-1 idata-2)))))))))
-
-(define (im-compose-left-channel c1 width-1 height-1
-                                 c2 width-2 height-2)
-  (im-compose-right-channel c2 width-2 height-2 c1 width-1 height-1))
-
-(define (im-compose-right-channel c1 width-1 height-1
-                                  c2 width-2 height-2)
-  (let* ((to-width (+ width-1 width-2))
-         (to (im-make-channel to-width height-1)))
-    (do ((i 0
-            (+ i 1)))
-        ((= i height-1))
-      (do ((j 0
-              (+ j 1)))
-          ((= j width-1))
-        (f32vector-set! to
-                        (+ (* i to-width) j)
-                        (f32vector-ref c1 (+ (* i width-1) j))))
-      (do ((j 0
-              (+ j 1)))
-          ((= j width-2))
-        (f32vector-set! to
-                        (+ (* i to-width) (+ j width-1))
-                        (f32vector-ref c2 (+ (* i width-2) j)))))
-    to))
+(define (im-adjust-channel-padd from to)
+  (let* ((diff (- to from))
+         (padd (/ diff 2)))
+    (if (even? diff)
+        (values diff padd padd)
+        (values diff
+                (float->int (ceiling padd))
+                (float->int (floor padd))))))
