@@ -105,9 +105,6 @@ others, the public interface of @code{(ice-9 match)}.
 @item @ref{im-fast-channel-set!}
 
 @item @ref{im-collect}
-
-@item @ref{im-display}
-@item @ref{im-display-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -290,39 +287,4 @@ The valid @var{what} synbols are:
 @end indentedblock
 
 (*): whith k being a valid channel indice, [0 (- n 1)].
-@end deffn
-
-
-@anchor{im-display}
-@anchor{im-display-channel}
-@deffn Procedure im-display image @
-       [#:proc identity] [#:port (current-output-port)]
-@deffnx Procedure im-display-channel channel width height @
-        [#:proc identity] [#:port (current-output-port)]
-
-Returns nothing.
-
-Displays the content of @var{image} or @var{channel} on @var{port},
-applying @var{proc} to each pixel value.
-
-@lisp
-...
-$5 = (3 2 3 (#f32(0.0 1.0 2.0 3.0 4.0 5.0) ... ...)
-(im-display $5 #:proc inexact->exact)
-@print{}
-Channel 1
-  0  1  2
-  3  4  5
-Channel 2
-  6  7  8
-  9  10  11
-Channel 3
-  12  13  14
-  15  16  17
-@end lisp
-
-Caution: unless you specify @var{port}, both this and
-@ref{im-display-channel} procedures are ment to be used on very small
-and testing images, otherwise even on a small image, it might be ok in a
-terminal, but it will definitely will kill your emacs.
 @end deffn
