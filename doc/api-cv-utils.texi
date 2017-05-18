@@ -16,12 +16,67 @@ Other Guile-CV procedures and methods utilities.
 @ifhtml
 @indentedblock
 @table @code
+@item @ref{im-compose}
+@item @ref{im-compose-channels}
 @item @ref{im-display}
 @item @ref{im-display-channel}
+@item @ref{im-histogram}
 @item @ref{im-show}
 @end table
 @end indentedblock
 @end ifhtml
+
+
+@anchor{im-compose}
+@anchor{im-compose-channels}
+@deffn Procedure im-compose position alignment @
+       [#:colour '(0 0 0)] img-1 img-2 @dots{}
+@deffnx Procedure im-compose-channels @
+                  position alignment channels widths heights @
+                  [#:value '0.0]
+
+Returns a new image or a new channel.
+
+The valid @var{position} and @var{alignment} symbols are:
+@indentedblock
+@table @code
+@item left
+@item right
+@item @ 
+@item @	@ @ top
+@item @	@ @ center
+@item @	@ @ bottom
+@item @ 
+@item above
+@item below
+@item @ 
+@item @	@ @ left
+@item @	@ @ center
+@item @	@ @ right
+
+@end table
+@end indentedblock
+
+When used, the optional @var{#:colour} keyword argument must come after
+the mandatory @var{alignment} argument and precede @var{img-1},
+otherwise Guile will raise an exception. For RGB images, it is the
+colour used to padd images passed in argument that are inferior, in
+width or height (depending on the position), to the biggest of them. For
+GRAY images, the @var{#:colour} is reduced to its corresponding gray
+@code{value}:
+
+@lisp
+@code{(/ (reduce + 0 colour) 3)}
+@end lisp
+
+For the @code{im-compose-channels} procedure, the list of
+@var{channels}, @var{widths} and @var{heights} must be of equal length
+and equally ordered, so the @code{nth} element of @var{widths} and
+@var{heights} are the @code{width} and @code{height} of the @code{nth}
+element of @var{channels}. The optional @code{#:value} keyword argument
+is used to padd @var{channels} that are inferior, in width or height
+(depending on the position), to the biggest of them.
+@end deffn
 
 
 @anchor{im-display}
@@ -58,6 +113,25 @@ and testing images, otherwise even on a small image, it might be ok in a
 terminal, but it will definitely will kill your emacs.
 @end deffn
 
+
+@anchor{im-histogram}
+@deffn Procedure im-histogram image @
+       [#:subtitle @quotedblleft{}Untitled@quotedblright{}]
+
+Returns two values: (1) an image; (2) a list (or a list of list) of
+significant values for @var{image}: one list if @var{image} is GREY, a
+list of list of values per channel if @var{image} is RGB.
+
+The returned image is composed of a header (title, @var{#:subtitle}),
+either the GREY or the RGB channel histogram(s) for @var{image} and a
+footer, which is a table containg, for each channel, the following
+values: @code{mean}, @code{standard deviation}, @code{minimum},
+@code{maximum}, the @code{mode}@footnote{The mode is the integer
+corresponding to the histogram entry that received the maximum of hits,
+and the value displayed in parens precisely is the number of hits.}
+followed by its @code{value}.
+
+@end deffn
 
 @anchor{im-show}
 @deffn Method im-show filename
