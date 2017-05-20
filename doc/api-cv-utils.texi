@@ -40,20 +40,10 @@ Returns a new image or a new channel.
 The valid @var{position} and @var{alignment} symbols are:
 @indentedblock
 @table @code
-@item left
-@item right
-@item @ 
-@item @	@ @ top
-@item @	@ @ center
-@item @	@ @ bottom
-@item @ 
-@item above
-@item below
-@item @ 
-@item @	@ @ left
-@item @	@ @ center
-@item @	@ @ right
-
+@item left right
+@code{top center bottom}
+@item above below
+@code{left center right}
 @end table
 @end indentedblock
 
