@@ -113,9 +113,9 @@
       (close ostream)
       filename)))
 
-(define %latex-compile-cmd "pdflatex ~A > /dev/null")
-;; to debug, use this instead
-;; (define %latex-compile-cmd "pdflatex ~A")
+(define %latex-compile-cmd
+  ;; when/to debug, use this instead: "pdflatex ~A"
+  "pdflatex --interaction=nonstopmode ~A > /dev/null")
 
 (define (latex-compile filename)
   (let* ((in (dirname filename))
