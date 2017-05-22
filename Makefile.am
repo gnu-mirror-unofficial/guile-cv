@@ -69,6 +69,7 @@ EXTRA_DIST = \
 	LICENSE				\
 	NEWS				\
 	README				\
+	build-aux/latex.scm		\
 	pre-inst-env.in			\
 	meta/guile-cv-1.0.pc.in	\
 	$(wildcard am/*)		\
@@ -97,7 +98,15 @@ distclean-local:
 	rm -f Makefile.in
 	rm -f aclocal.m4
 	rm -rf autom4te.cache
-	rm -rf build-aux
+	rm -f build-aux/compile
+	rm -f build-aux/config.guess
+	rm -f build-aux/config.sub
+	rm -f build-aux/depcomp
+	rm -f build-aux/install-sh
+	rm -f build-aux/ltmain.sh
+	rm -f build-aux/mdate-sh
+	rm -f build-aux/missing
+	rm -f build-aux/texinfo.tex
 	rm -f configure
 	rm -f *~
 	rm -f guile-cv-*.tar.gz

@@ -1,7 +1,15 @@
 TAGS
 aclocal.m4
 autom4te.cache
-build-aux
+build-aux/compile
+build-aux/config.guess
+build-aux/config.sub
+build-aux/depcomp
+build-aux/install-sh
+build-aux/ltmain.sh
+build-aux/mdate-sh
+build-aux/missing
+build-aux/texinfo.tex
 config.log
 config.status
 configure

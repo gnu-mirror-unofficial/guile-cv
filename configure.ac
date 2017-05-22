@@ -54,6 +54,21 @@ AC_CONFIG_SRCDIR([cv])
 AC_CHECK_PROG(have_makeinfo, makeinfo, yes, no)
 AM_CONDITIONAL(HAVE_MAKEINFO, test "$have_makeinfo" = yes)
 
+AC_CHECK_PROG(PDFLATEX, pdflatex, yes)
+if test -z "$PDFLATEX"; then
+  AC_MSG_ERROR([pdflatex required but not found])
+fi
+
+LATEX_DOCUMENT_CLASS_REQUIRED([standalone])
+LATEX_PACKAGE_REQUIRED([inputenc])
+LATEX_PACKAGE_REQUIRED([fontenc])
+LATEX_PACKAGE_REQUIRED([lmodern])
+LATEX_PACKAGE_REQUIRED([iwona])
+LATEX_PACKAGE_REQUIRED([xcolor])
+LATEX_PACKAGE_REQUIRED([booktabs])
+LATEX_PACKAGE_REQUIRED([siunitx])
+LATEX_PACKAGE_REQUIRED([iwona])
+
 VIGRA_LIB([1.11.0])
 
 VIGRA_C_LIB
