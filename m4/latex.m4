@@ -66,7 +66,7 @@
 #
 AC_DEFUN([LATEX_CHECK],
  [AC_REQUIRE([GUILE_PROGS])
-  $GUILE -L "$ac_top_srcdir" -c "(use-modules (build-aux latex)) $2" > /dev/null 2>&1
+  $GUILE -L "$srcdir" -c "(use-modules (build-aux latex)) $2" > /dev/null 2>&1
   $1=$?
  ])
 
