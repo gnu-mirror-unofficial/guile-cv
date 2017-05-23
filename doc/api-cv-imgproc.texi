@@ -386,7 +386,7 @@ Scraping an image is the operation of removing objects of size
 
 Using the above mentioned arguments, @code{im-scrap} first calls
 @ref{im-label} using @var{con} and @var{bg}, then calls
-@ref{im-features}.  The @code{area} property of each object is then
+@ref{im-features}.  The @code{area} feature of each object is then
 compared to @var{val} using @var{pred}, and the object is eliminated if
 the result is @code{#t}.
 
@@ -405,7 +405,7 @@ Each returned image is a @samp{particle}, which is a subpart of
 @var{image} determined by its bounding box, given by the @code{left}
 @code{top} @code{right} @code{bottom} values of the corresponding
 @samp{entry} in @var{features} (see @ref{im-features} for a complete
-description of a property value list.
+description of a feature value list.
 
 When @var{#:clean} is @code{#t}, which is the default,
 @ref{im-particle-clean} is called upon each particle (see below for a

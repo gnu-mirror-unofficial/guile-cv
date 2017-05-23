@@ -36,7 +36,7 @@ Notes: (a) @var{image} can either be an RGB or a GRAY image; (b)
 the @var{#:n-label} optional keyword argument must be the total number
 of labeled objects from @var{l-image}.
 
-The GRAY property list values are:
+The GRAY feature list values are:
 
 @indentedblock
 @table @code
@@ -60,7 +60,7 @@ values
 @end table
 @end indentedblock
 
-The RGB property list values are:
+The RGB feature list values are:
 
 @indentedblock
 @table @code
@@ -69,7 +69,7 @@ The labeled object area in pixel
 
 @item left top right bottom
 The coordinates of the labeled object (the corresponding GRAY
-property footnote applies here too of course)
+feature footnote applies here too of course)
 
 @item mean-x mean-y
 The coordinates of the mean (red green blue) values of the labeled

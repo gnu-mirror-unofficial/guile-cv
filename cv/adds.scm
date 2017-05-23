@@ -470,16 +470,16 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
              (match l-idata
                ((l-channel)
                 (let* ((features (im-features image l-image #:n-label n-label))
-                       (n-property (length features))
-                       (to-scrap (fold (lambda (property i prev)
-                                         (match property
+                       (n-feature (length features))
+                       (to-scrap (fold (lambda (feature i prev)
+                                         (match feature
                                            ((area . rest)
                                             (if (pred area val)
                                                 (cons i prev)
                                                 prev))))
                                        '()
                                        features
-                                       (iota n-property))))
+                                       (iota n-feature))))
                   (list width height 1
                         (list (im-scrap-channel channel l-channel width height
                                                 to-scrap n-label))))))))))
