@@ -27,7 +27,7 @@ of 32 bit floats, called @code{f32vector}, knowing that @code{f32} is
 the C type @code{float}.
 
 The external representation (ie. read syntax) for @var{idata} vectors is
-@code{#f32(@dots{})}. As an example, a grey scale image of width 3 and
+@code{#f32(@dots{})}. As an example, a gray scale image of width 3 and
 height 2, initialized to 0.0 is represented by the following expression:
 
 @lisp
@@ -36,7 +36,7 @@ height 2, initialized to 0.0 is represented by the following expression:
 
 The @var{n-channel} is an integer @code{>= 1}, with no limit but the
 memory size.  This said, most Guile-CV procedures and methods expect
-either GREY scale (@var{n-channel=1}), or RGB (@var{n-channel=3})
+either GRAY scale (@var{n-channel=1}), or RGB (@var{n-channel=3})
 images.  For the later, the channels are @code{Red}, @code{Green} and
 @code{Blue} in that order.
 
@@ -85,7 +85,7 @@ others, the public interface of @code{(ice-9 match)}.
 
 @item @ref{im-image?}
 @item @ref{im-binary?}
-@item @ref{im-grey?_}
+@item @ref{im-gray?_}
 @item @ref{im-rgb?_}
 
 @item @ref{im-=?}
@@ -160,19 +160,19 @@ Returns, respectively the @var{width}, the @var{height}, @var{n-channel},
 
 @anchor{im-image?}
 @anchor{im-binary?}
-@anchor{im-grey?_}
+@anchor{im-gray?_}
 @anchor{im-rgb?_}
 @deffn Procedure im-image? image
 @deffnx Procedure im-binary? image
-@deffnx Method im-grey? image
+@deffnx Method im-gray? image
 @deffnx Method im-rgb? image
 
 Returns @code{#t} if @var{image} is respectively a Guile-CV image, a
-BINARY (black and white), a GREY scale or an RGB image.
+BINARY (black and white), a GRAY scale or an RGB image.
 
 Notes: (a) @code{im-image?} is a relatively @samp{expensive} operation
 and offered for debugging purposes, but it is not recommended to use
-@samp{in production}; (b) because of the former, @code{im-grey?}  and
+@samp{in production}; (b) because of the former, @code{im-gray?}  and
 @code{im-rgb?} do _not_ check if @var{image} is a valid Guile-CV image,
 instead, they only check for @var{n-channel=1} and @var{n-channel=3}.
 @end deffn
@@ -279,7 +279,7 @@ The valid @var{what} synbols are:
 @item height
 @item n-channel
 @item channels
-@item chan-0, grey, red
+@item chan-0, gray, red
 @item chan-1, green
 @item chan-2, blue
 @item chan-k (*)

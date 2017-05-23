@@ -21,7 +21,7 @@ images.
 @item @ref{im-width}
 @item @ref{im-height}
 @item @ref{im-n-channel}
-@item @ref{im-grey?}
+@item @ref{im-gray?}
 @item @ref{im-rgb?}
 @end table
 @end indentedblock
@@ -34,7 +34,7 @@ images.
 Returns a Guile-CV image.
 
 Loads the image pointed by @var{filename} and returns a Guile-CV image.
-@var{filename} can either be a GREY or an RGB image.
+@var{filename} can either be a GRAY or an RGB image.
 
 At this point, Guile-CV supports the following file formats: GIF, TIFF,
 JPEG, BMP, EXR, HDR, PNM (PBM, PGM, PPM), PNG, SunRaster, KHOROS-VIFF.
@@ -80,11 +80,11 @@ Returns, respectively the @var{width}, the @var{height} and the
 @end deffn
 
 
-@anchor{im-grey?}
+@anchor{im-gray?}
 @anchor{im-rgb?}
-@deffn Method im-grey? filename
+@deffn Method im-gray? filename
 @deffnx Method im-rgb? filename
 
-Returns @code{#t} if @var{filename} is respectively a GREY scale or an
+Returns @code{#t} if @var{filename} is respectively a GRAY scale or an
 RGB image.
 @end deffn

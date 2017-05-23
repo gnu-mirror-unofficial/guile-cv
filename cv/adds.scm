@@ -48,9 +48,9 @@
 		last)
 
   #:export (#;im-map
-	    im-rgb->grey
+	    im-rgb->gray
             im-rgba->rgb
-            im-rgba->grey
+            im-rgba->gray
 	    im-threshold
 	    im-and
 	    im-or
@@ -82,7 +82,7 @@
 ;;; Guile-CV additional API
 ;;;
 
-(define (im-rgb->grey-1 c r g b i mini maxi total n-cell)
+(define (im-rgb->gray-1 c r g b i mini maxi total n-cell)
   (if (= i n-cell)
       (list mini maxi (round (/ total n-cell)) n-cell)
       (let ((k (/ (+ (f32vector-ref r i)
@@ -90,14 +90,14 @@
 		     (f32vector-ref b i))
 		  3)))
 	(f32vector-set! c i k)
-	(im-rgb->grey-1 c r g b
+	(im-rgb->gray-1 c r g b
 			(+ i 1)
 			(float-round (min mini k) 1)
 			(float-round (max maxi k) 1)
 			(+ total k)
 			n-cell))))
 
-(define (im-rgb->grey image)
+(define (im-rgb->gray image)
   (match image
     ((width height n-chan idata)
      (case n-chan
@@ -107,11 +107,11 @@
 	(match idata
 	  ((r g b)
 	   (let* ((c (im-make-channel width height))
-		  (vals (im-rgb->grey-1 c r g b 0 0 0 0 (* width height))))
+		  (vals (im-rgb->gray-1 c r g b 0 0 0 0 (* width height))))
 	     (values (list width height 1 (list c))
 		     vals)))))
        (else
-	(error "Not an RGB (nor a GREY) image."))))))
+	(error "Not an RGB (nor a GRAY) image."))))))
 
 #!
 Source => Target = (BGColor + Source) =
@@ -161,16 +161,16 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                          255.0)))
     to))
 
-(define* (im-rgba->grey image #:key (bg '(0.0 0.0 0.0)))
+(define* (im-rgba->gray image #:key (bg '(0.0 0.0 0.0)))
   (match image
     ((_ _ n-chan idata)
      (case n-chan
        ((3 1)
-        (im-rgb->grey image))
+        (im-rgb->gray image))
        ((4)
-        (im-rgb->grey (im-rgba->rgb image #:bg bg)))
+        (im-rgb->gray (im-rgba->rgb image #:bg bg)))
        (else
-	(error "Not an RGBA (nor an RGB neither a GREY) image."))))))
+	(error "Not an RGBA (nor an RGB neither a GRAY) image."))))))
 
 (define* (im-threshold image threshold #:key (bg 'dark) (prec 1.0e-4))
   (if (and (>= threshold 0.0)
@@ -179,10 +179,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                ((_ _ n-chan _)
                 (case n-chan
                   ((1) image)
-                  ((3) (im-rgb->grey image))
-                  ((4) (im-rgba->grey image))
+                  ((3) (im-rgb->gray image))
+                  ((4) (im-rgba->gray image))
                   (else
-                   (error "Not a GREY, RGB, nor an RGBA image.")))))
+                   (error "Not a GRAY, RGB, nor an RGBA image.")))))
 	((width height n-chan idata)
 	 (match idata
 	   ((c)
@@ -327,7 +327,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		 (apply = (cons height (im-collect rest 'height))))
 	    (let ((img-2 (im-copy image))
 		  (n-cell (* width height))
-		  (c-channels (im-collect (map im-rgb->grey rest) 'grey)))
+		  (c-channels (im-collect (map im-rgb->gray rest) 'gray)))
 	      (list width height n-chan
                     (let ((map-proc (if (and (> n-chan 1)
                                              (%use-par-map)) par-map map)))
@@ -352,7 +352,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		 (apply = (cons height (im-collect rest 'height))))
 	    (let ((img-2 (im-copy image))
 		  (n-cell (* width height))
-		  (c-channels (im-collect (map im-rgb->grey rest) 'grey)))
+		  (c-channels (im-collect (map im-rgb->gray rest) 'gray)))
 	      (list width height n-chan
                     (let ((map-proc (if (and (> n-chan 1)
                                              (%use-par-map)) par-map map)))

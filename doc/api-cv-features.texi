@@ -31,12 +31,12 @@ The Guile-CV procedures and methods related to image features.
 
 Returns a list of features.
 
-Notes: (a) @var{image} can either be an RGB or a GREY image; (b)
+Notes: (a) @var{image} can either be an RGB or a GRAY image; (b)
 @var{l-image} is the @samp{corresponding} labeled image; (c) when used,
 the @var{#:n-label} optional keyword argument must be the total number
 of labeled objects from @var{l-image}.
 
-The GREY property list values are:
+The GRAY property list values are:
 
 @indentedblock
 @table @code
@@ -55,7 +55,7 @@ of the mean value in @var{image}
 
 
 @item min max mean std-dev
-The minimum, maximum, mean and standard grey deviaton labeled object
+The minimum, maximum, mean and standard gray deviaton labeled object
 values
 @end table
 @end indentedblock
@@ -68,7 +68,7 @@ The RGB property list values are:
 The labeled object area in pixel
 
 @item left top right bottom
-The coordinates of the labeled object (the corresponding GREY
+The coordinates of the labeled object (the corresponding GRAY
 property footnote applies here too of course)
 
 @item mean-x mean-y

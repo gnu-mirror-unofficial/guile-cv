@@ -35,7 +35,7 @@
   #:export (%latex-cache
             latex-write-histogram-title
             latex-write-histogram-table
-            latex-write-histogram-table-grey
+            latex-write-histogram-table-gray
             latex-write-text
             latex-compile
             latex-pdftoppm))
@@ -87,14 +87,14 @@
          (close ostream)
          filename)))))
 
-(define (latex-write-histogram-table-grey in n-cell mean std-dev mini maxi mode val)
-  (let ((name (symbol->string (gensym "h-table-grey-"))))
+(define (latex-write-histogram-table-gray in n-cell mean std-dev mini maxi mode val)
+  (let ((name (symbol->string (gensym "h-table-gray-"))))
     (latex-purge in name)
     (let* ((b-name (string-append name ".tex"))
            (filename (string-append in "/" b-name))
            (ostream (open-output-file filename)))
       (format ostream "~A" %latex-begin)
-      (format ostream "~?" %latex-h-table-grey
+      (format ostream "~?" %latex-h-table-gray
               (list n-cell mean std-dev mini maxi mode val))
       (format ostream "~A" %latex-end)
       (close ostream)
@@ -251,7 +251,7 @@
 
 \\end{tabular}\n")
 
-(define %latex-h-table-grey
+(define %latex-h-table-gray
   "\\begin{tabular}
   {l S S c c c}
 

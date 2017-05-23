@@ -33,8 +33,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-padd-channel}
 @item @ref{im-padd-size}
 @item @ref{im-rgba->rgb}
-@item @ref{im-rgba->grey}
-@item @ref{im-rgb->grey}
+@item @ref{im-rgba->gray}
+@item @ref{im-rgb->gray}
 @item @ref{im-threshold}
 @item @ref{im-add}
 @item @ref{im-add-channel}
@@ -197,8 +197,8 @@ raises an error.
 Returns a new image or channel, respectively padding @var{image} or
 @var{channel} by @var{left}, @var{top}, @var{right} and @var{bottom}
 pixels initialized respectively to @var{colour} or @var{value}. Note
-that when @code{im-padd} is called upon a @code{GREY} image,
-@var{colour} is reduced to its corresponding grey @var{value}:
+that when @code{im-padd} is called upon a @code{GRAY} image,
+@var{colour} is reduced to its corresponding gray @var{value}:
 
 @lisp
 @code{(/ (reduce + 0 colour) 3)}
@@ -240,20 +240,20 @@ B = (((1 - Source.A) * BG.B) + (Source.A * Source.B)) * 255.0
 @end deffn
 
 
-@anchor{im-rgba->grey}
-@deffn Procedure im-rgba->grey image [#:bg '(0.0 0.0 0.0)]
+@anchor{im-rgba->gray}
+@deffn Procedure im-rgba->gray image [#:bg '(0.0 0.0 0.0)]
 
-Returns a new GREY image.
+Returns a new GRAY image.
 
-This procedure is implemented as @code{(im-rgb->grey (im-rgba->rgb
+This procedure is implemented as @code{(im-rgb->gray (im-rgba->rgb
 image)).}
 @end deffn
 
 
-@anchor{im-rgb->grey}
-@deffn Procedure im-rgb->grey image
+@anchor{im-rgb->gray}
+@deffn Procedure im-rgb->gray image
 
-Returns a new GREY image.
+Returns a new GRAY image.
 @end deffn
 
 
@@ -264,7 +264,7 @@ Returns a new GREY image.
 Returns a new BLACK and WHITE image.
 
 Valid @var{#:bg} values are @code{'(dark light)}, the default is
-@code{dark}. If @var{image} is an RGB image, @ref{im-rgb->grey} is first
+@code{dark}. If @var{image} is an RGB image, @ref{im-rgb->gray} is first
 called.
 
 Pixels for which the original value is @code{>=} @var{threshold} are set

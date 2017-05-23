@@ -109,11 +109,11 @@ terminal, but it will definitely will kill your emacs.
        [#:subtitle @quotedblleft{}Untitled@quotedblright{}]
 
 Returns two values: (1) an image; (2) a list (or a list of list) of
-significant values for @var{image}: one list if @var{image} is GREY, a
+significant values for @var{image}: one list if @var{image} is GRAY, a
 list of list of values per channel if @var{image} is RGB.
 
 The returned image is composed of a header (title, @var{#:subtitle}),
-either the GREY or the RGB channel histogram(s) for @var{image} and a
+either the GRAY or the RGB channel histogram(s) for @var{image} and a
 footer, which is a table containg, for each channel, the following
 values: @code{mean}, @code{standard deviation}, @code{minimum},
 @code{maximum}, the @code{mode}@footnote{The mode is the integer

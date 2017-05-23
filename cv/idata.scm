@@ -86,7 +86,7 @@
 	  im-n-channel
 	  im-channels
 
-	  im-grey?
+	  im-gray?
 	  im-rgb?)
 
 
@@ -171,7 +171,7 @@
 		    (float-member 255.0 vals)))))
 	  #t))))
 
-(define-method (im-grey? (image <list>))
+(define-method (im-gray? (image <list>))
   (match image
     ((width height n-chan idata)
      (= n-chan 1))))
@@ -343,7 +343,7 @@
     ((n-channel) (map im-n-channel images))
     ((size) (map im-size images))
     ((channels) (map im-channels images))
-    ((chan-0 grey red) (collect-channel images 0))
+    ((chan-0 gray red) (collect-channel images 0))
     ((chan-1 green) (collect-channel images 1))
     ((chan-2 blue) (collect-channel images 2))
     (else

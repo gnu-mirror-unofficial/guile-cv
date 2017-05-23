@@ -56,7 +56,7 @@
 ;;;
 
 (define %h-width 256)
-(define %h-height-grey 130)
+(define %h-height-gray 130)
 (define %h-height-rgb 80)
 (define %h-padd 11)
 (define %h-padd-colour '(255 255 255))
@@ -68,12 +68,12 @@
 
 (define* (im-histogram image #:key (subtitle "Untitled"))
   (case (im-n-channel image)
-    ((1) (im-histogram-grey image #:subtitle subtitle))
+    ((1) (im-histogram-gray image #:subtitle subtitle))
     ((3) (im-histogram-rgb image #:subtitle subtitle))
     (else
-     (error "Not a GREY not an RGB image."))))
+     (error "Not a GRAY not an RGB image."))))
 
-(define* (im-histogram-grey image #:key (subtitle "Untitled"))
+(define* (im-histogram-gray image #:key (subtitle "Untitled"))
   (match image
     ((width height n-chan idata)
      (match idata
@@ -82,14 +82,14 @@
                (items (map-proc
                           (lambda (i)
                             (case i
-                              ((0) (list (make-histogram-title subtitle #:grey #t)
-                                         (make-histogram-legend 'grey)))
+                              ((0) (list (make-histogram-title subtitle #:gray #t)
+                                         (make-histogram-legend 'gray)))
                               ((1) (receive (histogram
                                              n-cell mean std-dev mini maxi mode val)
-                                       (make-histogram-grey channel width height)
+                                       (make-histogram-gray channel width height)
                                      (list histogram
                                            (list n-cell mean std-dev mini maxi mode val)
-                                           (make-histogram-table-grey
+                                           (make-histogram-table-gray
                                             n-cell mean std-dev mini maxi mode val))))))
                           (iota 2))))
           (match (apply append items)
@@ -157,9 +157,9 @@
                 legend)))
 
 (define (im-histogram-channel channel width height hi-height)
-  (let* ((n-grey 256)
+  (let* ((n-gray 256)
          (n-cell (* width height))
-         (h-vals (make-f32vector n-grey 0.0)))
+         (h-vals (make-f32vector n-gray 0.0)))
     (do ((i 0
             (+ i 1)))
         ((= i n-cell))
@@ -209,11 +209,11 @@
         (values (float->int (ceiling l-padd))
                 (float->int (floor l-padd))))))
 
-(define* (make-histogram-title subtitle #:key (grey #f))
+(define* (make-histogram-title subtitle #:key (gray #f))
   (let ((title (im-load (latex-pdftoppm
                          (latex-compile
                           (latex-write-histogram-title %latex-cache subtitle)))))
-        (op (if grey im-rgb->grey identity)))
+        (op (if gray im-rgb->gray identity)))
     (op (match title
           ((width height n-cha idata)
            (receive (l-padd r-padd)
@@ -223,13 +223,13 @@
                  (im-padd (im-crop title (abs l-padd) 0 (abs r-padd) 0)
                           0 13 0 0  #:colour '(255 255 255)))))))))
 
-(define* (make-histogram-grey channel width height
-                              #:key (h-height %h-height-grey))
+(define* (make-histogram-gray channel width height
+                              #:key (h-height %h-height-gray))
   (receive (h-chan n-cell mean std-dev mini maxi mode val)
-      (im-histogram-channel channel width height %h-height-grey)
+      (im-histogram-channel channel width height %h-height-gray)
     (receive (l-padd r-padd)
         (histogram-item-left-right-padd %h-width)
-      (values (im-padd (list %h-width %h-height-grey 1
+      (values (im-padd (list %h-width %h-height-gray 1
                              (list h-chan))
                        l-padd 0 r-padd 0 #:colour '(255 255 255))
                n-cell mean std-dev mini maxi mode val))))
@@ -238,7 +238,7 @@
 
 (let ((h-legend-cache '()))
   (set! make-histogram-legend
-        (lambda* (#:optional (type 'grey))
+        (lambda* (#:optional (type 'gray))
           (or (assq-ref type h-legend-cache)
               (let* ((h-padd-colour %h-padd-colour)
                      (header (let* ((hl-width %h-width)
@@ -252,7 +252,7 @@
                                      ((= i hl-height))
                                    (f32vector-set! hl-chan (+ (* i hl-width) k) k)))
                                (case type
-                                 ((grey) (list 256 14 1 (list hl-chan)))
+                                 ((gray) (list 256 14 1 (list hl-chan)))
                                  (else
                                   (let ((ec1 (im-make-channel hl-width hl-height))
                                         (ec2 (im-make-channel hl-width hl-height)))
@@ -262,8 +262,8 @@
                                             ((green) (list ec1 hl-chan ec2))
                                             ((blue) (list ec1 ec2 hl-chan)))))))))
                      (footer (case type
-                               ((grey)
-                                (im-rgb->grey (make-histogram-legend-footer)))
+                               ((gray)
+                                (im-rgb->gray (make-histogram-legend-footer)))
                                (else
                                 (make-histogram-legend-footer))))
                      (h-legend (im-compose 'below 'center #:colour h-padd-colour
@@ -298,13 +298,13 @@
              (im-padd (im-crop table (abs l-padd) 0 (abs r-padd) 0)
                       0 13 0 0  #:colour '(255 255 255))))))))
 
-(define (make-histogram-table-grey n-cell mean std-dev mini maxi mode val)
+(define (make-histogram-table-gray n-cell mean std-dev mini maxi mode val)
   (let ((table (im-load (latex-pdftoppm
                          (latex-compile
-                          (latex-write-histogram-table-grey %latex-cache
+                          (latex-write-histogram-table-gray %latex-cache
                                                             n-cell mean std-dev
                                                             mini maxi mode val))))))
-    (im-rgb->grey (match table
+    (im-rgb->gray (match table
                     ((width height n-chan idata)
                      (receive (l-padd r-padd)
                          (histogram-item-left-right-padd width)

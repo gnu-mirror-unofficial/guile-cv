@@ -51,7 +51,7 @@
 	  im-n-channel
 	  im-channels
 
-	  im-grey?
+	  im-gray?
 	  im-rgb?)
 
 
@@ -62,24 +62,24 @@
 (define (im-load filename)
   (case (im-n-channel filename)
     ((1)
-     (vigra-load-grey-image filename))
+     (vigra-load-gray-image filename))
     ((3)
      (vigra-load-rgb-image filename))
     ((4)
      (vigra-load-rgba-image filename))
     (else
-     (error "Not a GREY, RGB nor an RGBA image" filename))))
+     (error "Not a GRAY, RGB nor an RGBA image" filename))))
 
 (define (im-save image filename)
   (case (im-n-channel image)
     ((1)
-     (vigra-save-grey-image image filename))
+     (vigra-save-gray-image image filename))
     ((3)
      (vigra-save-rgb-image image filename))
     ((4)
      (vigra-save-rgba-image image filename))
     (else
-     (error "Not a GREY, RGB nor an RGBA image" filename))))
+     (error "Not a GRAY, RGB nor an RGBA image" filename))))
 
 (define-method (im-size (filename <string>))
   (list (im-width filename)
@@ -101,7 +101,7 @@
 	     port)
     (newline port)))
 
-(define-method (im-grey? (filename <string>))
+(define-method (im-gray? (filename <string>))
   (= (im-n-channel filename) 1))
 
 (define-method (im-rgb? (filename <string>))
@@ -112,7 +112,7 @@
 ;;;
 ;;;
 
-(define (vigra-load-grey-image filename)
+(define (vigra-load-gray-image filename)
   (match (im-size filename)
     ((width height n-chan)
      (case n-chan
@@ -125,10 +125,10 @@
 					    height
 					    (string->pointer filename))
 	       ((0) (list width height n-chan idata))
-	       ((1) (error "Not a GREY image" filename))
+	       ((1) (error "Not a GRAY image" filename))
 	       ((2) (error "Sizes mismatch" filename)))))))
        (else
-	(error "Not a GREY image" filename))))))
+	(error "Not a GRAY image" filename))))))
 
 (define (vigra-load-rgb-image filename)
   (match (im-size filename)
@@ -170,7 +170,7 @@
        (else
 	(error "Not an RGBA image" filename))))))
 
-(define (vigra-save-grey-image image filename)
+(define (vigra-save-gray-image image filename)
   (match image
     ((width height n-chan idata)
      (case n-chan
@@ -185,7 +185,7 @@
 	     (else
 	      (error "Image could not be saved." filename))))))
        (else
-	(error "Not a GREY image" filename))))))
+	(error "Not a GRAY image" filename))))))
 
 (define (vigra-save-rgb-image image filename)
   (match image

@@ -65,29 +65,29 @@
             ((width height n-chan idata)
              (match idata
                ((c)
-                (im-features-grey c l-c width height #:n-label n-label))
+                (im-features-gray c l-c width height #:n-label n-label))
                ((r g b)
                 (im-features-rgb r g b l-c width height
                                    #:n-label n-label))
                (else
-                (error "Not a GREY neither an RGB image.")))))))
+                (error "Not a GRAY neither an RGB image.")))))))
        (else
         (error "Not a labeled image."))))))
 
-(define %vigra-property-length-grey 11)
+(define %vigra-property-length-gray 11)
 
-(define* (im-features-grey channel l-c width height #:key (n-label #f))
+(define* (im-features-gray channel l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
 		      (float->int (f32vector-max l-c))))
          (n-prop (+ n-label 1))
-	 (features (im-make-channel %vigra-property-length-grey n-prop))
-	 (result (vigra-extract-features-grey channel l-c
+	 (features (im-make-channel %vigra-property-length-gray n-prop))
+	 (result (vigra-extract-features-gray channel l-c
                                               features width height n-label)))
     (case result
       ((1)
        (error "Features failed."))
       (else
-       (vigra-features->list features n-prop 'grey)))))
+       (vigra-features->list features n-prop 'gray)))))
 
 (define %vigra-property-length-rgb 19)
 
@@ -112,7 +112,7 @@
   ;;    below for a full description of a property
   ;;
   (do ((proc (case im-type
-               ((grey) vigra-property-grey)
+               ((gray) vigra-property-gray)
                ((rgb) vigra-property-rgb)))
        (result '())
        (i 0
@@ -122,9 +122,9 @@
       (set! result
             (cons (proc features i) result))))
 
-(define (vigra-property-grey features i)
+(define (vigra-property-gray features i)
   ;;
-  ;;  Grey object's offset and property names are:
+  ;;  Gray object's offset and property names are:
   ;;
   ;;  | Index         | Feature                       |
   ;;  | ------------- | ----------------------------- |
@@ -132,12 +132,12 @@
   ;;  |  1,  2        | upperleft-x and y-coord       |
   ;;  |  3,  4        | lowerright-x and y-coord      |
   ;;  |  5,  6        | mean-x and y-coord            |
-  ;;  |  7            | min grey value                |
-  ;;  |  8            | max grey value                |
-  ;;  |  9            | mean grey value               |
-  ;;  | 10            | std.dev. grey value           |
+  ;;  |  7            | min gray value                |
+  ;;  |  8            | max gray value                |
+  ;;  |  9            | mean gray value               |
+  ;;  | 10            | std.dev. gray value           |
   ;;
-  (let* ((p-size %vigra-property-length-grey)
+  (let* ((p-size %vigra-property-length-gray)
          (offset (* i p-size)))
     (match (map (lambda (k)
                   (f32vector-ref features (+ offset k)))
@@ -199,8 +199,8 @@
 ;;; Guile vigra low level API
 ;;;
 
-(define (vigra-extract-features-grey from labels results width height n-label)
-  (vigra-extractfeatures-grey-c (bytevector->pointer from)
+(define (vigra-extract-features-gray from labels results width height n-label)
+  (vigra-extractfeatures-gray-c (bytevector->pointer from)
                                 (bytevector->pointer labels)
                                 (bytevector->pointer results)
                                 width
@@ -222,7 +222,7 @@
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-extractfeatures-grey-c
+(define vigra-extractfeatures-gray-c
   (pointer->procedure int
 		      (dynamic-func "vigra_extractfeatures_gray_c"
 				    %libvigra-c)
