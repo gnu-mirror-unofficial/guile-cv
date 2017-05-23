@@ -4,10 +4,10 @@
 @c See the file guile-cv.texi for copying conditions.
 
 
-@node Properties
-@subsection Properties
+@node Features
+@subsection Features
 
-The Guile-CV procedures and methods related to image properties.
+The Guile-CV procedures and methods related to image features.
 
 
 @subheading Procedures
@@ -15,21 +15,21 @@ The Guile-CV procedures and methods related to image properties.
 @ifhtml
 @indentedblock
 @table @code
-@item @ref{im-properties}
-@c @item @ref{im-properties-channel}
+@item @ref{im-features}
+@c @item @ref{im-features-channel}
 @end table
 @end indentedblock
 @end ifhtml
 
 
-@anchor{im-properties}
-@c @anchor{im-properties-channel}
-@deffn Procedure im-properties image l-image [#:n-label #f]
-@c @deffnx Procedure im-properties-channel channel l-channel width height @
+@anchor{im-features}
+@c @anchor{im-features-channel}
+@deffn Procedure im-features image l-image [#:n-label #f]
+@c @deffnx Procedure im-features-channel channel l-channel width height @
 @c         [#:n-label #f]
-@cindex Properties
+@cindex Features
 
-Returns a list of properties.
+Returns a list of features.
 
 Notes: (a) @var{image} can either be an RGB or a GREY image; (b)
 @var{l-image} is the @samp{corresponding} labeled image; (c) when used,

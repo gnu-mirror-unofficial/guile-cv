@@ -26,7 +26,7 @@
 ;;; Code:
 
 
-(define-module (cv properties)
+(define-module (cv features)
   #:use-module (oop goops)
   #:use-module (system foreign)
   #:use-module (ice-9 match)
@@ -43,8 +43,8 @@
 		warn
 		last)
 
-  #:export (im-properties
-	    im-properties-channel))
+  #:export (im-features
+	    im-features-channel))
 
 
 #;(g-export )
@@ -54,7 +54,7 @@
 ;;; Guile-CV API
 ;;;
 
-(define* (im-properties image l-image #:key (n-label #f))
+(define* (im-features image l-image #:key (n-label #f))
   (match l-image
     ((_ _ _ l-idata)
      (match l-idata
@@ -65,9 +65,9 @@
             ((width height n-chan idata)
              (match idata
                ((c)
-                (im-properties-grey c l-c width height #:n-label n-label))
+                (im-features-grey c l-c width height #:n-label n-label))
                ((r g b)
-                (im-properties-rgb r g b l-c width height
+                (im-features-rgb r g b l-c width height
                                    #:n-label n-label))
                (else
                 (error "Not a GREY neither an RGB image.")))))))
@@ -76,39 +76,39 @@
 
 (define %vigra-property-length-grey 11)
 
-(define* (im-properties-grey channel l-c width height #:key (n-label #f))
+(define* (im-features-grey channel l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
 		      (float->int (f32vector-max l-c))))
          (n-prop (+ n-label 1))
-	 (properties (im-make-channel %vigra-property-length-grey n-prop))
+	 (features (im-make-channel %vigra-property-length-grey n-prop))
 	 (result (vigra-extract-features-grey channel l-c
-                                              properties width height n-label)))
+                                              features width height n-label)))
     (case result
       ((1)
-       (error "Properties failed."))
+       (error "Features failed."))
       (else
-       (vigra-properties->list properties n-prop 'grey)))))
+       (vigra-features->list features n-prop 'grey)))))
 
 (define %vigra-property-length-rgb 19)
 
-(define* (im-properties-rgb r g b l-c width height #:key (n-label #f))
+(define* (im-features-rgb r g b l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
 		      (float->int (f32vector-max l-c))))
          (n-prop (+ n-label 1))
-	 (properties (im-make-channel %vigra-property-length-rgb n-prop))
+	 (features (im-make-channel %vigra-property-length-rgb n-prop))
 	 (result (vigra-extract-features-rgb r g b l-c
-                                             properties width height n-label)))
+                                             features width height n-label)))
     (case result
       ((1)
-       (error "Properties failed."))
+       (error "Features failed."))
       (else
-       (vigra-properties->list properties n-prop 'rgb)))))
+       (vigra-features->list features n-prop 'rgb)))))
 
-(define (vigra-properties->list properties n-prop im-type)
+(define (vigra-features->list features n-prop im-type)
   ;;
   ;; Notes:
   ;;  - n-prop is n-label + 1 (one for the bg, tbc)
-  ;;  - properties is a 'channel' (f32vector), see
+  ;;  - features is a 'channel' (f32vector), see
   ;;    below for a full description of a property
   ;;
   (do ((proc (case im-type
@@ -120,9 +120,9 @@
       ((= i n-prop)
        (reverse! result))
       (set! result
-            (cons (proc properties i) result))))
+            (cons (proc features i) result))))
 
-(define (vigra-property-grey properties i)
+(define (vigra-property-grey features i)
   ;;
   ;;  Grey object's offset and property names are:
   ;;
@@ -140,7 +140,7 @@
   (let* ((p-size %vigra-property-length-grey)
          (offset (* i p-size)))
     (match (map (lambda (k)
-                  (f32vector-ref properties (+ offset k)))
+                  (f32vector-ref features (+ offset k)))
              (iota p-size))
       ((area
         left top right bottom
@@ -156,7 +156,7 @@
              mini maxi meani
              std-dev)))))
 
-(define (vigra-property-rgb properties i)
+(define (vigra-property-rgb features i)
   ;;
   ;;  RGB object's offset and property names are:
   ;;
@@ -174,7 +174,7 @@
   (let* ((p-size %vigra-property-length-rgb)
          (offset (* i p-size)))
     (match (map (lambda (k)
-                  (f32vector-ref properties (+ offset k)))
+                  (f32vector-ref features (+ offset k)))
              (iota p-size))
       ((area
         left top right bottom

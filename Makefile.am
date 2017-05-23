@@ -48,7 +48,7 @@ SOURCES = \
 	cv/filters.scm				\
 	cv/morphology.scm			\
 	cv/segmentation.scm			\
-	cv/properties.scm			\
+	cv/features.scm				\
 	cv/adds.scm				\
 	cv/compose.scm				\
 	cv/histogram.scm			\
@@ -71,7 +71,7 @@ EXTRA_DIST = \
 	README				\
 	build-aux/latex.scm		\
 	pre-inst-env.in			\
-	meta/guile-cv-1.0.pc.in	\
+	meta/guile-cv-1.0.pc.in		\
 	$(wildcard am/*)		\
 	$(wildcard m4/*)		\
 	$(SOURCES)

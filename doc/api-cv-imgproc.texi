@@ -386,7 +386,7 @@ Scraping an image is the operation of removing objects of size
 
 Using the above mentioned arguments, @code{im-scrap} first calls
 @ref{im-label} using @var{con} and @var{bg}, then calls
-@ref{im-properties}.  The @code{area} property of each object is then
+@ref{im-features}.  The @code{area} property of each object is then
 compared to @var{val} using @var{pred}, and the object is eliminated if
 the result is @code{#t}.
 
@@ -395,7 +395,7 @@ Note that @var{image} must be a binary image.
 
 
 @anchor{im-particles}
-@deffn Procedure im-particles image properties [#:clean #t]
+@deffn Procedure im-particles image features [#:clean #t]
 @c @cindex Image split
 @cindex Image decompose
 
@@ -404,7 +404,7 @@ Returns a list of images.
 Each returned image is a @samp{particle}, which is a subpart of
 @var{image} determined by its bounding box, given by the @code{left}
 @code{top} @code{right} @code{bottom} values of the corresponding
-@samp{entry} in @var{properties} (see @ref{im-properties} for a complete
+@samp{entry} in @var{features} (see @ref{im-features} for a complete
 description of a property value list.
 
 When @var{#:clean} is @code{#t}, which is the default,
@@ -424,8 +424,8 @@ removing any object(s) that is(are) not connected to the
 
 This procedure is based on the property that in a @samp{particle}, which
 is an (sub)image resulting from a @ref{im-crop} based on the bounding
-box coordinates as returned by @code{im-properties}, there precisely is
-one object that, if you call @code{im-properties} upon @var{particle},
+box coordinates as returned by @code{im-features}, there precisely is
+one object that, if you call @code{im-features} upon @var{particle},
 would have its bounding box coordinates being the entire
 @var{particle}. In other words, if you call @code{im-particle-clean}
 upon an image that is not a @samp{particle}, the result will just be a

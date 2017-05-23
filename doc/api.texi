@@ -33,7 +33,7 @@
 @include api-cv-filters.texi
 @include api-cv-segmentation.texi
 @include api-cv-morphology.texi
-@include api-cv-properties.texi
+@include api-cv-features.texi
 @include api-cv-utils.texi
 
 @node Support

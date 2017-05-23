@@ -39,7 +39,7 @@
   #:use-module (cv idata)
   #:use-module (cv imgproc)
   #:use-module (cv segmentation)
-  #:use-module (cv properties)
+  #:use-module (cv features)
   
   #:duplicates (merge-generics
 		replace
@@ -469,8 +469,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
             ((_ _ _ l-idata)
              (match l-idata
                ((l-channel)
-                (let* ((properties (im-properties image l-image #:n-label n-label))
-                       (n-property (length properties))
+                (let* ((features (im-features image l-image #:n-label n-label))
+                       (n-property (length features))
                        (to-scrap (fold (lambda (property i prev)
                                          (match property
                                            ((area . rest)
@@ -478,7 +478,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                                 (cons i prev)
                                                 prev))))
                                        '()
-                                       properties
+                                       features
                                        (iota n-property))))
                   (list width height 1
                         (list (im-scrap-channel channel l-channel width height
@@ -529,7 +529,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                             (f32vector-ref channel i)))))
     to))
 
-(define* (im-particles image properties #:key (clean #t))
+(define* (im-particles image features #:key (clean #t))
   (let ((map-proc (if (%use-par-map) par-map map)))
     (map-proc (lambda (prop)
                 (match prop
@@ -539,7 +539,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                        (if clean
                            (im-particle-clean particle)
                            particle))))))
-              (cdr properties))))
+              (cdr features))))
 
 (define (im-particle-clean particle)
   (let* ((binary? (im-binary? particle))
@@ -562,8 +562,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                                         (cons i prev)
                                                         prev))))
                                                '()
-                                               (im-properties binary label-im
-                                                              #:n-label n-label)
+                                               (im-features binary label-im
+                                                            #:n-label n-label)
                                                (iota (+ n-label 1))))
                               (cache (scrap-cache to-remove n-label)))
                          (do ((i 0

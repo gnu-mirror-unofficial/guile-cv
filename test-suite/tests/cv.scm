@@ -360,7 +360,7 @@
     (assert-true (im-=? (im-scrap a 9 #:pred =) c))
     (assert-true (im-=? (im-scrap a 9 #:pred >) d))))
 
-(define (make-properties-images)
+(define (make-features-images)
   (let ((idx '((0 0)
                (0 1) (0 2) (0 3)
                (1 0) (2 0) (3 0)
@@ -384,13 +384,13 @@
 	idx)
     (values img-1 img-2 img-3)))
 
-(define-method (test-properties (self <guile-cv-tests-cv>))
+(define-method (test-features (self <guile-cv-tests-cv>))
   (receive (img-1 img-2 img-3)
-      (make-properties-images)
+      (make-features-images)
     (let ((l-img (im-label img-1)))
-      (assert-exception (im-properties img-3 l-img))
-      (assert-exception (im-properties img-1 img-2))
-      (assert (im-properties img-1 l-img)))))
+      (assert-exception (im-features img-3 l-img))
+      (assert-exception (im-features img-1 img-2))
+      (assert (im-features img-1 l-img)))))
 
 
 (exit-with-summary (run-all-defined-test-cases))
