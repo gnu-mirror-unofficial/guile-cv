@@ -59,7 +59,7 @@
 (define %h-height-gray 130)
 (define %h-height-rgb 80)
 (define %h-padd 11)
-(define %h-padd-colour '(255 255 255))
+(define %h-padd-color '(255 255 255))
 
 (define %hl-height 14)
 (define %hl-padd 2)
@@ -94,7 +94,7 @@
                           (iota 2))))
           (match (apply append items)
             ((h-title h-legend histogram h-vals h-table)
-             (values (im-compose 'below 'center #:colour %h-padd-colour
+             (values (im-compose 'below 'center #:color %h-padd-color
                                  h-title h-legend histogram h-table)
                      h-vals)))))))))
 
@@ -102,7 +102,7 @@
   (match image
     ((width height n-chan idata)
      (let* ((h-padd %h-padd) ;; pixels
-            (h-padd-colour %h-padd-colour)
+            (h-padd-color %h-padd-color)
             (hl-padd %hl-padd)
             (n-cell (* width height))
             (map-proc (if (%use-par-map) par-map map))
@@ -129,15 +129,15 @@
                                  (case c-type
                                    ((red)
                                     (im-padd (im-histogram-rgb-with-legend h-channel c-type)
-                                             0 h-padd 0 h-padd #:colour h-padd-colour))
+                                             0 h-padd 0 h-padd #:color h-padd-color))
                                    ((green)
                                     (im-padd (im-histogram-rgb-with-legend h-channel c-type)
-                                             0 0 0 h-padd #:colour h-padd-colour))
+                                             0 0 0 h-padd #:color h-padd-color))
                                    ((blue)
                                     (im-histogram-rgb-with-legend h-channel c-type))))))
                       (zip h-channels '(red green blue)))
              ((h-red h-green h-blue)
-              (im-compose 'below 'center #:colour h-padd-colour
+              (im-compose 'below 'center #:color h-padd-color
                           h-title
                           h-red
                           h-green
@@ -152,7 +152,7 @@
                       (im-copy-channel h-channel width height)
                       (im-copy-channel h-channel width height)))
         (legend (make-histogram-legend c-type)))
-    (im-compose 'below 'center #:colour %h-padd-colour
+    (im-compose 'below 'center #:color %h-padd-color
                 (list width height 3 idata)
                 legend)))
 
@@ -219,9 +219,9 @@
            (receive (l-padd r-padd)
                (histogram-item-left-right-padd width)
              (if (> l-padd 0)
-                 (im-padd title l-padd 13 r-padd 0 #:colour '(255 255 255))
+                 (im-padd title l-padd 13 r-padd 0 #:color '(255 255 255))
                  (im-padd (im-crop title (abs l-padd) 0 (abs r-padd) 0)
-                          0 13 0 0  #:colour '(255 255 255)))))))))
+                          0 13 0 0  #:color '(255 255 255)))))))))
 
 (define* (make-histogram-gray channel width height
                               #:key (h-height %h-height-gray))
@@ -231,7 +231,7 @@
         (histogram-item-left-right-padd %h-width)
       (values (im-padd (list %h-width %h-height-gray 1
                              (list h-chan))
-                       l-padd 0 r-padd 0 #:colour '(255 255 255))
+                       l-padd 0 r-padd 0 #:color '(255 255 255))
                n-cell mean std-dev mini maxi mode val))))
 
 (define make-histogram-legend #f)
@@ -240,7 +240,7 @@
   (set! make-histogram-legend
         (lambda* (#:optional (type 'gray))
           (or (assq-ref type h-legend-cache)
-              (let* ((h-padd-colour %h-padd-colour)
+              (let* ((h-padd-color %h-padd-color)
                      (header (let* ((hl-width %h-width)
                                     (hl-height %hl-height)
                                     (hl-chan (im-make-channel hl-width hl-height)))
@@ -266,23 +266,23 @@
                                 (im-rgb->gray (make-histogram-legend-footer)))
                                (else
                                 (make-histogram-legend-footer))))
-                     (h-legend (im-compose 'below 'center #:colour h-padd-colour
-                                           (im-padd header 13 2 13 2 #:colour h-padd-colour)
+                     (h-legend (im-compose 'below 'center #:color h-padd-color
+                                           (im-padd header 13 2 13 2 #:color h-padd-color)
                                            footer)))
                 (set! h-legend-cache
                       (assq-set! h-legend-cache type h-legend))
                 h-legend)))))
 
 (define (make-histogram-legend-footer)
-  (let ((h-padd-colour %h-padd-colour)
+  (let ((h-padd-color %h-padd-color)
         (n0 (im-load (latex-pdftoppm
                       (latex-compile
                        (latex-write-text %latex-cache "0")))))
         (n255 (im-load (latex-pdftoppm
                         (latex-compile
                          (latex-write-text %latex-cache "255"))))))
-    (im-compose 'right 'top #:colour h-padd-colour
-                (im-padd n0 5 0 229 0 #:colour h-padd-colour)
+    (im-compose 'right 'top #:color h-padd-color
+                (im-padd n0 5 0 229 0 #:color h-padd-color)
                 n255)))
 
 (define (make-histogram-table vals)
@@ -294,9 +294,9 @@
        (receive (l-padd r-padd)
            (histogram-item-left-right-padd width)
          (if (> l-padd 0)
-             (im-padd table l-padd 13 r-padd 0 #:colour '(255 255 255))
+             (im-padd table l-padd 13 r-padd 0 #:color '(255 255 255))
              (im-padd (im-crop table (abs l-padd) 0 (abs r-padd) 0)
-                      0 13 0 0  #:colour '(255 255 255))))))))
+                      0 13 0 0  #:color '(255 255 255))))))))
 
 (define (make-histogram-table-gray n-cell mean std-dev mini maxi mode val)
   (let ((table (im-load (latex-pdftoppm
@@ -309,6 +309,6 @@
                      (receive (l-padd r-padd)
                          (histogram-item-left-right-padd width)
                        (if (> l-padd 0)
-                           (im-padd table l-padd 13 r-padd 0 #:colour '(255 255 255))
+                           (im-padd table l-padd 13 r-padd 0 #:color '(255 255 255))
                            (im-padd (im-crop table (abs l-padd) 0 (abs r-padd) 0)
-                                    0 13 0 0  #:colour '(255 255 255)))))))))
+                                    0 13 0 0  #:color '(255 255 255)))))))))

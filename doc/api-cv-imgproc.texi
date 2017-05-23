@@ -190,18 +190,18 @@ raises an error.
 
 @anchor{im-padd}
 @anchor{im-padd-channel}
-@deffn Procedure im-padd image left top right bottom [#:colour '(0.0 0.0 0.0)]
+@deffn Procedure im-padd image left top right bottom [#:color '(0.0 0.0 0.0)]
 @deffnx Procedure im-padd-channel channel width height left top right bottom @
         [#:new-w #f] [#:new-h #f] [#:value 0.0]
 
 Returns a new image or channel, respectively padding @var{image} or
 @var{channel} by @var{left}, @var{top}, @var{right} and @var{bottom}
-pixels initialized respectively to @var{colour} or @var{value}. Note
+pixels initialized respectively to @var{color} or @var{value}. Note
 that when @code{im-padd} is called upon a @code{GRAY} image,
-@var{colour} is reduced to its corresponding gray @var{value}:
+@var{color} is reduced to its corresponding gray @var{value}:
 
 @lisp
-@code{(/ (reduce + 0 colour) 3)}
+@code{(/ (reduce + 0 color) 3)}
 @end lisp
 @end deffn
 

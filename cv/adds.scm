@@ -143,7 +143,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
           (else
            (error "Not an RGBA image."))))))
     (else
-     (error "Invalid background colour: " bg))))
+     (error "Invalid background color: " bg))))
 
 (define* (im-rgba-channel->rgb-channel c width height a-norm #:key (bg 0.0))
   (let ((c-norm (im-normalize-channel c width height))

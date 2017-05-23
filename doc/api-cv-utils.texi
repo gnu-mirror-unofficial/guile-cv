@@ -30,7 +30,7 @@ Other Guile-CV procedures and methods utilities.
 @anchor{im-compose}
 @anchor{im-compose-channels}
 @deffn Procedure im-compose position alignment @
-       [#:colour '(0 0 0)] img-1 img-2 @dots{}
+       [#:color '(0 0 0)] img-1 img-2 @dots{}
 @deffnx Procedure im-compose-channels @
                   position alignment channels widths heights @
                   [#:value '0.0]
@@ -47,16 +47,16 @@ The valid @var{position} and @var{alignment} symbols are:
 @end table
 @end indentedblock
 
-When used, the optional @var{#:colour} keyword argument must come after
+When used, the optional @var{#:color} keyword argument must come after
 the mandatory @var{alignment} argument and precede @var{img-1},
 otherwise Guile will raise an exception. For RGB images, it is the
-colour used to padd images passed in argument that are inferior, in
+color used to padd images passed in argument that are inferior, in
 width or height (depending on the position), to the biggest of them. For
-GRAY images, the @var{#:colour} is reduced to its corresponding gray
+GRAY images, the @var{#:color} is reduced to its corresponding gray
 @code{value}:
 
 @lisp
-@code{(/ (reduce + 0 colour) 3)}
+@code{(/ (reduce + 0 color) 3)}
 @end lisp
 
 For the @code{im-compose-channels} procedure, the list of

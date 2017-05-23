@@ -186,7 +186,7 @@
 
    
 %%%
-%%% Colours
+%%% Colors
 %%%
 
 \\definecolor{red}{rgb}{0.82, 0.0, 0.11}

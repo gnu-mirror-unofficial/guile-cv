@@ -198,7 +198,7 @@
 	    (+ top height bottom))
       (error "Invalid padd value(s): " left top right bottom)))
 
-(define* (im-padd image left top right bottom #:key (colour '(0.0 0.0 0.0)))
+(define* (im-padd image left top right bottom #:key (color '(0.0 0.0 0.0)))
   (match image
     ((width height n-chan idata)
      (match (im-padd-size width height left top right bottom)
@@ -208,7 +208,7 @@
                 ((c)
                  (list (im-padd-channel c width height left top right bottom
                                         #:new-w new-w #:new-h new-h
-                                        #:value (/ (reduce + 0 colour) 3))))
+                                        #:value (/ (reduce + 0 color) 3))))
                 ((r g b)
                  (let ((map-proc (if (%use-par-map) par-map map)))
                    (map-proc (lambda (chaco)
@@ -216,7 +216,7 @@
                                  ((channel value)
                                (im-padd-channel channel width height left top right bottom
                                                 #:new-w new-w #:new-h new-h #:value value))))
-			  (zip idata colour)))))))))))
+			  (zip idata color)))))))))))
 
 (define* (im-padd-channel channel width height left top right bottom
 			  #:key (new-w #f) (new-h #f) (value 0.0))

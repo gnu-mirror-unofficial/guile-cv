@@ -54,14 +54,14 @@
 ;;; Compose
 ;;;
 
-(define* (im-compose position alignment #:key (colour '(0 0 0)) . images)
+(define* (im-compose position alignment #:key (color '(0 0 0)) . images)
   ;; ... when #:key is used together with a rest argument, the keyword
   ;; parameters in a call all remain in the rest list. This is the same
   ;; as Common Lisp ...
   ;; =>
   ;; so let's make sure images does not include the kw
   (let ((images (match images
-                  ((#:colour val . rest) rest)
+                  ((#:color val . rest) rest)
                   (else
                    images))))
     (match images
@@ -83,8 +83,8 @@
                                                           #:value value))))
                           (zip (apply zip (im-collect images 'channels))
                                (if (> n-chan 1)
-                                   colour
-                                   (list (/ (reduce + 0 colour) 3)))))))
+                                   color
+                                   (list (/ (reduce + 0 color) 3)))))))
                 (match (car composed-channels)
                   ((width height _)
                    (list width height n-chan
