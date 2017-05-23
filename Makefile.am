@@ -107,6 +107,7 @@ distclean-local:
 	rm -f build-aux/mdate-sh
 	rm -f build-aux/missing
 	rm -f build-aux/texinfo.tex
+	rm -f build-aux/*~
 	rm -f configure
 	rm -f *~
 	rm -f guile-cv-*.tar.gz
@@ -117,6 +118,7 @@ distclean-local:
 	rm -f libguile-cv/libguile-cv.lo
 	rm -f libguile-cv/libguile-cv.so
 	rm -rf doc/guile-cv
+	rm -f doc/TAGS
 	rm -f doc/*.info
 	rm -f doc/*.pdf
 	rm -f doc/*~
@@ -126,6 +128,7 @@ distclean-local:
 	rm -f doc/Makefile.in
 	rm -f doc/stamp-vti
 	rm -f doc/version.texi
+	rm -f cv/TAGS
 	rm -f cv/*~
 	rm -f test-suite/Makefile
 	rm -f test-suite/Makefile.in
@@ -134,6 +137,7 @@ distclean-local:
 	rm -f m4/ltsugar.m4
 	rm -f m4/ltversion.m4
 	rm -f m4/lt~obsolete.m4
+	rm -f m4/*~
 
 
 ACLOCAL_AMFLAGS = -I m4
