@@ -34,3 +34,7 @@
 @set UVIGRAC https://github.com/BSeppke/vigra_c
 
 @set UGIT https://git-scm.com/
+
+@set ULATEX http://www.latex-project.org/
+@set UTEXLIVE https://tug.org/texlive/
+@set UIWONA http://www.tug.dk/FontCatalogue/iwona/

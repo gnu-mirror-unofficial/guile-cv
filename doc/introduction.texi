@@ -73,6 +73,8 @@ Autoconf >= 2.69
 @item
 Automake >= 1.14
 @item
+Makeinfo >= 6.3
+@item
 @uref{@value{UGUILE}, Guile} >= 2.0.13
 @item
 @uref{@value{UGUILE-LIB}, Guile-Lib} >= 0.2.5
@@ -91,11 +93,37 @@ these checks are listed as part of our @code{configure} steps}.  But no
 big deal, its home page has an 'Installation' section which guides you
 step by step.
 
-@strong{Special note:} make sure the directory where
-@file{libvigra_c.so} has been installed is 'known', either because it is
-defined in @file{/etc/ld.so.conf.d}, or you set the environment variable
+@strong{Special notes:}
+
+(a) vigra_c says it depends on @code{cmake >= 3.1}, but this is only
+true if you want to build its documentation, probably not the case. Most
+distribution still have cmake 2.8, if that is your case, you may safely
+edit @file{/your/path/vigra_c/CMakeLists.txt} and downgrade this
+requirement to the cmake version installed on your machine;
+
+(b) make sure the directory where @file{libvigra_c.so} has been
+installed is 'known', either because it is defined in
+@file{/etc/ld.so.conf.d}, or you set the environment variable
 @code{LD_LIBRARY_PATH}, otherwise Guile won't find it and
-@code{configure} will report an error.
+@code{configure} will report an error;
+@end indentedblock
+
+@item
+@uref{@value{ULATEX}, LaTex}
+
+@indentedblock
+Any modern latex distribution will do, we use @uref{@value{UTEXLIVE},
+TexLive}.
+
+Guile-CV will check that it can find the @code{standalone}
+documentclass, as well as the following packages: @code{inputenc},
+@code{fontenc}, @code{lmodern}, @code{xcolor}, @code{booktabs},
+@code{siunitx}, @code{iwona}.
+
+@uref{@value{UIWONA}, Iwona}: this is the font used to create
+@ref{im-histogram} headers, legend indices and footers. Note that it
+could be that it is not part of your 'basic' LaTex distro, on debian
+for example, iwona is part of the texlive-fonts-extra package.
 @end indentedblock
 
 @end itemize
@@ -131,29 +159,28 @@ could use
 @end example
 
 @item
-To install Guile-CV, you must have @code{write permissions} for
-@code{$prefix}, Guile's global site and site-ccache directories.
-@ifhtml
-@*@*
-@end ifhtml
+To install Guile-CV, you must have @code{write permissions} to the
+following directories:
 
-@item
-Guile-CV's modules are installed in Guile's global site directory.  If
-you want to know its location, enter the following expression in a
-terminal:
+@indentedblock
+@code{$prefix} and its subdirs@*
+Guile's global site directory@*
+Guile's site ccache directory
+@end indentedblock
+
+You may check the above two latest directories location using:
 
 @example
 guile -c "(display (%global-site-dir)) (newline)"
-@end example
-
-@item
-Guile-CV's compiled modules are installed in the Guile's
-@code{site-ccache} directory.  If you want to know its location, enter
-the following expression in a terminal:
-
-@example
 guile -c "(display (%site-ccache-dir)) (newline)"
 @end example
+
+Guile-CV's modules are installed in Guile's global site directory.
+Guile-CV's compiled modules are installed in the Guile's
+@code{site-ccache} directory.
+@ifhtml
+@*@*
+@end ifhtml
 
 @item
 Like for any other GNU Tool Chain compatible software, you may install
@@ -165,7 +192,7 @@ installed in @code{$prefix/share/doc/guile-cv}
 @end ifhtml
 
 @item
-Last but not least :), Guile-CV comes with a tests suite, which we
+Last but not least :), Guile-CV comes with a @code{test-suite}, which we
 recommend you to run (especially before @ref{Reporting Bugs}):
 
 @example
