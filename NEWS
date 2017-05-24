@@ -18,6 +18,86 @@ warranty.
 
 * Latest News
 
+** May the 23rd, 2017
+
+Guile-CV version 0.1.4 is released!
+
+	This is the first public release of Guile-CV, earlier releases
+	were made available to GNU evaluators and Savannah hackers only.
+
+Here is a summary of the changes since version 0.1.3.2. See GNU
+Guile-CV's git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.3.2
+
+New Dependencies
+----------------
+
+New (or earlier unspecified) dependencies:
+
+	Makeinfo >= 6.3
+	Latex
+	  (any modern latex distribution will do)
+	  documentclass:
+		standalone
+	  packages:
+	        inputenc, fontenc, lmodern, xcolor, booktabs, siunitx,
+		iwona
+
+Incompatible API change:
+------------------------
+
+	im-properties:
+		renamed im-features
+
+	im-*grey* procedures and methods:
+		renamed im-*gray*
+		dito for arguments
+		GREY -> GRAY in the documentation
+
+	colour -> color
+	COLOUR -> COLOR:
+		both in the source code (arg and kw arg names)
+		and in the documentation
+
+	f32vector-* procedures
+		use #:key, not #:optional
+
+	im-padd
+	im-padd-channel
+		accept a #:color optional keyword argument
+
+	f32vector-multiply
+		renamed f32vector-matrix-multiply
+
+New procedures:
+---------------
+
+	f32vector-inverse
+	f32vector-reduce
+	f32vector-mean
+	f32vector-std-dev
+	im-add
+	im-add-channel
+	im-subtract
+	im-subtract-channel
+	im-multiply
+	im-multiply-channel
+	im-divide
+	im-divide-channel
+	im-inverse
+	im-inverse-channel
+	im-compose
+	im-compose-channels
+	im-particles
+	im-particle-clean
+	im-histogram
+
+* Older News
+
 ** March the 12th, 2017
 
 Guile-CV version 0.1.3 is released, the next maintenance release for
@@ -116,6 +196,5 @@ description:
 [2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
 
 
-* Older News
 
-For older News, see http://www.gnu.org/software/guile-cv/news.html
+
