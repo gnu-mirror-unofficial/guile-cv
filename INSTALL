@@ -95,6 +95,10 @@ proceed with the following steps:
 	make
 	make install
 
+Special note: before you start to use Guile-CV, make sure you read and
+implement the recommendation made in the manual, section 'Configuring
+Guile’s repl-print procedure'.
+
 Happy Guile-CV!
 
 *** Notes
