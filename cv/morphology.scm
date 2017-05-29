@@ -52,7 +52,9 @@
 	    im-close
 	    im-close-channel
 	    im-fill
-	    im-fill-channel))
+	    im-fill-channel
+            im-delineate
+            im-delineate-channel))
 
 
 #;(g-export )
@@ -139,6 +141,39 @@
 	  (f32vector-set! l-channel i 255.0)))
     (im-unpadd-channel l-channel new-w new-h 1 1 1 1
 		       #:new-w width #:new-h height)))
+
+(define (im-delineate image threshold)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-delineate-channel channel width height threshold))
+		       idata))))))
+
+(define (im-delineate-channel channel width height threshold)
+  (let* ((radius 2)
+         (channel-min (im-disc-erode-channel channel width height radius))
+         (channel-max (im-disc-dilate-channel channel width height radius))
+         (to (im-make-channel width height))
+         (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell) to)
+      (let* ((ori (f32vector-ref channel i))
+             (mini (f32vector-ref channel-min i))
+             (maxi (f32vector-ref channel-max i))
+             (diff (- maxi mini)))
+        (f32vector-set! to i
+                        (if (< diff threshold)
+                            ;; not an edge
+                            ori
+                            ;; an edge
+                            (if (< (- ori mini)
+                                   (- maxi ori))
+                                mini
+                                maxi)))))))
 
 
 ;;;
