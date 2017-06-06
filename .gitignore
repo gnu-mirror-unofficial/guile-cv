@@ -10,6 +10,7 @@ build-aux/ltmain.sh
 build-aux/mdate-sh
 build-aux/missing
 build-aux/texinfo.tex
+build-aux/config.rpath
 config.log
 config.status
 configure
