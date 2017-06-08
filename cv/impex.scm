@@ -60,26 +60,30 @@
 ;;;
 
 (define (im-load filename)
-  (case (im-n-channel filename)
-    ((1)
-     (vigra-load-gray-image filename))
-    ((3)
-     (vigra-load-rgb-image filename))
-    ((4)
-     (vigra-load-rgba-image filename))
-    (else
-     (error "Not a GRAY, RGB nor an RGBA image" filename))))
+  (match (im-size filename)
+    ((width height n-chan)
+     (case n-chan
+       ((1)
+        (vigra-load-gray-image filename width height))
+       ((3)
+        (vigra-load-rgb-image filename width height))
+       ((4)
+        (vigra-load-rgba-image filename width height))
+       (else
+        (error "Not a GRAY, RGB nor an RGBA image" filename))))))
 
 (define (im-save image filename)
-  (case (im-n-channel image)
-    ((1)
-     (vigra-save-gray-image image filename))
-    ((3)
-     (vigra-save-rgb-image image filename))
-    ((4)
-     (vigra-save-rgba-image image filename))
-    (else
-     (error "Not a GRAY, RGB nor an RGBA image" filename))))
+  (match image
+    ((width height n-chan idata)
+     (case n-chan
+       ((1)
+        (vigra-save-gray-image image filename width height))
+       ((3)
+        (vigra-save-rgb-image image filename width height))
+       ((4)
+        (vigra-save-rgba-image image filename width height))
+       (else
+        (error "Not a GRAY, RGB nor an RGBA image" filename))))))
 
 (define-method (im-size (filename <string>))
   (list (im-width filename)
@@ -112,119 +116,81 @@
 ;;;
 ;;;
 
-(define (vigra-load-gray-image filename)
-  (match (im-size filename)
-    ((width height n-chan)
-     (case n-chan
-       ((1)
-	(let ((idata (im-make-channels width height n-chan)))
-	  (match idata
-	    ((c)
-	     (case (vigra-importgrayimage-c (bytevector->pointer c)
-					    width
-					    height
-					    (string->pointer filename))
-	       ((0) (list width height n-chan idata))
-	       ((1) (error "Not a GRAY image" filename))
-	       ((2) (error "Sizes mismatch" filename)))))))
-       (else
-	(error "Not a GRAY image" filename))))))
+(define (vigra-load-gray-image filename width height)
+  (let ((c (im-make-channel width height)))
+    (case (vigra-importgrayimage-c (bytevector->pointer c)
+                                   width
+                                   height
+                                   (string->pointer filename))
+      ((0) (list width height 1 (list c)))
+      ((1) (error "Not a GRAY image" filename))
+      ((2) (error "Sizes mismatch" filename)))))
 
-(define (vigra-load-rgb-image filename)
-  (match (im-size filename)
-    ((width height n-chan)
-     (case n-chan
-       ((3)
-	(let ((idata (im-make-channels width height n-chan)))
-	  (match idata
-	    ((r g b)
-	     (case (vigra-importrgbimage-c (bytevector->pointer r)
-					   (bytevector->pointer g)
-					   (bytevector->pointer b)
-					   width
-					   height
-					   (string->pointer filename))
-	       ((0) (list width height n-chan idata))
-	       ((1) (error "Not an RGB image" filename))
-	       ((2) (error "Sizes mismatch" filename)))))))
-       (else
-	(error "Not an RGB image" filename))))))
+(define (vigra-load-rgb-image filename width height)
+  (let ((idata (im-make-channels width height 3)))
+    (match idata
+      ((r g b)
+       (case (vigra-importrgbimage-c (bytevector->pointer r)
+                                     (bytevector->pointer g)
+                                     (bytevector->pointer b)
+                                     width
+                                     height
+                                     (string->pointer filename))
+         ((0) (list width height 3 idata))
+         ((1) (error "Not an RGB image" filename))
+         ((2) (error "Sizes mismatch" filename)))))))
 
-(define (vigra-load-rgba-image filename)
-  (match (im-size filename)
-    ((width height n-chan)
-     (case n-chan
-       ((4)
-	(let ((idata (im-make-channels width height n-chan)))
-	  (match idata
-	    ((r g b a)
-	     (case (vigra-importrgbaimage-c (bytevector->pointer r)
-                                            (bytevector->pointer g)
-                                            (bytevector->pointer b)
-                                            (bytevector->pointer a)
-                                            width
-                                            height
-                                            (string->pointer filename))
-	       ((0) (list width height n-chan idata))
-	       ((1) (error "Load RGBA image failed." filename)))))))
-       (else
-	(error "Not an RGBA image" filename))))))
+(define (vigra-load-rgba-image filename width height)
+  (let ((idata (im-make-channels width height 4)))
+    (match idata
+      ((r g b a)
+       (case (vigra-importrgbaimage-c (bytevector->pointer r)
+                                      (bytevector->pointer g)
+                                      (bytevector->pointer b)
+                                      (bytevector->pointer a)
+                                      width
+                                      height
+                                      (string->pointer filename))
+         ((0) (list width height 4 idata))
+         ((1) (error "Load RGBA image failed." filename)))))))
 
-(define (vigra-save-gray-image image filename)
-  (match image
-    ((width height n-chan idata)
-     (case n-chan
-       ((1)
-	(match idata
-	  ((c)
-	   (case (vigra-exportgrayimage-c (bytevector->pointer c)
-					  width
-					  height
-					  (string->pointer filename))
-	     ((0) #t)
-	     (else
-	      (error "Image could not be saved." filename))))))
+(define (vigra-save-gray-image image filename width height)
+  (match (im-channels image)
+    ((c)
+     (case (vigra-exportgrayimage-c (bytevector->pointer c)
+                                    width
+                                    height
+                                    (string->pointer filename))
+       ((0) #t)
        (else
-	(error "Not a GRAY image" filename))))))
+        (error "Image could not be saved." filename))))))
 
-(define (vigra-save-rgb-image image filename)
-  (match image
-    ((width height n-chan idata)
-     (case n-chan
-       ((3)
-	(match idata
-	  ((r g b)
-	   (case (vigra-exportrgbimage-c (bytevector->pointer r)
-					 (bytevector->pointer g)
-					 (bytevector->pointer b)
-					 width
-					 height
-					 (string->pointer filename))
-	     ((0) #t)
-	     (else
-	      (error "Image could not be saved." filename))))))
+(define (vigra-save-rgb-image image filename width height)
+  (match (im-channels image)
+    ((r g b)
+     (case (vigra-exportrgbimage-c (bytevector->pointer r)
+                                   (bytevector->pointer g)
+                                   (bytevector->pointer b)
+                                   width
+                                   height
+                                   (string->pointer filename))
+       ((0) #t)
        (else
-	(error "Not an RGB image" filename))))))
+        (error "Image could not be saved." filename))))))
 
-(define (vigra-save-rgba-image image filename)
-  (match image
-    ((width height n-chan idata)
-     (case n-chan
-       ((4)
-	(match idata
-	  ((r g b a)
-	   (case (vigra-exportrgbaimage-c (bytevector->pointer r)
-                                          (bytevector->pointer g)
-                                          (bytevector->pointer b)
-                                          (bytevector->pointer a)
-                                          width
-                                          height
-                                          (string->pointer filename))
-	     ((0) #t)
-	     (else
-	      (error "Image could not be saved." filename))))))
+(define (vigra-save-rgba-image image filename width height)
+  (match (im-channels image)
+    ((r g b a)
+     (case (vigra-exportrgbaimage-c (bytevector->pointer r)
+                                    (bytevector->pointer g)
+                                    (bytevector->pointer b)
+                                    (bytevector->pointer a)
+                                    width
+                                    height
+                                    (string->pointer filename))
+       ((0) #t)
        (else
-	(error "Not an RGBA image" filename))))))
+        (error "Image could not be saved." filename))))))
 
 
 ;;;
