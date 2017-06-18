@@ -54,7 +54,9 @@
 	    im-fill
 	    im-fill-channel
             im-delineate
-            im-delineate-channel))
+            im-delineate-channel
+            im-distance-map
+            im-distance-map-channel))
 
 
 #;(g-export )
@@ -142,19 +144,21 @@
     (im-unpadd-channel l-channel new-w new-h 1 1 1 1
 		       #:new-w width #:new-h height)))
 
-(define (im-delineate image threshold)
+(define* (im-delineate image #:key (threshold  10) (radius 2))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-delineate-channel channel width height threshold))
+			 (im-delineate-channel channel width height
+                                               #:threshold threshold
+                                               #:radius radius))
 		       idata))))))
 
-(define (im-delineate-channel channel width height threshold)
-  (let* ((radius 2)
-         (channel-min (im-disc-erode-channel channel width height radius))
+(define* (im-delineate-channel channel width height
+                               #:key (threshold  10) (radius 2))
+  (let* ((channel-min (im-disc-erode-channel channel width height radius))
          (channel-max (im-disc-dilate-channel channel width height radius))
          (to (im-make-channel width height))
          (n-cell (* width height)))
@@ -175,6 +179,26 @@
                                 mini
                                 maxi)))))))
 
+(define* (im-distance-map image
+                                #:key (bg 'black) (mode 'euclidian))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-distance-map-channel channel width height
+                                                        #:bg bg #:mode mode))
+		       idata))))))
+
+(define* (im-distance-map-channel channel width height
+                                        #:key (bg 'black) (mode 'euclidian))
+    (let ((to (im-make-channel width height)))
+    (case (vigra-distance-transform channel to width height bg mode)
+      ((0) to)
+      (else
+       (error "Distance transform failed.")))))
+
 
 ;;;
 ;;; Guile vigra low level API
@@ -185,7 +209,7 @@
 		 (bytevector->pointer to)
 		 width
 		 height
-		 radius))
+if the pixels		 radius))
 
 (define (vigra-disc-dilate from to width height radius)
   (vigra-disc-dilate-c (bytevector->pointer from)
@@ -193,6 +217,23 @@
 		       width
 		       height
 		       radius))
+
+(define (vigra-distance-transform from to width height bg mode)
+  (vigra-distance-transform-c (bytevector->pointer from)
+                              (bytevector->pointer to)
+                              width
+                              height
+                              (case bg
+                                ((black) 0.0)
+                                ((white) 255.0)
+                                (else
+                                 (error "No such background: " bg)))
+                              (case mode
+                                ((chessboard) 0)
+                                ((manhattan) 1)
+                                ((euclidian) 2)
+                                (else
+                                 (error "No such mode: " mode)))))
 
 
 ;;;
@@ -218,3 +259,14 @@
 			    int	     ;; width
 			    int      ;; height
 			    int)))   ;; radius
+
+(define vigra-distance-transform-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_distancetransform_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int      ;; height
+                            float    ;; bg
+			    int)))   ;; mode

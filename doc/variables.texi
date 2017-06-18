@@ -38,3 +38,7 @@
 @set ULATEX http://www.latex-project.org/
 @set UTEXLIVE https://tug.org/texlive/
 @set UIWONA http://www.tug.dk/FontCatalogue/iwona/
+
+@set UCHESSBOARD https://en.wikipedia.org/wiki/Chessboard_distance
+@set UMANHATTAN https://en.wikipedia.org/wiki/Taxicab_geometry
+@set UEUCLIDEAN https://en.wikipedia.org/wiki/Euclidean_distance

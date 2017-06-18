@@ -24,6 +24,10 @@ The Guile-CV procedures and methods related to morphology.
 @item @ref{im-close-channel}
 @item @ref{im-fill}
 @item @ref{im-fill-channel}
+@item @ref{im-delineate}
+@item @ref{im-delineate-channel}
+@item @ref{im-distance-map}
+@item @ref{im-distance-map-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -146,4 +150,84 @@ FIXME.
 Returns a new image or channnel.
 
 FIXME.
+@end deffn
+
+
+@anchor{im-delineate}
+@anchor{im-delineate-channel}
+@deffn Procedure im-delineate image @
+       [#:threshold 10] [#:radius 2]
+@deffnx Procedure im-delineate-channel channel width height @
+       [#:threshold 10] [#:radius 2]
+@cindex Edge Enhancement
+
+Returns a new image or channnel.
+
+Also know as @samp{Edge Enhancement}, this procedure performs the
+delineation of @var{image}, obtained by applying the following pseudo
+code algorithm:
+
+@lisp
+;; with
+;;   Min = (im-disc-erode image radius)
+;;   Max = (im-disc-dilate image radius)
+D = Max - Min
+If D < threshold
+  ;; not an edge
+  output pixel = input pixel
+  ;; it is an edge
+  If (pixel – Min) < (Max – pixel)
+    output pixel = Min
+    output pixel = Max
+@end lisp
+
+@ifnottex
+@image{images/sinter,,,sinter,png}
+@image{images/sinter-delin-t10-r2,,,sinter-delin-t10-r2,png}
+@image{images/sinter-delin-t25-r5,,,sinter-delin-t25-r5,png}
+@end ifnottex
+
+Here above, left being the original image - a small part of an optical
+microscope capture of a sinter sample - you can see the difference
+between @code{im-delineate} called with the default @var{threshold} and
+@var{radius} values, then called using @code{#:threshold 25} and
+@code{#:radius 5}.
+@end deffn
+
+
+@anchor{im-distance-map}
+@anchor{im-distance-map-channel}
+@deffn Procedure im-distance-map image @
+       [#:bg 'black] [#:mode 'euclidean]
+@deffnx Procedure im-distance-map-channel channel width height @
+       [#:bg 'black] [#:mode 'euclidean]
+@cindex Distance Transform
+
+Returns a new image or channnel.
+
+Also know as @samp{Distance Tranform}, this procedure performs the
+distance map of @var{image}, which consist of, for each background
+pixel, calculating its distance to the nearest object or contour. In the
+return new image or channel, all background pixels will be assigned the
+their distance value, all other pixels will be assigned to 0. Distances
+larger than 255 are labelled as 255.
+
+The default backgroung pixel value is @code{'black}, the optional
+@var{#:bg} keyword argument also accepts @code{'white}.
+
+The default distance map mode is @uref{@value{UEUCLIDEAN},
+'euclidean}. Other valid optional @var{#:mode} keyword argument are
+@uref{@value{UCHESSBOARD}, 'chessboard} and @uref{@value{UMANHATTAN},
+'manhattan}.
+
+@ifnottex
+@image{images/t-cells,,,t-cells,png}
+@image{images/t-cells-edm,,,t-cells-edm,png}
+@image{images/t-cells-mdm,,,t-cells-mdm,png}
+@image{images/t-cells-cdm,,,t-cells-cdm,png}
+@end ifnottex
+
+Here above, left being the original image - a few cells - you can see
+the results obtained by calling @code{im-distance-map} using respectively
+the @code{'euclidean}, @code{'manhattan} and @code{'chessboard} modes.
 @end deffn
