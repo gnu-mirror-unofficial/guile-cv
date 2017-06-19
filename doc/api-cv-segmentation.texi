@@ -34,7 +34,7 @@ The Guile-CV procedures and methods related to segmentation.
 @deffnx Procedure im-label-all image [#:con 8]
 @deffnx Procedure im-label-all-channel channel width height [#:con 8]
 
-Returns two values: a new GRAY image or GRAY channnel, and the total
+Returns two values: a new GRAY image or GRAY channel, and the total
 number of objects.
 
 The @code{im-label} and @code{im-label-channel} procedures label
@@ -76,5 +76,5 @@ value.
 @c @deffn Procedure im-watershed image
 @c @deffnx Procedure im-watershed-channel channel width height
 
-@c Returns a new image or channnel.
+@c Returns a new image or channel.
 @c @end deffn

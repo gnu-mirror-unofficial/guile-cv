@@ -38,7 +38,7 @@ The Guile-CV procedures and methods related to morphology.
 @deffn Procedure im-disc-erode image radius
 @deffnx Procedure im-disc-erode-channel channel width height radius
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 Performs the morpholgical erosion of @var{image} using a disc of a given
 @var{radius}. Here is an example:
@@ -76,7 +76,7 @@ Channel 1
 @deffn Procedure im-disc-dilate image radius
 @deffnx Procedure im-disc-dilate-channel channel width height radius
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 Performs the morpholgical dilatation of @var{image} using a disc of a
 given @var{radius}. Here is an example:
@@ -125,7 +125,7 @@ Channel 1
 @deffn Procedure im-open image
 @deffnx Procedure im-open-channel channel width height
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 FIXME.
 @end deffn
@@ -136,7 +136,7 @@ FIXME.
 @deffn Procedure im-close image
 @deffnx Procedure im-close-channel channel width height
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 FIXME.
 @end deffn
@@ -147,7 +147,7 @@ FIXME.
 @deffn Procedure im-fill image
 @deffnx Procedure im-fill-channel channel width height
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 FIXME.
 @end deffn
@@ -161,7 +161,7 @@ FIXME.
        [#:threshold 10] [#:radius 2]
 @cindex Edge Enhancement
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 Also know as @samp{Edge Enhancement}, this procedure performs the
 delineation of @var{image}, obtained by applying the following pseudo
@@ -203,7 +203,7 @@ between @code{im-delineate} called with the default @var{threshold} and
        [#:bg 'black] [#:mode 'euclidean]
 @cindex Distance Transform
 
-Returns a new image or channnel.
+Returns a new image or channel.
 
 Also know as @samp{Distance Tranform}, this procedure performs the
 distance map of @var{image}, which consist of, for each background
