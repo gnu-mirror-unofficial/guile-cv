@@ -209,7 +209,7 @@
 		 (bytevector->pointer to)
 		 width
 		 height
-if the pixels		 radius))
+		 radius))
 
 (define (vigra-disc-dilate from to width height radius)
   (vigra-disc-dilate-c (bytevector->pointer from)
