@@ -180,7 +180,7 @@
                                 maxi)))))))
 
 (define* (im-distance-map image
-                                #:key (bg 'black) (mode 'euclidian))
+                          #:key (bg 'black) (mode 'euclidian))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
@@ -188,16 +188,16 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-distance-map-channel channel width height
-                                                        #:bg bg #:mode mode))
-		       idata))))))
+                                                  #:bg bg #:mode mode))
+                 idata))))))
 
 (define* (im-distance-map-channel channel width height
-                                        #:key (bg 'black) (mode 'euclidian))
-    (let ((to (im-make-channel width height)))
+                                  #:key (bg 'black) (mode 'euclidian))
+  (let ((to (im-make-channel width height)))
     (case (vigra-distance-transform channel to width height bg mode)
       ((0) to)
       (else
-       (error "Distance transform failed.")))))
+       (error "Distance map failed.")))))
 
 
 ;;;
