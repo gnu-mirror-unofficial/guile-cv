@@ -86,7 +86,7 @@
     (case (vigra-gaussian-gradient channel to width height sigma)
       ((0) to)
       (else
-       (error "Gradient failed.")))))
+       (error "Gaussian gradient failed.")))))
 
 
 ;;;
