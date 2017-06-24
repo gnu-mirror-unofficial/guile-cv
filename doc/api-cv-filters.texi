@@ -48,7 +48,6 @@ distribution.
 @cindex Gaussian gradient
 
 Returns a new image or channel.
-@var{sigma}.
 
 The new image or new channel is the result of the computation of the
 strength of the first order partial derivatives by means of a
