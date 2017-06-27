@@ -68,7 +68,7 @@
 	      (iota n-cell))))))
     image))
 
-(define (make-test-image-gray type)
+(define (make-test-image-gray-type type)
     (let* ((img (im-make 3 3 1))
 	 (chan (im-channel img 0)))
     (case type
@@ -168,10 +168,10 @@
 
 
 (define-method (test-idata-3 (self <guile-cv-tests-cv>))
-  (let* ((empty (make-test-image-gray 'empty))
-	 (center (make-test-image-gray 'center))
-	 (square (make-test-image-gray 'square))
-	 (diamond (make-test-image-gray 'losange))
+  (let* ((empty (make-test-image-gray-type 'empty))
+	 (center (make-test-image-gray-type 'center))
+	 (square (make-test-image-gray-type 'square))
+	 (diamond (make-test-image-gray-type 'losange))
 	 (img-1 (make-test-image-rgb 3 2)))
     (assert-equal #t (im-image? empty))
     (assert-equal #t (im-image? center))
@@ -204,11 +204,47 @@
       (assert ((@@ (cv impex) vigra-save-rgb-image) bf t-file 85 95)))))
 
 
+(define-method (test-im-min/max (self <guile-cv-tests-cv>))
+  (let* ((gray (make-test-image-gray 3 2))
+         (rgb (make-test-image-rgb 3 2)))
+    (receive (val row col)
+        (im-min gray)
+      (assert-numeric-= val 0.0 1.0e-4)
+      (assert-numeric-= row 0 1.0e-4)
+      (assert-numeric-= col 0 1.0e-4))
+    (receive (val row col)
+        (im-max gray)
+      (assert-numeric-= val 5.0 1.0e-4)
+      (assert-numeric-= row 1 1.0e-4)
+      (assert-numeric-= col 2 1.0e-4))
+    (let ((rgb-mins (im-min rgb))
+          (expected-mins '((0.0 0 0) (6.0 0 0) (12.0 0 0)))
+          (rgb-maxs (im-max rgb))
+          (expected-maxs '((5.0 1 2) (11.0 1 2) (17.0 1 2))))
+      (for-each (lambda (item)
+                  (match item
+                    ((a b)
+                     (for-each (lambda (vals)
+                                 (match vals
+                                   ((need got)
+                                    (assert-numeric-= need got 1.0e-4))))
+                       (zip a b)))))
+          (zip rgb-mins expected-mins))
+      (for-each (lambda (item)
+                  (match item
+                    ((a b)
+                     (for-each (lambda (vals)
+                                 (match vals
+                                   ((need got)
+                                    (assert-numeric-= need got 1.0e-4))))
+                       (zip a b)))))
+          (zip rgb-maxs expected-maxs)))))
+
 (define-method (test-im-and (self <guile-cv-tests-cv>))
-  (let* ((empty (make-test-image-gray 'empty))
-	 (center (make-test-image-gray 'center))
-	 (square (make-test-image-gray 'square))
-	 (diamond (make-test-image-gray 'losange)))
+  (let* ((empty (make-test-image-gray-type 'empty))
+	 (center (make-test-image-gray-type 'center))
+	 (square (make-test-image-gray-type 'square))
+	 (diamond (make-test-image-gray-type 'losange)))
     (assert-equal diamond (im-and square diamond))
     (assert-equal empty (im-and diamond center))))
 
