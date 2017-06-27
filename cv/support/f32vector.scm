@@ -61,32 +61,29 @@
         (pos -1))
     (case n-cell
       ((0) (error "Empty vector: " v))
-      ((1) (f32vector-ref v 0))
       (else
-       (let ((mini (f32vector-ref v 0)))
-	 (do ((i 1
-		 (+ i 1)))
-	     ((= i n-cell) (values mini pos))
-	   (let ((val (f32vector-ref v i)))
-	     (when (float<? val mini prec)
-	       (set! mini val)
-               (set! pos i)))))))))
+       (do ((mini (f32vector-ref v 0))
+            (i 1
+               (+ i 1)))
+           ((= i n-cell) (values mini pos))
+         (let ((val (f32vector-ref v i)))
+           (when (float<? val mini prec)
+             (set! mini val)
+             (set! pos i))))))))
 
 (define* (f32vector-max v #:key (prec 1.0e-4))
   (let ((n-cell (f32vector-length v))
         (pos -1))
     (case n-cell
       ((0) (error "Empty vector: " v))
-      ((1) (f32vector-ref v 0))
-      (else
-       (let ((maxi (f32vector-ref v 0)))
-	 (do ((i 1
-		 (+ i 1)))
-	     ((= i n-cell) (values maxi pos))
-	   (let ((val (f32vector-ref v i)))
-	     (when (float>? val maxi)
-	       (set! maxi val)
-               (set! pos i)))))))))
+      (do ((maxi (f32vector-ref v 0))
+           (i 1
+              (+ i 1)))
+          ((= i n-cell) (values maxi pos))
+        (let ((val (f32vector-ref v i)))
+          (when (float>? val maxi)
+            (set! maxi val)
+            (set! pos i)))))))
 
 (define* (f32vector-reduce init op v #:key (n-cell #f))
   (let ((n-cell (or n-cell
