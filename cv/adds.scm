@@ -381,24 +381,42 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	      idata))))))
 
 (define (im-min image)
-    (match image
-      ((width height n-chan idata)
-       (let ((map-proc (if (and (> n-chan 1)
-                                (%use-par-map)) par-map map)))
-         (map-proc
-          (lambda (channel)
-            (f32vector-min channel))
-          idata)))))
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-min-channel c width))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (receive (val row col)
+                          (im-min-channel channel width)
+                        (list val row col)))
+              idata)))))))
+
+(define (im-min-channel channel width)
+  (receive (val pos)
+      (f32vector-min channel)
+    (values val (quotient pos width) (remainder pos width))))
 
 (define (im-max image)
-    (match image
-      ((width height n-chan idata)
-       (let ((map-proc (if (and (> n-chan 1)
-                                (%use-par-map)) par-map map)))
-         (map-proc
-          (lambda (channel)
-            (f32vector-max channel))
-          idata)))))
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-max-channel c width))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (receive (val row col)
+                          (im-max-channel channel width)
+                        (list val row col)))
+              idata)))))))
+
+(define (im-max-channel channel width)
+  (receive (val pos)
+      (f32vector-max channel)
+    (values val (quotient pos width) (remainder pos width))))
 
 (define (im-transpose image)
   (match image
