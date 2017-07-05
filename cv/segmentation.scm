@@ -47,7 +47,9 @@
 	    im-label-all
 	    im-label-all-channel
 	    #;im-watershed
-	    #;im-watershed-channel))
+	    #;im-watershed-channel
+            im-canny
+            im-canny-channel))
 
 
 #;(g-export )
@@ -123,7 +125,29 @@
       ((-1)
        (error "Watershed failed."))
       (else
-       to))))
+to))))
+
+(define* (im-canny image
+                   #:key (sigma 1.0) (threshold 0.0) (marker 255.0))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-canny-channel channel width height
+                                           #:sigma sigma
+                                           #:threshold threshold
+                                           #:marker marker))
+                 idata))))))
+
+(define* (im-canny-channel channel width height
+                           #:key (sigma 1.0) (threshold 0.0) (marker 255.0))
+  (let ((to (im-make-channel width height)))
+    (case (vigra-canny-edge-image channel to width height sigma threshold marker)
+      ((0) to)
+      (else
+       (error "Canny failed.")))))
 
 
 ;;;
@@ -163,6 +187,15 @@
 		     width
 		     height))
 
+(define (vigra-canny-edge-image from to width height sigma threshold marker)
+  (vigra-canny-edge-image-c (bytevector->pointer from)
+                            (bytevector->pointer to)
+                            width
+                            height
+                            sigma
+                            threshold
+                            marker))
+
 
 ;;;
 ;;; Vigra_c bindings
@@ -197,3 +230,15 @@
 			    '*	     ;; to channel
 			    int	     ;; width
 			    int)))   ;; height
+
+(define vigra-canny-edge-image-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_cannyedgeimage_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            float    ;; scale
+                            float    ;; gradient-threshold
+			    float))) ;; edge-marker

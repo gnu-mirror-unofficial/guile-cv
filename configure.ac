@@ -74,6 +74,7 @@ VIGRA_C_LIB
 VIGRA_C_FUNCTION([vigra_labelimagewithbackground_c])
 VIGRA_C_FUNCTION([vigra_labelimage_c])
 #VIGRA_C_FUNCTION([vigra_watersheds_c])
+VIGRA_C_FUNCTION([vigra_cannyedgeimage_c])
 VIGRA_C_FUNCTION([vigra_gaussiansmoothing_c])
 VIGRA_C_FUNCTION([vigra_gaussiangradientmagnitude_c])
 VIGRA_C_FUNCTION([vigra_discerosion_c])

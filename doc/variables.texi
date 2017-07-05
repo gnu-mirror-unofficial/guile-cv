@@ -42,3 +42,5 @@
 @set UCHESSBOARD https://en.wikipedia.org/wiki/Chessboard_distance
 @set UMANHATTAN https://en.wikipedia.org/wiki/Taxicab_geometry
 @set UEUCLIDEAN https://en.wikipedia.org/wiki/Euclidean_distance
+@set UCANNYEDGE https://en.wikipedia.org/wiki/Canny_edge_detector
+@set UEDGETHINNING https://en.wikipedia.org/wiki/Edge_detection#Edge_thinning

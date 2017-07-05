@@ -20,6 +20,8 @@ The Guile-CV procedures and methods related to segmentation.
 @item @ref{im-label-all-channel}
 @c @item @ref{im-watershed}
 @c @item @ref{im-watershed-channel}
+@item @ref{im-canny}
+@item @ref{im-canny-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -78,3 +80,22 @@ value.
 
 @c Returns a new image or channel.
 @c @end deffn
+
+
+@anchor{im-canny}
+@anchor{im-canny-channel}
+@deffn Procedure im-canny image @
+       [#:sigma 1.0] [#:threshold 0.0] [#:marker 255.0]
+@deffnx Procedure im-canny-channel channel width height @
+       [#:sigma 1.0] [#:threshold 0.0] [#:marker 255.0]
+@cindex Edge Detection
+
+Returns a new image or channel.
+
+Detect and mark edges using a @uref{@value{UCANNYEDGE}, Canny Edge
+Detector} algorithm: (a) compute the @var{image} Gaussian gradient using
+@var{sigma}, (b) remove edges whose strength is below @var{threshold},
+then for all remaining edges, (d) remove the non-local maxima
+(@uref{@value{UEDGETHINNING}, edge thinning}) and (e) set their
+intensity using @var{marker}.
+@end deffn
