@@ -98,4 +98,36 @@ Detector} algorithm: (a) compute the @var{image} Gaussian gradient using
 then for all remaining edges, (d) remove the non-local maxima
 (@uref{@value{UEDGETHINNING}, edge thinning}) and (e) set their
 intensity using @var{marker}.
+
+@ifnottex
+@image{images/edx,,,edx,png}
+@image{images/edx-canny-s1.0-t0.0-m255.0,,,edx-canny-s1.0-t0.0-m255.0,png}
+@image{images/edx-canny-s1.0-t8.0-m255.0,,,edx-canny-s1.0-t8.0-m255.0,png}
+@image{images/edx-canny-s1.5-t8.0-m255.0,,,edx-canny-s1.5-t8.0-m255.0,png}
+@image{images/edx-canny-s1.0-t8.0-m96.0,,,edx-canny-s1.0-t8.0-m96.0,png}
+
+
+Here above, left being the original @code{tif} image@footnote{Actually,
+all images dislayed in the documentation are @code{png} images, though
+all described @code{im-canny} calls where performed on the original
+@code{tif} image. This is because in Guile-CV, all images are 32bit
+float images, and when saved as @code{tif}, all values are preserved (as
+opposed to being normalized): however, most viewers do not handle
+floating point pixel values (they don´t know how to scale the values,
+which may be negative, fractional...). In order to show the results in
+the documentation, even though all computations of this example were
+made upon the original @code{tif} image, they were saved to @code{png}
+(which normalize all pixel values to [0 255].).}, you can see the
+difference between @code{im-canny} called using the default values, then
+using @var{#:threshold 8}, and finally both @var{#:sigma 1.5} and
+@var{#:threshold 8}. The last example is an illustration of the use of
+@code{#:marker 96.0}@footnote{Note that in order to show the result in
+the documentation, we had to manually set one pixel of one of the edges
+to 255.0: this is because, just as we explained in the previous
+footnote, to be able to display the image in the documentation, we had
+to save the image as @code{png}, which does normalize all values: if you
+do not set one of the pixels of one edge to 255.0, all markers values
+would be normalized to 255.0, there by loosing the original marker
+value.}.
+@end ifnottex
 @end deffn
