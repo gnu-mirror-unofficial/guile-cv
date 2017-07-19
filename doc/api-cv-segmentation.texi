@@ -108,7 +108,7 @@ intensity using @var{marker}.
 
 
 Here above, left being the original @code{tif} image@footnote{Actually,
-all images dislayed in the documentation are @code{png} images, though
+all images displayed in the documentation are @code{png} images, though
 all described @code{im-canny} calls where performed on the original
 @code{tif} image. This is because in Guile-CV, all images are 32bit
 float images, and when saved as @code{tif}, all values are preserved (as
