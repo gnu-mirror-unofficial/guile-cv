@@ -47,15 +47,21 @@ var {
     font-style: italic;
 }
 
-/*
-layout.css indents "body p" when it should probably only indent
-"body > p"?  In any case, disable indenting of p in these sub
-elements.
+/* layout.css indents "body p" when it should probably only indent
+   "body > p"?  In any case, disable indenting of p in these sub
+   elements.
 */
 dd p,li p {
     margin-left: 0;
     margin-right: 0;
 }
+
+/* This makes the very long tables of contents in Gnulib and other
+   manuals easier to read. */
+.contents ul, .shortcontents ul { font-weight: bold; }
+.contents ul ul, .shortcontents ul ul { font-weight: normal; }
+.contents ul { list-style: none; }
+
 
 /*
 underlined links are distracting, especially within outlined
@@ -67,6 +73,7 @@ a { /* add :link for external links */
     color: #547eaa;
     !color: #7a9b8f;
     !color: #6c8c80;
+    !color: #3e51b5; /* the economist blue alink */
 }
 
 a:hover {
@@ -76,6 +83,7 @@ a:hover {
 a code {
     color: #547eaa;
     !color: #6c8c80;
+    !color: #3e51b5; /* the economist blue alink */
 }
 
 /*
