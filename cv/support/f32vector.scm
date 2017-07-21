@@ -34,6 +34,7 @@
   #:use-module (cv init)
   #:use-module (cv support utils)
   #:use-module (cv support float)
+  #:use-module (cv support libguile-cv)
 
   #:export (f32vector-min
 	    f32vector-max
@@ -44,6 +45,7 @@
 	    f32vector-complement
 	    f32vector-and-at-offset
 	    f32vector-or-at-offset
+            f32vector-xor-at-offset
 	    f32vector-sum-at-offset
 	    f32vector-mean-at-offset
 	    f32vector=-at-offset?
@@ -157,6 +159,28 @@
 (define* (f32vector-or-at-offset vectors i
 				 #:key (prec 1.0e-4))
   (float>? (f32vector-sum-at-offset vectors i) 0.0 prec))
+
+(define (pixel-logior-1 vals result)
+  (if (null? vals)
+      result
+      (let ((a result)
+            (b (car vals)))
+        (pixel-logior-1 (cdr vals)
+                        (logior (logand a (- 255 b))
+                                (logand (- 255 a) b))))))
+
+(define (pixel-logior vals)
+  (match vals
+    ((a) a)
+    ((a . rests)
+     (pixel-logior-1 rests a))
+    (else
+     (error "Invalid argument: vals"))))
+
+(define (f32vector-xor-at-offset vectors i)
+  (pixel-logior (map (lambda (vector)
+                       (float->int (f32vector-ref vector i)))
+                  vectors)))
 
 (define (f32vector-sum-at-offset vectors i)
   (reduce +

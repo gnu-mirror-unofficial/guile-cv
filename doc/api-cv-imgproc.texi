@@ -46,6 +46,7 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-divide-channel}
 @item @ref{im-and}
 @item @ref{im-or}
+@item @ref{im-xor}
 @item @ref{im-complement}
 @item @ref{im-scrap}
 @item @ref{im-particles}
@@ -346,23 +347,53 @@ inverse of @var{channel-2}.  It will check that the number of lines of
 
 @anchor{im-and}
 @anchor{im-or}
+@anchor{im-xor}
 @deffn Procedure im-and i1 i2 i3 @dots{}
 @deffnx Procedure im-or i1 i2 i3 @dots{}
+@deffnx Procedure im-xor i1 i2 i3 @dots{}
 
 Returns @var{image} if one argument only, otherwise, it returns a new
-image, as the result of computing the logical @code{AND} or @code{OR} of
-all images.
+image, as the result of computing the logical @code{AND}, @code{OR} or
+@code{XOR} of all images.
 
-In the case of @code{AND}, for all positive results, the pixel value (of
-each channel) of the new image is set to the one obtained from
+In the case of @code{AND}, for all positive results, the pixel values
+(of each channel) of the new image are set to the one obtained from
 @var{i1}, and @code{0.0} otherwise.
 
-In the case of @code{OR}, the pixel value (of each channel) of the new
-image is to the one obtained from @var{i1} when it is @code{> 0.0},
-otherwise, it is set to the corresponding pixel mean value of all other
-images.
+In the case of @code{OR}, the pixel values (of each channel) of the new
+image are set to the one obtained from @var{i1} when it is @code{> 0.0},
+otherwise, they are set to the corresponding pixel mean value of all
+other images.
 
-All images must have the same @code{width} and @code{height}.
+In the case of @code{XOR}, the pixel values (of each channel) of the new
+image are set to the value obtained from successively computing
+@code{(logior (logand a (- 255 b)) (logand (- 255 a) b))} where @code{a}
+would be the previous result and @code{b} the current @code{image} pixel
+value, until all images passed in arguments have been
+processed@footnote{Note that there is no mathematically valid @code{XOR}
+operation on floating points, hence as they are @samp{accessed}, pixel
+values are converted to integer, using @code{float->int}, defined in the
+@code{(cv support libguile-cv)} module).}.
+
+All images must have the same @code{width}, @code{height} and
+@code{n-channel}.
+
+There are, of course, scientific use and examples of images logical
+@code{XOR}, and that is why @uref{@value{UGUILE-CV}, Guile-CV} is being
+developed for, but let's have a bit of fun here, and see if our
+levitating GNU likes apples!
+
+@ifnottex
+@image{images/emacs-1,,,emacs-1,png}
+@end ifnottex
+
+@c @indentedblock
+@c You want to have some fun? @code{:-)}
+
+@c Try @code{(im-xor img-1 igm-2)}, then @code{(im-xor img-1 igm-2 img-2)},
+@c the result of which being @code{img-1} (a mathematical proprety of the
+@c @code{XOR} operation of course, but its fun to see it @samp{in action}.
+@c @end indentedblock
 @end deffn
 
 

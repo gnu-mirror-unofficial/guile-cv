@@ -54,6 +54,7 @@
 	    im-threshold
 	    im-and
 	    im-or
+            im-xor
 	    im-complement
 	    im-min
 	    im-max
@@ -324,7 +325,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
      (match image
        ((width height n-chan _)
 	(if (and (apply = (cons width (im-collect rest 'width)))
-		 (apply = (cons height (im-collect rest 'height))))
+		 (apply = (cons height (im-collect rest 'height)))
+                 (apply = (cons n-chan (im-collect rest 'n-channel))))
 	    (let ((img-2 (im-copy image))
 		  (n-cell (* width height))
 		  (c-channels (im-collect (map im-rgb->gray rest) 'gray)))
@@ -349,7 +351,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
      (match image
        ((width height n-chan _)
 	(if (and (apply = (cons width (im-collect rest 'width)))
-		 (apply = (cons height (im-collect rest 'height))))
+		 (apply = (cons height (im-collect rest 'height)))
+                 (apply = (cons n-chan (im-collect rest 'n-channel))))
 	    (let ((img-2 (im-copy image))
 		  (n-cell (* width height))
 		  (c-channels (im-collect (map im-rgb->gray rest) 'gray)))
@@ -368,6 +371,34 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	    (error "Size mismatch.")))))
     ((image) image)
     (() (error "Invalid argument: " images))))
+
+(define (im-xor . images)
+  (match images
+    ((image . rest)
+     (match image
+       ((width height n-chan _)
+	(if (and (apply = (cons width (im-collect rest 'width)))
+		 (apply = (cons height (im-collect rest 'height)))
+                 (apply = (cons n-chan (im-collect rest 'n-channel))))
+            (list width height n-chan
+                  (let ((map-proc (if (and (> n-chan 1)
+                                           (%use-par-map)) par-map map)))
+                    (map-proc (lambda (channels)
+                                (im-xor-channels channels width height))
+                        (apply zip (im-collect images 'channels)))))
+	    (error "Size mismatch.")))))
+    ((image) image)
+    (() (error "Invalid argument: " images))))
+
+(define (im-xor-channels channels width height)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+            (+ i 1)))
+        ((= i n-cell))
+      (f32vector-set! to i
+                      (f32vector-xor-at-offset channels i)))
+    to))
 
 (define (im-complement image)
   (match image
