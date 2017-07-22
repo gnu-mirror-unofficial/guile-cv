@@ -21,50 +21,73 @@
 @node About Guile-CV
 @section About Guile-CV
 
-Guile-CV @* a Computer Vision functional programming library for
-@uref{@value{UGUILE}, Guile}
+@strong{GNU Guile-CV} @*
+Image Processing and Analysis in @uref{@value{UGUILE}, Guile} @*
+a Computer Vision functional programming library
 
 
-@subheading Description
+@c @subheading Description
 
-Guile-CV is a Computer Vision function progrmming library for the
-@uref{@value{UGUILE}, Guile} Scheme language. Guile-CV is based on
-@uref{@value{UVIGRA}, Vigra} (Vision with Generic Algorithms).  It
-comprises a direct binding to @uref{@value{UVIGRAC}, vigra_c} (a C
-wrapper to a subset of the Vigra library), and a higher level API
-written in Guile Scheme.
+@uref{@value{UGUILE-CV}, Guile-CV} - Image Processing and Analysis in
+@uref{@value{UGUILE}, Guile} - is a Computer Vision functional
+programming library for the @uref{@value{UGUILE}, Guile} Scheme
+language.
+
+Based on @uref{@value{UVIGRA}, Vigra} (Vision with Generic Algorithms -
+a C++ image processing and analysis library), @uref{@value{UGUILE-CV},
+Guile-CV} comprises a direct binding to @uref{@value{UVIGRAC}, Vigra C}
+(a C wrapper to most of the Vigra functionality), @code{enriched} with
+pure Guile scheme algorithms, all accessible through a @code{nice},
+@code{clean} and @code{easy to use} high level @code{API}.
 
 
-@subheading What else
+@subheading Objective
 
-Guile-CV is almost entirely written in @uref{@value{UGUILE}, Guile}
-Scheme, though for performance reasons, some basic operations are
-implemented in C (see libguile-cv if you are interested).  This C code
-is kept to the very strict minimum and _not_ part of the API: as Guile
-Scheme evolves, targeting an AOT compiler, we may rewrite these in
-scheme at any moment.
+@uref{@value{UGUILE-CV}, Guile-CV} objective is to be a @code{robust},
+@code{reliable} and @code{fast} - Image Processing and Analysis -
+Computer Vision functional programming library for the
+@uref{@value{UGUILE}, Guile} Scheme language. @uref{@value{UGUILE-CV},
+Guile-CV} also wants to be @code{easy to use}, @code{study},
+@code{modify} and @code{extend}.
+
+@uref{@value{UGUILE-CV}, Guile-CV} can be used as an @code{educational
+sofware}, a @code{research toolbox} but it can also be used @code{'in
+production'}: @uref{@value{UGUILE-CV}, Guile-CV} is @code{robust},
+@code{reliable} and @code{fast}, and we will make sure
+@uref{@value{UGUILE-CV}, Guile-CV} remains @code{robust},
+@code{reliable} and @code{fast} as it grows.
+
+@c @subheading What else
+
+@c @uref{@value{UGUILE-CV}, Guile-CV} is almost entirely written in
+@c @uref{@value{UGUILE}, Guile} Scheme, though for performance reasons,
+@c some basic operations are implemented in C (see libguile-cv if you are
+@c interested).  This C code is kept to the very strict minimum and _not_
+@c part of the API: as Guile Scheme evolves, targeting an AOT compiler, we
+@c may rewrite these in scheme at any moment.
 
 
 @subheading Savannah
 
-Guile-CV also has a @uref{@value{UGUILE-CV-SAVANNAH}, Savannah} project
-page.
+@uref{@value{UGUILE-CV}, Guile-CV} also has a
+@uref{@value{UGUILE-CV-SAVANNAH}, Savannah project page}.
 
 
 @node Obtaining and Installing Guile-CV
 @section Obtaining and Installing Guile-CV
 
-Guile-CV can be obtained from the following archive
-@uref{@value{UGUILE-CV-RELEASES}, site}.  The file will be named
+@uref{@value{UGUILE-CV}, Guile-CV} can be obtained from the following
+archive @uref{@value{UGUILE-CV-RELEASES}, site}.  The file will be named
 guile-cv-version.tar.gz. The current version is @value{VERSION}, so the
 file you should grab is:
 
-@tie{}@tie{}@tie{}@tie{}@uref{@value{UGUILE-CV-LATEST}}
-
+@indentedblock
+@uref{@value{UGUILE-CV-LATEST}}
+@end indentedblock
 
 @subheading Dependencies
 
-Guile-CV needs the following software to run:
+@uref{@value{UGUILE-CV}, Guile-CV} needs the following software to run:
 
 @itemize @bullet
 
@@ -80,11 +103,20 @@ Makeinfo >= 6.3
 @uref{@value{UGUILE-LIB}, Guile-Lib} >= 0.2.5
 @item 
 @uref{@value{UVIGRA}, Vigra} >= 1.11.0
-@item
-@uref{@value{UVIGRAC}, Vigra_c}
 
 @indentedblock
-Vigra_c is a C wrapper [to some of] the Vigra functionality. It is
+@strong{Special notes:}
+
+If you manually install @uref{@value{UVIGRA}, Vigra}, make sure you pass
+the cmake ‑DCMAKE_BUILD_TYPE=RELEASE option, which triggers absolutely
+essential adequate runtime optimization flags.
+@end indentedblock
+
+@item
+@uref{@value{UVIGRAC}, Vigra C}
+
+@indentedblock
+Vigra C - a C wrapper [to some of] the Vigra functionality - is
 currently only available by cloning its source code @uref{@value{UGIT},
 git} repository: there is no release and no versioning scheme
 either@footnote{We do our best to check that the libvigra_c installed
@@ -93,19 +125,26 @@ these checks are listed as part of our @code{configure} steps}.  But no
 big deal, its home page has an 'Installation' section which guides you
 step by step.
 
-@strong{Special notes:}
+@strong{Notes:}
 
-(a) vigra_c says it depends on @code{cmake >= 3.1}, but this is only
+@enumerate
+@item
+Make sure you pass the cmake ‑DCMAKE_BUILD_TYPE=RELEASE option, which
+triggers absolutely essential adequate runtime optimization flags;
+
+@item
+Vigra C says it depends on @code{cmake >= 3.1}, but this is only
 true if you want to build its documentation, probably not the case. Most
 distribution still have cmake 2.8, if that is your case, you may safely
 edit @file{/your/path/vigra_c/CMakeLists.txt} and downgrade this
 requirement to the cmake version installed on your machine;
 
-(b) make sure the directory where @file{libvigra_c.so} has been
-installed is 'known', either because it is defined in
-@file{/etc/ld.so.conf.d}, or you set the environment variable
-@code{LD_LIBRARY_PATH}, otherwise Guile won't find it and
-@code{configure} will report an error;
+@item
+Make sure the directory where @file{libvigra_c.so} has been installed is
+'known', either because it is defined in @file{/etc/ld.so.conf.d}, or
+you set the environment variable @code{LD_LIBRARY_PATH}, otherwise Guile
+won't find it and @code{configure} will report an error.
+@end enumerate
 @end indentedblock
 
 @item
@@ -143,7 +182,15 @@ make
 make install
 @end example
 
-Happy Guile-CV!
+@indentedblock
+@strong{Special notes:}
+
+Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
+you read and implement the recommendation made in the manual, section
+@xref{Configuring Guile's repl-print procedure}.
+@end indentedblock
+
+Happy @uref{@value{UGUILE-CV}, Guile-CV}!
 
 @*
 @strong{Notes:}
@@ -151,12 +198,10 @@ Happy Guile-CV!
 @enumerate
 @item
 In the above @code{configure} step, @code{--prefix=/your/prefix} is
-optional.  The default value is @code{/usr/local}.  As an example, you
-could use
-
-@example
-./configure --prefix=/opt
-@end example
+optional.  The default value is @code{/usr/local}.
+@ifhtml
+@*@*
+@end ifhtml
 
 @item
 To install Guile-CV, you must have @code{write permissions} to the
