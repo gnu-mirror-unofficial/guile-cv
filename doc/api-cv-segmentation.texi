@@ -31,8 +31,8 @@ The Guile-CV procedures and methods related to segmentation.
 @anchor{im-label-channel}
 @anchor{im-label-all}
 @anchor{im-label-all-channel}
-@deffn Procedure im-label image [#:con 8] [#:bg 'dark]
-@deffnx Procedure im-label-channel channel width height [#:con 8] [#:bg 'dark]
+@deffn Procedure im-label image [#:con 8] [#:bg 'black]
+@deffnx Procedure im-label-channel channel width height [#:con 8] [#:bg 'black]
 @deffnx Procedure im-label-all image [#:con 8]
 @deffnx Procedure im-label-all-channel channel width height [#:con 8]
 

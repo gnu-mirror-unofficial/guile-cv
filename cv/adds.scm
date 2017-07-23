@@ -173,7 +173,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
        (else
 	(error "Not an RGBA (nor an RGB neither a GRAY) image."))))))
 
-(define* (im-threshold image threshold #:key (bg 'dark) (prec 1.0e-4))
+(define* (im-threshold image threshold #:key (bg 'black) (prec 1.0e-4))
   (if (and (>= threshold 0.0)
 	   (<= threshold 255.0))
       (match (match image
@@ -189,8 +189,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	   ((c)
 	    (let ((c-copy (im-make-channel width height))
 		  (op (case bg
-			((dark) float>=?)
-			((light) float<=?)
+			((black) float>=?)
+			((white) float<=?)
 			(else
 			 (error "Invalid background: " bg)))))
 	      (do ((i 0
@@ -505,7 +505,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                               255)))
     to))
 
-(define* (im-scrap image val #:key (pred <) (con 8) (bg 'dark))
+(define* (im-scrap image val #:key (pred <) (con 8) (bg 'black))
   ;; (im-binary? image) is rather expensive
   (match image
     ((width height n-chan idata)

@@ -59,7 +59,7 @@
 ;;; Guile-CV API
 ;;;
 
-(define* (im-label image #:key (con 8) (bg 'dark))
+(define* (im-label image #:key (con 8) (bg 'black))
   ;; (im-binary? image) is rather expensive
   (match image
     ((width height n-chan idata)
@@ -75,7 +75,7 @@
        (else
 	(error "Not a binary image."))))))
 
-(define* (im-label-channel channel width height #:key (con 8) (bg 'dark))
+(define* (im-label-channel channel width height #:key (con 8) (bg 'black))
   (let* ((to (im-make-channel width height))
 	 (result (vigra-label channel to width height con bg)))
     (case result
@@ -165,8 +165,8 @@ to))))
 		   (else
 		    (error "No such connectivity: " con)))
 		 (case bg
-		   ((dark) 0.0)
-		   ((light) 255.0)
+		   ((black) 0.0)
+		   ((white) 255.0)
 		   (else
 		    (error "No such background: " bg)))))
 

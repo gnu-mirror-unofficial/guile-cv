@@ -260,17 +260,17 @@ Returns a new GRAY image.
 
 @anchor{im-threshold}
 @deffn Procedure im-threshold image threshold @
-       [#:bg 'dark] [#:prec 1.0e-4]
+       [#:bg 'black] [#:prec 1.0e-4]
 
 Returns a new BLACK and WHITE image.
 
-Valid @var{#:bg} values are @code{'(dark light)}, the default is
-@code{dark}. If @var{image} is an RGB image, @ref{im-rgb->gray} is first
+Valid @var{#:bg} values are @code{'(black white)}, the default is
+@code{black}. If @var{image} is an RGB image, @ref{im-rgb->gray} is first
 called.
 
 Pixels for which the original value is @code{>=} @var{threshold} are set
-to 255.0 if @var{#:bg} is @code{'dark}, and set to 0.0 if @var{#:bg} is
-@code{'light}. The other pixels are set to 0.0 or 255.0 respectively.
+to 255.0 if @var{#:bg} is @code{'black}, and set to 0.0 if @var{#:bg} is
+@code{'white}. The other pixels are set to 0.0 or 255.0 respectively.
 @end deffn
 
 
@@ -408,7 +408,7 @@ value is @code{(- 255.0 pixel-value)}.
 @end deffn
 
 @anchor{im-scrap}
-@deffn Procedure im-scrap image val [#:pred <] [#:con 8] [#:bg 'dark]
+@deffn Procedure im-scrap image val [#:pred <] [#:con 8] [#:bg 'black]
 
 Returns a new image.
 
