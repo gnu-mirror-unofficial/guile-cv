@@ -30,24 +30,37 @@ Guile-CV needs the following software to run:
     Makeinfo	>= 6.3
 	Guile 		>= 2.0.13	[a]
 	Vigra		>= 1.11.0	[b]
-	Vigra_c				[c]
+
+	  Special notes:
+	  --------------
+
+	  If you manually install Vigra, make sure you pass the cmake
+	  ‑DCMAKE_BUILD_TYPE=RELEASE option, which triggers absolutely
+	  essential adequate runtime optimization flags.
+
+	Vigra C				[c]
 
 	  Vigra_c is a C wrapper [to some of] the Vigra
 	  functionality. It is currently only available by cloning its
 	  source code git repository: there is no release and no
-	  versioning scheme either1. But no big deal, its home page has
+	  versioning scheme either. But no big deal, its home page has
 	  an ’Installation’ section which guides you step by step.
 
-	  Special note:
+	  Notes:
+	  ------
 
-	  (i) vigra_c says it depends on cmake >= 3.1, but this is only
+	  (i) Make sure you pass the cmake ‑DCMAKE_BUILD_TYPE=RELEASE
+	  option, which triggers absolutely essential adequate runtime
+	  optimization flags;
+
+	  (ii) Vigra C says it depends on cmake >= 3.1, but this is only
 	  true if you want to build its documentation, probably not the
 	  case. Most distribution still have cmake 2.8, if that is your
 	  case, you may safely edit /your/path/vigra_c/CMakeLists.txt
 	  and downgrade this requirement to the cmake version installed
 	  on your machine;
 
-	  (ii) make sure the directory where libvigra_c.so has been
+	  (iii) Make sure the directory where libvigra_c.so has been
 	  installed is ’known’, either because it is defined in
 	  /etc/ld.so.conf.d, or you set the environment variable
 	  LD_LIBRARY_PATH, otherwise Guile won’t find it and configure
@@ -79,8 +92,8 @@ Guile-CV releases are here:
 
 	http://ftp.gnu.org/gnu/guile-cv/
 
-		guile-cv-0.1.4.tar.gz
-		guile-cv-0.1.4.tar.gz.sig
+		guile-cv-0.1.5.tar.gz
+		guile-cv-0.1.5.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -89,15 +102,18 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.1.4.tar.gz
-	cd guile-cv-0.1.4
+	tar zxf guile-cv-0.1.5.tar.gz
+	cd guile-cv-0.1.5
 	./configure [--prefix=/your/prefix]
 	make
 	make install
 
-Special note: before you start to use Guile-CV, make sure you read and
-implement the recommendation made in the manual, section 'Configuring
-Guile’s repl-print procedure'.
+	  Special note:
+	  -------------
+
+	  Before you start to use Guile-CV, make sure you read and
+      implement the recommendation made in the manual, section
+      'Configuring Guile’s repl-print procedure'.
 
 Happy Guile-CV!
 

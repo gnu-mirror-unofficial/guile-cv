@@ -19,23 +19,30 @@ warranty.
 * Guile-CV
 
 GNU Guile-CV [1]
-a Computer Vision functional programming library for Guile [2]
+Image Processing and Analysis in Guile [2]
+a Computer Vision functional programming library
 
-** Description
 
-GNU Guile-CV is a Computer Vision functional programming library for the
-Guile Scheme language.  GNU Guile-CV is based on Vigra (Vision with Generic
-Algorithms) [3].  It comprises a direct binding to Vigra_c [4] (a C
-wrapper to some of the Vigra functionality), and a higher level API
-written in Guile Scheme [5].
+GNU Guile-CV - Image Processing and Analysis in Guile - is a Computer
+Vision functional programming library for the Guile Scheme language.
 
-** What else
+Based on Vigra (Vision with Generic Algorithms - a C++ image processing
+and analysis library) [3], GNU GUile-CV comprises a direct binding to
+Vigra C (a C wrapper to some of the Vigra functionality) [4], enriched
+with pure Guile scheme algorithms, all accessible through a nice, clean
+and easy to use high level API.
 
-GNU Guile-CV is almost entirely written in Guile Scheme, though for
-performance reasons, some basic operations are implemented in C (see
-libguile-cv if you are interested).  This C code is kept to the very
-strict minimum and _not_ part of the API: as Guile Scheme evolves,
-targeting an AOT compiler, we may rewrite these in scheme at any moment.
+** Objective
+
+Guile-CV objective is to be a robust, reliable and fast - Image
+Processing and Analysis - Computer Vision functional programming library
+for the Guile Scheme language. Guile-CV also wants to be easy to use,
+study, modify and extend.
+
+Guile-CV can be used as an educational sofware, a research toolbox but
+it can also be used 'in production': Guile-CV is robust, reliable and
+fast, and we will make sure Guile-CV remains robust, reliable and fast
+as it grows.
 
 ** Savannah
 

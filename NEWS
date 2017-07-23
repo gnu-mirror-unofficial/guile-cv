@@ -16,7 +16,48 @@ warranty.
 
 #+END_COMMENT
 
-* Latest News
+
+Guile-CV - History of user-visible changes
+==========================================
+
+  Please send Guile-CV bug reports to
+
+	 bug-guile-cv@gnu.org
+
+
+* Latest New
+
+** July the 24th, 2017
+
+Guile-CV version 0.1.5 is released!
+
+Here is a summary of the changes since version 0.1.4. See GNU Guile-CV's
+git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.4
+
+**** New interfaces
+
+im-delineate
+im-delineate-channel
+im-distance-map
+im-distance-map-channel
+im-canny
+im-canny-channel
+im-xor
+f32vector-xor-at-offset
+
+**** Bug fixes
+
+Import export test-suite
+im-gaussian-gradient error message 
+Documentation typo fixes
+
+
+* Older News
 
 ** May the 23rd, 2017
 
@@ -95,8 +136,6 @@ New procedures:
 	im-particles
 	im-particle-clean
 	im-histogram
-
-* Older News
 
 ** March the 12th, 2017
 
