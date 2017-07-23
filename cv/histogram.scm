@@ -95,7 +95,7 @@
           (match (apply append items)
             ((h-title h-legend histogram h-vals h-table)
              (values (im-compose 'below 'center #:color %h-padd-color
-                                 h-title h-legend histogram h-table)
+                                 h-title histogram h-legend h-table)
                      h-vals)))))))))
 
 (define* (im-histogram-rgb image #:key (subtitle "Untitled"))
