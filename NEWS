@@ -39,6 +39,14 @@ git summary [1] and git log [2] for a complete description:
 
 *** Changes since 0.1.4
 
+**** Interface changes
+
+dark -> black
+light -> white
+
+  both in the source code (optional kw default values)
+  and in the documentation
+
 **** New interfaces
 
 im-delineate
@@ -53,9 +61,9 @@ f32vector-xor-at-offset
 **** Bug fixes
 
 Import export test-suite
-im-gaussian-gradient error message 
+Error message for im-gaussian-gradient
 Documentation typo fixes
-
+Histogram gray legends below their histogram
 
 * Older News
 
