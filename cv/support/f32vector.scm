@@ -55,7 +55,8 @@
 	    f32vector-index
 	    f32vector-count-distinct
             f32vector-inverse
-            f32vector-matrix-multiply))
+            f32vector-matrix-multiply
+            f32vector->s32vector))
 
 
 (define* (f32vector-min v #:key (prec 1.0e-4))
@@ -341,6 +342,15 @@
 	((= i n-cell) to)
       (f32vector-set! to i
                       (expt (f32vector-ref v i) -1)))))
+
+(define (f32vector->s32vector v)
+  (let* ((n-cell (f32vector-length v))
+	 (to (make-s32vector n-cell)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell) to)
+      (s32vector-set! to i
+                      (float->int (f32vector-ref v i))))))
 
 
 ;;;
