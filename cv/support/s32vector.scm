@@ -37,7 +37,8 @@
   #:use-module (cv support libguile-cv)
 
   #:export (s32vector-min
-	    s32vector-max))
+	    s32vector-max
+            s32vector->f32vector))
 
 
 (define (s32vector-min v)
@@ -71,3 +72,12 @@
            (when (> val maxi)
              (set! maxi val)
              (set! pos i))))))))
+
+(define (s32vector->f32vector v)
+  (let* ((n-cell (s32vector-length v))
+	 (to (make-f32vector n-cell)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell) to)
+      (f32vector-set! to i
+                      (s32vector-ref v i)))))
