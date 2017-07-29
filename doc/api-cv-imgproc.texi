@@ -155,14 +155,14 @@ row values.
 
 @anchor{im-normalize}
 @anchor{im-normalize-channel}
-@deffn Procedure im-normalize image
-@deffnx Procedure im-normalize-channel channel width height
+@deffn Procedure im-normalize image [#:value 255.0]
+@deffnx Procedure im-normalize-channel channel width height [#:value 255.0]
 
 Returns a new normalized image or channel.
 
 Normalizing an @var{image} or a @var{channel} consist of dividing all
-pixel values by 255.0, as a result, all being in the @code{[0.0 -> 1.0]}
-range.
+pixels by a value so they all fall in the @code{[0.0 -> 1.0]} range. The
+default @var{#:value} is @code{255.0}.
 @end deffn
 
 

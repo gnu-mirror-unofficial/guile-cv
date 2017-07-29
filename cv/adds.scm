@@ -485,24 +485,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define (im-inverse-channel channel width height)
   (f32vector-inverse channel))
 
-(define (im-normalize image)
+(define* (im-normalize image #:key (val 255.0))
   (match image
     ((width height n-chan idata)
      (list height width n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-normalize-channel channel width height))
+			 (im-normalize-channel channel width height #:val val))
 	       idata))))))
 
-(define (im-normalize-channel channel width height)
+(define* (im-normalize-channel channel width height #:key (val 255.0))
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
     (do ((i 0
 	    (+ i 1)))
 	((= i n-cell))
       (f32vector-set! to i (/ (f32vector-ref channel i)
-                              255)))
+                              val)))
     to))
 
 (define* (im-scrap image val #:key (pred <) (con 8) (bg 'black))
