@@ -44,6 +44,10 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-multiply-channel}
 @item @ref{im-divide}
 @item @ref{im-divide-channel}
+@item @ref{im-min}
+@item @ref{im-min-channel}
+@item @ref{im-max}
+@item @ref{im-max-channel}
 @item @ref{im-and}
 @item @ref{im-or}
 @item @ref{im-xor}
@@ -342,6 +346,23 @@ So, the matrix methods performs the linear algebra matrix multiplication
 of @var{image} by the inverse of @var{image-2}, or @var{channel} by the
 inverse of @var{channel-2}.  It will check that the number of lines of
 @var{image-2} is equal to the number of columns of @var{image}.
+@end deffn
+
+
+@anchor{im-min}
+@anchor{im-max}
+@anchor{im-min-channel}
+@anchor{im-max-channel}
+@deffn Procedure im-min image
+@deffnx Procedure im-max image
+@deffnx Procedure im-min-channel channel width height
+@deffnx Procedure im-max-channel channel width height
+
+Returns three multiple values if @var{image} is GRAY: 1. respectively
+the @code{minimum} or @code{maximum} value of @var{image} or
+@var{channel}; 2. and 3.  its @code{row} and @code{column} indices in
+@var{image} or @var{channel}.  If @var{image} is RGB or for any
+@code{n-chan > 1} images, it returns a list of list of these.
 @end deffn
 
 
