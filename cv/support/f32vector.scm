@@ -89,18 +89,18 @@
              (set! maxi val)
              (set! pos i))))))))
 
-(define* (f32vector-reduce init op v #:key (n-cell #f))
+(define* (f32vector-reduce v proc seed #:key (n-cell #f))
   (let ((n-cell (or n-cell
                     (f32vector-length v)))
-        (result init))
+        (result seed))
     (do ((i 0
             (+ i 1)))
         ((= i n-cell) result)
-      (set! result (op result (f32vector-ref v i))))))
+      (set! result (proc result (f32vector-ref v i))))))
 
 (define* (f32vector-mean v #:key (n-cell #f))
   (let ((n-cell (f32vector-length v)))
-    (/ (f32vector-reduce 0 + v #:n-cell n-cell) n-cell)))
+    (/ (f32vector-reduce v + 0 #:n-cell n-cell) n-cell)))
 
 (define* (f32vector-std-dev v #:key (n-cell #f) (mean #f))
   (let* ((n-cell (or n-cell (f32vector-length v)))

@@ -90,7 +90,7 @@
 
 (define-method (test-f32vector-reduce (self <guile-cv-tests-support>))
   (let ((v1 %v1))
-    (assert-numeric-= 40.0 (f32vector-reduce 0 + v1) 0)))
+    (assert-numeric-= 40.0 (f32vector-reduce v1 + 0) 0)))
 
 (define-method (test-f32vector-mean (self <guile-cv-tests-support>))
   (let* ((v1 %v1)
