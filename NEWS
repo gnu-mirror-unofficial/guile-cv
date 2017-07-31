@@ -25,7 +25,55 @@ Guile-CV - History of user-visible changes
 	 bug-guile-cv@gnu.org
 
 
-* Latest New
+* Latest News
+
+** August the xx, 2017
+
+Guile-CV version 0.1.6 is released!
+
+Here is a summary of the changes since version 0.1.5. See GNU Guile-CV's
+git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.5
+
+**** Interface changes
+
+im-normalize
+im-normalize-channel:
+
+  Adding an optional #:key (val 255.0), since we need to be able to
+  normalize to specific values in some circumstances, such as, for
+  example, to normalize gray level co-occurrence matrices.
+
+f32vector-reduce:
+
+  The arguments order has been changed for 'vector proc default' not
+  'proc default vector', because it is the order we use in im-reduce and
+  im-reduce-channel - as [almost] all other im-* procedures or methods
+  take an image as their first argument.  As a user, it is also a bit
+  more naturel, imo at least, to 'reduce image using proc, return
+  default if the image is empty'.
+
+**** New interfaces
+
+im-min
+im-min-channel
+im-max
+im-max-channel
+im-reduce
+im-reduce-channel
+f32vector->s32vector
+s32vector-min
+s32vector-max
+s32vector->f32vector
+
+**** Bug fixes
+
+
+* Older News
 
 ** July the 24th, 2017
 
@@ -64,8 +112,6 @@ Import export test-suite
 Error message for im-gaussian-gradient
 Documentation typo fixes
 Histogram gray legends below their histogram
-
-* Older News
 
 ** May the 23rd, 2017
 

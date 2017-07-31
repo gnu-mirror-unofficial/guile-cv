@@ -48,6 +48,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-min-channel}
 @item @ref{im-max}
 @item @ref{im-max-channel}
+@item @ref{im-reduce}
+@item @ref{im-reduce-channel}
 @item @ref{im-and}
 @item @ref{im-or}
 @item @ref{im-xor}
@@ -355,14 +357,48 @@ inverse of @var{channel-2}.  It will check that the number of lines of
 @anchor{im-max-channel}
 @deffn Procedure im-min image
 @deffnx Procedure im-max image
-@deffnx Procedure im-min-channel channel width height
-@deffnx Procedure im-max-channel channel width height
+@deffnx Procedure im-min-channel channel width
+@deffnx Procedure im-max-channel channel width
 
 Returns three multiple values if @var{image} is GRAY: 1. respectively
 the @code{minimum} or @code{maximum} value of @var{image} or
 @var{channel}; 2. and 3.  its @code{row} and @code{column} indices in
 @var{image} or @var{channel}.  If @var{image} is RGB or for any
 @code{n-chan > 1} images, it returns a list of list of these.
+@end deffn
+
+
+@anchor{im-reduce}
+@anchor{im-reduce-channel}
+@deffn Procedure im-reduce image proc default
+@deffnx Procedure im-reduce-channel channel proc default
+
+Returns one value if @var{image} is GRAY.  If @var{image} is RGB or for
+any @code{n-chan > 1}, it returns a list of values.
+
+If @var{image} is empty, @code{im-reduce} returns @var{default} (this is
+the only use for default).  If @var{image} has only one pixel, then the
+pixel value is what is returned.  Otherwise, @var{proc} is called on the
+pixel values of @var{image}.
+
+Each @var{proc} call is @code{(proc elem prev)}, where @code{elem} is a
+pixel value from the channel (the second and subsequent pixel values of
+the channel), and @code{prev} is the returned value from the previous
+call to @var{proc}. The first pixel value - for each channel - is the
+@code{prev} for the first call to @code{proc}.
+
+For example:
+
+@lisp
+,use (cv)
+(im-load "edx.png")
+@print{}
+$2 = (128 128 1 (#f32(4.0 26.0 102.0 97.0 58.0 10.0 9.0 21.0 # …)))
+(im-reduce $2 + 0)
+@print{}
+$3 = 556197.0
+@end lisp
+
 @end deffn
 
 

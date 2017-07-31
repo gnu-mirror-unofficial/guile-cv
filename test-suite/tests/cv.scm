@@ -456,5 +456,36 @@
       (assert-exception (im-features img-1 img-2))
       (assert (im-features img-1 l-img)))))
 
+(define %texture-test-image
+  (list 4 4 1
+        (list #f32(0 0 1 1 0 0 1 1 0 2 2 2 2 2 3 3))))
+
+(define %glcm-test-result
+  (list 4 4 4
+        (list #f32(2.0  2.0  1.0  0.0
+                   0.0  2.0  0.0  0.0
+                   0.0  0.0  3.0  1.0
+                   0.0  0.0  0.0  1.0)
+              #f32(2.0  1.0  0.0  0.0
+                   0.0  1.0  0.0  0.0
+                   0.0  2.0  2.0  0.0
+                   0.0  0.0  1.0  0.0)
+              #f32(3.0  0.0  0.0  0.0
+                   0.0  2.0  0.0  0.0
+                   2.0  2.0  1.0  0.0
+                   0.0  0.0  2.0  0.0)
+              #f32(1.0  0.0  0.0  0.0
+                   1.0  1.0  0.0  0.0
+                   3.0  1.0  0.0  0.0
+                   0.0  0.0  2.0  0.0))))
+
+(define-method (test-im-reduce (self <guile-cv-tests-cv>))
+  (assert-numeric-= (im-reduce %texture-test-image + 0) 20.0 1.0e-4)
+  (for-each (lambda (vals)
+              (match vals
+                ((got need)
+                 (assert-numeric-= got need 1.0e-4))))
+      (zip (im-reduce %glcm-test-result + 0)
+           '(12.0 9.0 12.0 9.0))))
 
 (exit-with-summary (run-all-defined-test-cases))

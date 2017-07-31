@@ -58,6 +58,8 @@
 	    im-complement
 	    im-min
 	    im-max
+            im-reduce
+            im-reduce-channel
             im-inverse
             im-inverse-channel
             im-transpose
@@ -318,6 +320,58 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define-method (im-divide-channel c1 width-1 height-1 (c2 <uvec>) width-2)
   (f32vector-matrix-multiply c1 width-1 height-1 (f32vector-inverse c2) width-2))
 
+(define (im-min image)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-min-channel c width))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (receive (val row col)
+                          (im-min-channel channel width)
+                        (list val row col)))
+              idata)))))))
+
+(define (im-min-channel channel width)
+  (receive (val pos)
+      (f32vector-min channel)
+    (values val (quotient pos width) (remainder pos width))))
+
+(define (im-max image)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-max-channel c width))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (receive (val row col)
+                          (im-max-channel channel width)
+                        (list val row col)))
+              idata)))))))
+
+(define (im-max-channel channel width)
+  (receive (val pos)
+      (f32vector-max channel)
+    (values val (quotient pos width) (remainder pos width))))
+
+(define (im-reduce image proc default)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-reduce-channel c proc default))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (im-reduce-channel channel proc default))
+              idata)))))))
+
+(define (im-reduce-channel channel proc default)
+  (f32vector-reduce channel proc default))
 
 (define (im-and . images)
   (match images
@@ -410,44 +464,6 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	      (lambda (channel)
 		(f32vector-complement channel))
 	      idata))))))
-
-(define (im-min image)
-  (match image
-    ((width height n-chan idata)
-     (match idata
-       ((c)
-        (im-min-channel c width))
-       (else
-        (let ((map-proc (if (%use-par-map) par-map map)))
-          (map-proc (lambda (channel)
-                      (receive (val row col)
-                          (im-min-channel channel width)
-                        (list val row col)))
-              idata)))))))
-
-(define (im-min-channel channel width)
-  (receive (val pos)
-      (f32vector-min channel)
-    (values val (quotient pos width) (remainder pos width))))
-
-(define (im-max image)
-  (match image
-    ((width height n-chan idata)
-     (match idata
-       ((c)
-        (im-max-channel c width))
-       (else
-        (let ((map-proc (if (%use-par-map) par-map map)))
-          (map-proc (lambda (channel)
-                      (receive (val row col)
-                          (im-max-channel channel width)
-                        (list val row col)))
-              idata)))))))
-
-(define (im-max-channel channel width)
-  (receive (val pos)
-      (f32vector-max channel)
-    (values val (quotient pos width) (remainder pos width))))
 
 (define (im-transpose image)
   (match image
