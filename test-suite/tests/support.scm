@@ -103,10 +103,36 @@
     (assert-numeric-= 2.0 std-dev 0)))
 
 
+;;;
+;;; s32vector
+;;;
+
+(define-method (test-s32vector-min-max (self <guile-cv-tests-support>))
+  (let ((v1 #s32(-2 -10 0 255 20))
+	(v2 #s32(0 128 196 255)))
+    (receive (val pos)
+        (s32vector-min v1)
+      (assert-true (= val -10))
+      (assert-true (= pos 1)))
+    (receive (val pos)
+        (s32vector-max v1)
+      (assert-true (= val 255))
+      (assert-true (= pos 3)))))
+
+
+(define %s32-v1 #s32(2 4 4 4 5 5 7 9))
+
+(define-method (test-s32vector-reduce (self <guile-cv-tests-support>))
+  (assert-true (= 40 (s32vector-reduce %s32-v1 + 0))))
+
+
+;;;
+;;; libguile-cv
+;;;
+
 (define-method (test-libguile-cv (self <guile-cv-tests-support>))
   (assert-true (= 1 (float->int 1.0)))
   (assert-true (= 1 (float->int 1.52)))
   (assert-true (= 1 (float->int 1.99))))
-
 
 (exit-with-summary (run-all-defined-test-cases))

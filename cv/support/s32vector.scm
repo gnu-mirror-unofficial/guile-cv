@@ -38,6 +38,7 @@
 
   #:export (s32vector-min
 	    s32vector-max
+            s32vector-reduce
             s32vector->f32vector))
 
 
@@ -72,6 +73,17 @@
            (when (> val maxi)
              (set! maxi val)
              (set! pos i))))))))
+
+(define* (s32vector-reduce v proc default #:key (n-cell #f))
+  (let ((n-cell (or n-cell
+                    (s32vector-length v))))
+    (if (= n-cell 0)
+        default
+        (do ((i 1
+                (+ i 1))
+             (prev (s32vector-ref v 0)
+                   (proc (s32vector-ref v i) prev)))
+            ((= i n-cell) prev)))))
 
 (define (s32vector->f32vector v)
   (let* ((n-cell (s32vector-length v))
