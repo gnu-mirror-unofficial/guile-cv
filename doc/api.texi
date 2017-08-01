@@ -27,13 +27,13 @@
 @node Guile-CV
 @section Guile-CV
 
-@include api-cv-impex.texi
 @include api-cv-idata.texi
+@include api-cv-impex.texi
 @include api-cv-imgproc.texi
-@include api-cv-filters.texi
-@include api-cv-segmentation.texi
-@include api-cv-morphology.texi
 @include api-cv-features.texi
+@include api-cv-filters.texi
+@include api-cv-morphology.texi
+@include api-cv-segmentation.texi
 @include api-cv-utils.texi
 
 @node Support

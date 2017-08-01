@@ -43,13 +43,13 @@ guile_cv_TEXINFOS = \
   using-guile-cv.texi		\
   api-abreviations.texi		\
   api-overview.texi		\
-  api-cv-impex.texi		\
   api-cv-idata.texi		\
+  api-cv-impex.texi		\
   api-cv-imgproc.texi		\
+  api-cv-features.texi		\
   api-cv-filters.texi		\
   api-cv-morphology.texi	\
   api-cv-segmentation.texi	\
-  api-cv-features.texi		\
   api-cv-utils.texi		\
   api-support-modules.texi	\
   api-support.texi		\

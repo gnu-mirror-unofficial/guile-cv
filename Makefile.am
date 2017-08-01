@@ -44,15 +44,16 @@ SOURCES = \
 	cv/support.scm				\
 	cv/init.scm				\
 	cv/idata.scm				\
-	cv/imgproc.scm				\
 	cv/impex.scm				\
-	cv/filters.scm				\
-	cv/morphology.scm			\
-	cv/segmentation.scm			\
-	cv/features.scm				\
+	cv/imgproc.scm				\
 	cv/adds.scm				\
 	cv/compose.scm				\
 	cv/histogram.scm			\
+	cv/features.scm				\
+	cv/texture.scm				\
+	cv/filters.scm				\
+	cv/morphology.scm			\
+	cv/segmentation.scm			\
 	cv/utils.scm				\
 	cv.scm
 
