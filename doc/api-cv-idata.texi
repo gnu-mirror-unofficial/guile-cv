@@ -8,7 +8,7 @@
 @subsection Image Structure and Accessors
 
 The Guile-CV procedures and methods related to images data structure,
-creating, accessing ad copying images.
+creating, accessing and copying images.
 
 
 @subheading Image Data Structure
