@@ -68,7 +68,9 @@ im-reduce-channel
 f32vector->s32vector
 s32vector-min
 s32vector-max
+s32vector-reduce
 s32vector->f32vector
+
 
 **** Bug fixes
 
