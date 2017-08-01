@@ -40,6 +40,12 @@ Guile-CV} comprises a direct binding to @uref{@value{UVIGRAC}, Vigra C}
 pure Guile scheme algorithms, all accessible through a @code{nice},
 @code{clean} and @code{easy to use} high level @code{API}.
 
+@uref{@value{UGUILE-CV}, Guile-CV} is natively @code{multi-threaded},
+and takes advantage of @code{multiple cores}, using high-level and fine
+grained application-level @code{parallelism constructs} available in
+@uref{@value{UGUILE}, Guile}, based on its support to @code{POSIX
+threads}.
+
 
 @subheading Objective
 
