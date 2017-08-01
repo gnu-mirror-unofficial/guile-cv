@@ -4,8 +4,8 @@
 @c See the file guile-cv.texi for copying conditions.
 
 
-@node Image Processing
-@subsection Image Processing
+@node Processing
+@subsection Processing
 
 The Guile-CV procedures and methods to process images.
 
