@@ -43,6 +43,7 @@
             f32vector-std-dev
 	    f32vector-copy
 	    f32vector-complement
+            f32vector-ref-at-offset
 	    f32vector-and-at-offset
 	    f32vector-or-at-offset
             f32vector-xor-at-offset
@@ -148,6 +149,11 @@
       (f32vector-set! copy i
 		      (- of (f32vector-ref vector i))))))
 
+(define (f32vector-ref-at-offset vectors i)
+  (map (lambda (vector)
+         (f32vector-ref vector i))
+    vectors))
+
 (define* (f32vector-and-at-offset vectors i
 				  #:key (prec 1.0e-4))
   (let ((n-vec (length vectors))
@@ -178,7 +184,7 @@
     ((a . rests)
      (pixel-logior-1 rests a))
     (else
-     (error "Invalid argument: vals"))))
+     (error "Invalid argument:" vals))))
 
 (define (f32vector-xor-at-offset vectors i)
   (pixel-logior (map (lambda (vector)
@@ -188,9 +194,7 @@
 (define (f32vector-sum-at-offset vectors i)
   (reduce +
 	  0.0
-	  (map (lambda (vector)
-		 (f32vector-ref vector i))
-	    vectors)))
+          (f32vector-ref-at-offset vectors i)))
 
 (define (f32vector-mean-at-offset vectors i)
   (let ((n-vec (length vectors)))
