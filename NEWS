@@ -63,6 +63,8 @@ im-min
 im-min-channel
 im-max
 im-max-channel
+im-map
+im-map-channel
 im-reduce
 im-reduce-channel
 f32vector->s32vector

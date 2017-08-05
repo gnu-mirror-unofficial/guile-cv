@@ -460,6 +460,13 @@
   (list 4 4 1
         (list #f32(0 0 1 1 0 0 1 1 0 2 2 2 2 2 3 3))))
 
+(define  %texture-test-image-2
+  (list 4 4 1
+        (list #f32(0.0  0.0  2.0  2.0
+                   0.0  0.0  2.0  2.0
+                   0.0  4.0  4.0  4.0
+                   4.0  4.0  6.0  6.0))))
+
 (define %glcm-test-result
   (list 4 4 4
         (list #f32(2.0  2.0  1.0  0.0
@@ -478,6 +485,35 @@
                    1.0  1.0  0.0  0.0
                    3.0  1.0  0.0  0.0
                    0.0  0.0  2.0  0.0))))
+
+(define %glcm-test-result-2
+  (list 4 4 4
+        (list #f32(4.0  4.0  2.0  0.0
+                   0.0  4.0  0.0  0.0
+                   0.0  0.0  6.0  2.0
+                   0.0  0.0  0.0  2.0)
+              #f32(4.0  2.0  0.0  0.0
+                   0.0  2.0  0.0  0.0
+                   0.0  4.0  4.0  0.0
+                   0.0  0.0  2.0  0.0)
+              #f32(6.0  0.0  0.0  0.0
+                   0.0  4.0  0.0  0.0
+                   4.0  4.0  2.0  0.0
+                   0.0  0.0  4.0  0.0)
+              #f32(2.0  0.0  0.0  0.0
+                   2.0  2.0  0.0  0.0
+                   6.0  2.0  0.0  0.0
+                   0.0  0.0  4.0  0.0))))
+
+(define-method (test-im-map (self <guile-cv-tests-cv>))
+  (let ((i1 %texture-test-image)
+        (i2 %texture-test-image-2)
+        (i3 %glcm-test-result)
+        (i4 %glcm-test-result-2))
+    (assert-true (im-=? i1 (im-map identity i1)))
+    (assert-true (im-=? (im-map + i1 i1) i2))
+    (assert-true (im-=? i3 (im-map identity i3)))
+    (assert-true (im-=? (im-map + i3 i3) i4))))
 
 (define-method (test-im-reduce (self <guile-cv-tests-cv>))
   (assert-numeric-= (im-reduce %texture-test-image + 0) 20.0 1.0e-4)

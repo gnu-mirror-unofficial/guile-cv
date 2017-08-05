@@ -48,6 +48,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-min-channel}
 @item @ref{im-max}
 @item @ref{im-max-channel}
+@item @ref{im-map}
+@item @ref{im-map-channel}
 @item @ref{im-reduce}
 @item @ref{im-reduce-channel}
 @item @ref{im-and}
@@ -365,6 +367,20 @@ the @code{minimum} or @code{maximum} value of @var{image} or
 @var{channel}; 2. and 3.  its @code{row} and @code{column} indices in
 @var{image} or @var{channel}.  If @var{image} is RGB or for any
 @code{n-chan > 1} images, it returns a list of list of these.
+@end deffn
+
+
+@anchor{im-map}
+@anchor{im-map-channel}
+@deffn Procedure im-map proc i1 i2 i3 @dots{}
+@deffnx Procedure im-map-channel proc width height c1 c2 c3 @dots{}
+
+Returns a new image or channel.
+
+Apply @var{proc} to each pixel value of each channel of @var{i1} (if
+only two arguments are given), or to the corresponding pixel values of
+each channels of i1 i2 i3 @dots{} (if more than two arguments are
+given).
 @end deffn
 
 

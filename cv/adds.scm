@@ -58,6 +58,8 @@
 	    im-complement
 	    im-min
 	    im-max
+            im-map
+            im-map-channel
             im-reduce
             im-reduce-channel
             im-inverse
@@ -372,6 +374,50 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (im-reduce-channel channel proc default)
   (f32vector-reduce channel proc default))
+
+(define (im-map proc . images)
+  (match images
+    ((image . rest)
+     (match image
+       ((width height n-chan _)
+	(if (and (apply = (cons width (im-collect rest 'width)))
+		 (apply = (cons height (im-collect rest 'height)))
+                 (apply = (cons n-chan (im-collect rest 'n-channel))))
+            (list width height n-chan
+                  (let ((map-proc (if (and (> n-chan 1)
+                                           (%use-par-map)) par-map map)))
+                    (map-proc (lambda (channels)
+                                (apply im-map-channel proc width height channels))
+                        (apply zip (im-collect images 'channels)))))
+	    (error "Size mismatch.")))))
+    ((image)
+     (match image
+       ((width height n-chan idata)
+        (list width height n-chan
+              (let ((map-proc (if (and (> n-chan 1)
+                                       (%use-par-map)) par-map map)))
+                (map-proc (lambda (channel)
+                            (im-map-channel proc width height channel))
+                    idata))))))
+    (()
+     (error "Invalid argument: " images))))
+
+(define (im-map-channel proc width height . channels)
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (match channels
+      ((c . rest)
+       (do ((i 0
+               (+ i 1)))
+           ((= i n-cell))
+         (f32vector-set! to i
+                         (match channels
+                           ((c . rest)
+                            (apply proc
+                                   (f32vector-ref-at-offset channels i)))
+                           ((c)
+                            (proc (f32vector-ref c i))))))))
+    to))
 
 (define (im-and . images)
   (match images
