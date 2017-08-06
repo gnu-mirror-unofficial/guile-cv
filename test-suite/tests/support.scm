@@ -60,14 +60,6 @@
 	(pred1 (lambda (val) (float=? val 0.0)))
 	(pred2 (lambda (val) (float=? val 255.0)))
 	(pred3 (lambda (val) (float=? val 256.0))))
-    (receive (val pos)
-        (f32vector-min v1)
-      (assert-numeric-= val -10.0 1.0e-4)
-      (assert-numeric-= pos 1 1.0e-4))
-    (receive (val pos)
-        (f32vector-max v1)
-      (assert-numeric-= val 255.0 1.0e-4)
-      (assert-numeric-= pos 3 1.0e-4))
     (assert-true (f32vector=? v1 (f32vector-copy v1)))
     (assert-true (f32vector=? v3 (f32vector-complement v2)))
     (assert-false (f32vector-and-at-offset (list v2 v3) 0))
@@ -85,6 +77,16 @@
     (assert-true (f32vector-pred-at-offset? pred2 (list v3 v4) 0))
     (assert-numeric-= 0 (f32vector-index pred2 v3 v4) 1.0e-1)
     (assert-false (f32vector-index pred3 v3 v4))))
+
+(define-method (test-f32vector-range (self <guile-cv-tests-support>))
+  (let ((v1 #f32(-2.0 -10.0 0.0 255.0 20.0))
+        (prec 1.0e-4))
+    (match (f32vector-range v1 #:prec prec)
+      ((mini p-mini maxi p-maxi)
+       (assert-numeric-= mini -10.0 prec)
+       (assert-numeric-= p-mini 1 prec))
+      (assert-numeric-= maxi 255.0 prec)
+      (assert-numeric-= p-maxi 3 prec))))
 
 (define %v1 #f32(2.0 4.0 4.0 4.0 5.0 5.0 7.0 9.0))
 
@@ -107,18 +109,14 @@
 ;;; s32vector
 ;;;
 
-(define-method (test-s32vector-min-max (self <guile-cv-tests-support>))
-  (let ((v1 #s32(-2 -10 0 255 20))
-	(v2 #s32(0 128 196 255)))
-    (receive (val pos)
-        (s32vector-min v1)
-      (assert-true (= val -10))
-      (assert-true (= pos 1)))
-    (receive (val pos)
-        (s32vector-max v1)
-      (assert-true (= val 255))
-      (assert-true (= pos 3)))))
-
+(define-method (test-s32vector-range (self <guile-cv-tests-support>))
+  (let ((v1 #s32(-2 -10 0 255 20)))
+    (match (s32vector-range v1)
+      ((mini p-mini maxi p-maxi)
+       (assert-true (= mini -10))
+       (assert-true (= p-mini 1))
+       (assert-true (= maxi 255))
+       (assert-true (= p-maxi 3))))))
 
 (define %s32-v1 #s32(2 4 4 4 5 5 7 9))
 
