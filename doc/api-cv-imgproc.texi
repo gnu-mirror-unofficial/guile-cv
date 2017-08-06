@@ -44,6 +44,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-multiply-channel}
 @item @ref{im-divide}
 @item @ref{im-divide-channel}
+@item @ref{im-range}
+@item @ref{im-range-channel}
 @item @ref{im-min}
 @item @ref{im-min-channel}
 @item @ref{im-max}
@@ -353,6 +355,17 @@ inverse of @var{channel-2}.  It will check that the number of lines of
 @end deffn
 
 
+@anchor{im-range}
+@anchor{im-range-channel}
+@deffn Procedure im-range image
+@deffnx Procedure im-range-channel channel width
+
+Returns a list of six values @code{(min row col max row col)} if
+@var{image} is GRAY, and a list of list of these values if @var{image}
+is RGB or for any @code{n-chan > 1} images.
+@end deffn
+
+
 @anchor{im-min}
 @anchor{im-max}
 @anchor{im-min-channel}
@@ -362,11 +375,9 @@ inverse of @var{channel-2}.  It will check that the number of lines of
 @deffnx Procedure im-min-channel channel width
 @deffnx Procedure im-max-channel channel width
 
-Returns three multiple values if @var{image} is GRAY: 1. respectively
-the @code{minimum} or @code{maximum} value of @var{image} or
-@var{channel}; 2. and 3.  its @code{row} and @code{column} indices in
-@var{image} or @var{channel}.  If @var{image} is RGB or for any
-@code{n-chan > 1} images, it returns a list of list of these.
+Returns three multiple values if @var{image} is GRAY: @code{min row col}
+or @code{max row col} respectively.  If @var{image} is RGB or for any
+@code{n-chan > 1} images, it returns a list of list of these values.
 @end deffn
 
 

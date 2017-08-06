@@ -56,6 +56,7 @@
 	    im-or
             im-xor
 	    im-complement
+            im-range
 	    im-min
 	    im-max
             im-map
@@ -321,6 +322,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define-method (im-divide-channel c1 width-1 height-1 (c2 <uvec>) width-2)
   (f32vector-matrix-multiply c1 width-1 height-1 (f32vector-inverse c2) width-2))
+
+(define (im-range image)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        (im-range-channel c width))
+       (else
+        (let ((map-proc (if (%use-par-map) par-map map)))
+          (map-proc (lambda (channel)
+                      (im-range-channel channel width))
+              idata)))))))
+
+(define (im-range-channel channel width)
+  (match (f32vector-range channel)
+    ((mini p-mini maxi p-maxi)
+     (list mini (quotient p-mini width) (remainder p-mini width)
+           maxi (quotient p-maxi width) (remainder p-maxi width)))))
 
 (define (im-min image)
   (match image

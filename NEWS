@@ -59,6 +59,8 @@ f32vector-reduce:
 
 **** New interfaces
 
+im-range
+im-range-channel
 im-min
 im-min-channel
 im-max
@@ -68,6 +70,8 @@ im-map-channel
 im-reduce
 im-reduce-channel
 f32vector->s32vector
+f32vector-range
+s32vector-range
 s32vector-min
 s32vector-max
 s32vector-reduce
