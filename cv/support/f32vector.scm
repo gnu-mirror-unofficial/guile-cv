@@ -36,7 +36,8 @@
   #:use-module (cv support float)
   #:use-module (cv support libguile-cv)
 
-  #:export (f32vector-min
+  #:export (f32vector-range
+            f32vector-min
 	    f32vector-max
             f32vector-reduce
             f32vector-mean
@@ -60,35 +61,36 @@
             f32vector->s32vector))
 
 
-(define* (f32vector-min v #:key (prec 1.0e-4))
+(define* (f32vector-range v #:key (prec 1.0e-4))
   (let ((n-cell (f32vector-length v)))
     (case n-cell
       ((0) (error "Empty vector: " v))
       (else
        (do ((mini (f32vector-ref v 0))
-            (pos 0)
+            (maxi (f32vector-ref v 0))
+            (p-mini 0)
+            (p-maxi 0)
             (i 1
                (+ i 1)))
-           ((= i n-cell) (values mini pos))
+           ((= i n-cell)
+            (list mini p-mini maxi p-maxi))
          (let ((val (f32vector-ref v i)))
            (when (float<? val mini prec)
              (set! mini val)
-             (set! pos i))))))))
-
-(define* (f32vector-max v #:key (prec 1.0e-4))
-  (let ((n-cell (f32vector-length v)))
-    (case n-cell
-      ((0) (error "Empty vector: " v))
-      (else
-       (do ((maxi (f32vector-ref v 0))
-            (pos 0)
-            (i 1
-               (+ i 1)))
-           ((= i n-cell) (values maxi pos))
-         (let ((val (f32vector-ref v i)))
+             (set! p-mini i))
            (when (float>? val maxi)
              (set! maxi val)
-             (set! pos i))))))))
+             (set! p-maxi i))))))))
+
+(define* (f32vector-min v #:key (prec 1.0e-4))
+  (match (f32vector-range v #:prec prec)
+    ((mini p-mini maxi p-maxi)
+     (values mini p-mini))))
+
+(define* (f32vector-max v #:key (prec 1.0e-4))
+  (match (f32vector-range v #:prec prec)
+    ((mini p-mini maxi p-maxi)
+     (values maxi p-maxi))))
 
 (define* (f32vector-reduce v proc default #:key (n-cell #f))
   (let ((n-cell (or n-cell
