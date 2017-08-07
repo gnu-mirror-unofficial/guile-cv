@@ -337,7 +337,7 @@
              (k 0
                 (+ k 1)))
             ((= k m)
-             (f32vector-set! ab (+ (* i n) j) sub))
+             (f32vector-set! ab (+ (* i p) j) sub))
           (set! sub
                 (+ sub (* (f32vector-ref a (+ (* i m) k))
                           (f32vector-ref b (+ (* k p) j))))))))))

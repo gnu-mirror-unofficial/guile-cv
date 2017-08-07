@@ -85,6 +85,12 @@ im-normalize:
   the width and height of the result normalized image were inadvertently
   inverted, now fixed.
 
+f32vector-matrix-multiply:
+
+  the sub results were inadvertently using 'n' instead of 'p' to compute
+  their destination position in the 'n x p' cells returned result
+  f32vector, now fixed.
+
 
 
 * Older News
