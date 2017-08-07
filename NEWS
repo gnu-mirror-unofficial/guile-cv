@@ -80,6 +80,12 @@ s32vector->f32vector
 
 **** Bug fixes
 
+im-normalize:
+
+  the width and height of the result normalized image were inadvertently
+  inverted, now fixed.
+
+
 
 * Older News
 

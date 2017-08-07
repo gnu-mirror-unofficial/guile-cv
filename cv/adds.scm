@@ -569,7 +569,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define* (im-normalize image #:key (val 255.0))
   (match image
     ((width height n-chan idata)
-     (list height width n-chan
+     (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
