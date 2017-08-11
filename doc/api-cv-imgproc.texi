@@ -287,57 +287,55 @@ to 255.0 if @var{#:bg} is @code{'black}, and set to 0.0 if @var{#:bg} is
 @anchor{im-add}
 @anchor{im-add-channel}
 @deffn Method im-add image val
-@deffnx Method im-add image image-2
+@deffnx Method im-add i1 i2 i3 @dots{}
 @deffnx Method im-add-channel channel width height val
-@deffnx Method im-add-channel channel width height channel-2
+@deffnx Method im-add-channel width height c1 c2 c3 @dots{}
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel respectively adds @var{val} or
-the corresponding pixel value from @var{image-2} to the (corresponding)
-original pixel value from @var{image} or @var{channel}.
+Performs the scalar addition of @var{image} with @var{val} or the matrix
+addition of @var{i1 i2 i3} @dots{} or @var{c1 c2 c3} @dots{}
+respectively.
 @end deffn
 
 
 @anchor{im-subtract}
 @anchor{im-subtract-channel}
 @deffn Method im-subtract image val
-@deffnx Method im-subtract image image-2
+@deffnx Method im-subtract i1 i2 i3 @dots{}
 @deffnx Method im-subtract-channel channel width height val
-@deffnx Method im-subtract-channel channel width height channel-2
+@deffnx Method im-subtract-channel width height c1 c2 c3 @dots{}
 
 Returns a new image or channel.
 
-Each pixel of the new image or channel respectively subtracts @var{val}
-or the corresponding pixel value from @var{image-2} to the
-(corresponding) original pixel value from @var{image} or @var{channel}.
+Performs the scalar subtraction of @var{image} with @var{val} or the
+matrix subtraction of @var{i1 i2 i3} @dots{} or @var{c1 c2 c3} @dots{}
+respectively.
 @end deffn
 
 
 @anchor{im-multiply}
 @anchor{im-multiply-channel}
 @deffn Method im-multiply image val
-@deffnx Method im-multiply image image-2
+@deffnx Method im-multiply i1 i2 i3 @dots{}
 @deffnx Method im-multiply-channel channel width height val
-@deffnx Method im-multiply-channel channel width height channel-2
+@deffnx Method im-multiply-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
 
 Returns a new image or channel.
 
-The scalar method multiplies each pixel of @var{image} or @var{channel}
-by @var{val}.  The matrix methods performs the linear algebra matrix
-multiplication of @var{image} by @var{image-2}, or @var{channel} by
-@var{channel-2}.  The matrix multiplication method will check that the
-number of lines of @var{image-2} is equal to the number of columns of
-@var{image}.
+Performs the scalar multiplication of @var{image} with @var{val} or the
+matrix multiplication of @var{i1 i2 i3} @dots{} or @var{c1 w1 h1 c2 w2
+h2 c3 w3 h3} @dots{} recursively.  The number of lines of the next image
+must equal the number of columns of the previous intermediate result.
 @end deffn
 
 
 @anchor{im-divide}
 @anchor{im-divide-channel}
 @deffn Method im-divide image val
-@deffnx Method im-divide image image-2
+@deffnx Method im-divide i1 i2 i3 @dots{}
 @deffnx Method im-divide-channel channel width height val
-@deffnx Method im-divide-channel channel width height channel-2
+@deffnx Method im-divide-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
 
 Returns a new image or channel.
 
@@ -348,10 +346,11 @@ Technically speaking, there is no such thing as matrix division.
 Dividing a matrix by another matrix is an undefined function.  The
 closest equivalent is multiplying by the inverse of another matrix.
 
-So, the matrix methods performs the linear algebra matrix multiplication
-of @var{image} by the inverse of @var{image-2}, or @var{channel} by the
-inverse of @var{channel-2}.  It will check that the number of lines of
-@var{image-2} is equal to the number of columns of @var{image}.
+So, the matrix divide methods performs the linear algebra matrix
+multiplication of @var{i1} or @var{c1} by the inverse of @var{i2 i3}
+@dots{} or @var{c1 c2 c3} @dots{} recursively.  The number of lines of
+the next image must equal the number of columns of the previous
+intermediate result.
 @end deffn
 
 

@@ -206,24 +206,6 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 		  (f32vector-set! c-copy i 255.0))))))))
       (error "Invalid threshold: " threshold)))
 
-(define (im-scalar-op image val op)
-  (match image
-    ((width height n-chan idata)
-     (list width height n-chan
-           (let ((map-proc (if (and (> n-chan 1)
-                                    (%use-par-map)) par-map map)))
-	     (map-proc (lambda (channel)
-			 (im-scalar-channel-op channel width height val op))
-                       idata))))))
-
-(define (im-scalar-channel-op channel width height val op)
-  (let ((to (im-make-channel width height))
-        (n-cell (* width height)))
-    (do ((i 0
-	    (+ i 1)))
-	((= i n-cell) to)
-      (f32vector-set! to i (op (f32vector-ref channel i) val)))))
-
 (define (im-matrix-op image img-2 op)
   (match image
     ((width height n-chan idata)
@@ -251,6 +233,13 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-set! to i (op (f32vector-ref channel i)
                              (f32vector-ref channel-2 i))))))
 
+(define (matrix-multiply c1 width-1 height-1 c2 width-2)
+  (f32vector-matrix-multiply c1 width-1 height-1 c2 width-2))
+
+(define (matrix-divide c1 width-1 height-1 c2 width-2)
+  (f32vector-matrix-multiply c1 width-1 height-1
+                             (f32vector-inverse c2) width-2))
+
 (define (im-matrix-multdiv-op img-1 img-2 op)
   ;; The product is defined only if the number of columns in img-1 is
   ;; equal to the number of rows in img-2.
@@ -271,57 +260,109 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
             (error "Size missmatch.")))))))
 
 
-
 (define-method (im-add image (val <number>))
-  (im-scalar-op image val +))
+  (im-map (lambda (p-val) (+ p-val val)) image))
 
 (define-method (im-add-channel channel width height (val <number>))
-  (im-scalar-channel-op channel width height val +))
+  (im-map-channel (lambda (p-val) (+ p-val val)) width height channel))
 
-(define-method (im-add image (img-2 <list>))
-  (im-matrix-op image img-2 +))
+(define-method (im-add . images)
+  (apply im-map + images))
 
-(define-method (im-add-channel channel width height (channel-2 <uvec>))
-  (im-matrix-channel-op channel width height channel-2 +))
+(define-method (im-add-channel width height . channels)
+  (apply im-map-channel + width height channels))
 
 
 (define-method (im-subtract image (val <number>))
-  (im-scalar-op image val -))
+  (im-map (lambda (p-val) (- p-val val)) image))
 
 (define-method (im-subtract-channel channel width height (val <number>))
-  (im-scalar-channel-op channel width height val -))
+  (im-map-channel (lambda (p-val) (- p-val val)) width height channel))
 
-(define-method (im-subtract image (img-2 <list>))
-  (im-matrix-op image img-2 -))
+(define-method (im-subtract . images)
+  (apply im-map - images))
 
-(define-method (im-subtract-channel channel width height (channel-2 <uvec>))
-  (im-matrix-channel-op channel width height channel-2 -))
+(define-method (im-subtract-channel width height . channels)
+  (apply im-map-channel - width height channels))
 
 
 (define-method (im-multiply image (val <number>))
-  (im-scalar-op image val *))
+  (im-map (lambda (p-val) (* p-val val)) image))
 
 (define-method (im-multiply-channel channel width height (val <number>))
-  (im-scalar-channel-op channel width height val *))
+  (im-map-channel (lambda (p-val) (* p-val val)) width height channel))
 
-(define-method (im-multiply img-1 (img-2 <list>))
-  (im-matrix-multdiv-op img-1 img-2 im-multiply-channel))
+(define (im-multiply-1 prev images)
+  (if (null? images)
+      prev
+      (match images
+        ((ii . rest)
+         (im-multiply-1 (im-matrix-multdiv-op prev ii matrix-multiply)
+                        rest)))))
 
-(define-method (im-multiply-channel c1 width-1 height-1 (c2 <uvec>) width-2)
-  (f32vector-matrix-multiply c1 width-1 height-1 c2 width-2))
+(define-method (im-multiply . images)
+  (match images
+    ((i1 . rest)
+     (im-multiply-1 i1 rest))
+    (else
+     (error "Wrong arguments:" images))))
+
+(define (im-multiply-channel-1 channel width height rest)
+  (if (null? rest)
+      (values channel width height)
+      (match rest
+        ((channel-i width-i height-i . rest)
+         (im-multiply-channel-1 (f32vector-matrix-multiply channel width height
+                                                           channel-i width-i)
+                                width-i height rest)))))
+
+(define-method (im-multiply-channel . rest)
+  (match rest
+    ((channel width height . rest)
+     (im-multiply-channel-1 channel width height rest))
+    (else
+     (error "Wrong arguments:" rest))))
 
 
 (define-method (im-divide image (val <number>))
-  (im-scalar-op image val /))
+  (im-map (lambda (p-val) (/ p-val val)) image))
 
 (define-method (im-divide-channel channel width height (val <number>))
-  (im-scalar-channel-op channel width height val /))
+  (im-map-channel (lambda (p-val) (/ p-val val)) width height channel))
 
-(define-method (im-divide img-1 (img-2 <list>))
-  (im-matrix-multdiv-op img-1 img-2 im-divide-channel))
 
-(define-method (im-divide-channel c1 width-1 height-1 (c2 <uvec>) width-2)
-  (f32vector-matrix-multiply c1 width-1 height-1 (f32vector-inverse c2) width-2))
+(define (im-divide-1 prev images)
+  (if (null? images)
+      prev
+      (match images
+        ((ii . rest)
+         (im-divide-1 (im-matrix-multdiv-op prev ii matrix-divide)
+                        rest)))))
+
+(define-method (im-divide . images)
+  (match images
+    ((i1 . rest)
+     (im-divide-1 i1 rest))
+    (else
+     (error "Wrong arguments:" images))))
+
+(define (im-divide-channel-1 channel width height rest)
+  (if (null? rest)
+      (values channel width height)
+      (match rest
+        ((channel-i width-i height-i . rest)
+         (im-divide-channel-1 (f32vector-matrix-multiply channel width height
+                                                         (f32vector-inverse channel-i)
+                                                         width-i)
+                                width-i height rest)))))
+
+(define-method (im-divide-channel . rest)
+  (match rest
+    ((channel width height . rest)
+     (im-divide-channel-1 channel width height rest))
+    (else
+     (error "Wrong arguments:" rest))))
+
 
 (define (im-range image)
   (match image
@@ -423,19 +464,21 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (im-map-channel proc width height . channels)
   (let ((to (im-make-channel width height))
-        (n-cell (* width height)))
-    (match channels
-      ((c . rest)
-       (do ((i 0
-               (+ i 1)))
-           ((= i n-cell))
-         (f32vector-set! to i
-                         (match channels
-                           ((c . rest)
-                            (apply proc
-                                   (f32vector-ref-at-offset channels i)))
-                           ((c)
-                            (proc (f32vector-ref c i))))))))
+        (n-cell (* width height))
+        (n-channels (length channels)))
+    (if (> n-channels 1)
+        (do ((i 0
+                (+ i 1)))
+            ((= i n-cell))
+          (f32vector-set! to i
+                          (apply proc
+                                 (f32vector-ref-at-offset channels i))))
+        (do ((c (car channels))
+             (i 0
+                (+ i 1)))
+            ((= i n-cell))
+          (f32vector-set! to i
+                            (proc (f32vector-ref c i)))))
     to))
 
 (define (im-and . images)

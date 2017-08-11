@@ -297,62 +297,74 @@
       (assert-true (= (inexact->exact (f32vector-ref di-chan i))
                       (list-ref di-check i))))))
 
-(define (make-add-2-a)
+(define %a
   `(2 3 1 (,#f32(1.0 2.0 3.0 4.0 5.0 6.0))))
 
-(define (make-add-2-b)
+(define %b
   `(2 3 1 (,#f32(2.0 3.0 4.0 5.0 6.0 7.0))))
 
-(define (make-add-2-c)
+(define %c
   `(2 3 1 (,#f32(2.0 4.0 6.0 8.0 10.0 12.0))))
 
-(define (make-add-2-a+b)
+(define %a+b
   `(2 3 1 (,#f32(3.0 5.0 7.0 9.0 11.0 13.0))))
 
-(define (make-add-2-a-b)
+(define %a+b+c
+  `(2 3 1 (,#f32(5.0 9.0 13.0 17.0 21.0 25.0))))
+
+(define %a-b
   `(2 3 1 (,#f32(-1.0 -1.0 -1.0 -1.0 -1.0 -1.0))))
 
-(define (make-add-2-a')
+(define %a-b-c
+  `(2 3 1 (,#f32(-3.0 -5.0 -7.0 -9.0 -11.0 -13.0))))
+
+(define %a'
   `(3 2 1 (,#f32(1.0 3.0 5.0 2.0 4.0 6.0))))
 
-(define (make-add-2-a*a')
+(define %axa'
   `(3 3 1 (,#f32(5.0 11.0 17.0 11.0 25.0 39.0 17.0 39.0 61.0))))
 
+(define %axa'xa
+  `(2 3 1 (,#f32(123.0 156.0 281.0 356.0 439.0 556.0))))
+
 (define-method (test-im-add (self <guile-cv-tests-cv>))
-  (let ((a (make-add-2-a))
-        (b (make-add-2-b))
-        (a+b (make-add-2-a+b)))
-    (assert-true (im-=? (im-add a 1.0) b))
-    (assert-true (im-=? (im-add a b) a+b))))
+  (assert-true (im-=? (im-add %a 1.0) %b))
+  (assert-true (im-=? (im-add %a %b) %a+b))
+  (assert-true (im-=? (im-add %a %b %c) %a+b+c)))
 
 (define-method (test-im-subtract (self <guile-cv-tests-cv>))
-  (let ((a (make-add-2-a))
-        (b (make-add-2-b))
-        (a-b (make-add-2-a-b)))
-    (assert-true (im-=? (im-subtract b 1.0) a))
-    (assert-true (im-=? (im-subtract a b) a-b))))
+  (assert-true (im-=? (im-subtract %b 1.0) %a))
+  (assert-true (im-=? (im-subtract %a %b) %a-b))
+  (assert-true (im-=? (im-subtract %a %b %c) %a-b-c)))
 
 (define-method (test-im-multiply (self <guile-cv-tests-cv>))
-  (let ((a (make-add-2-a))
-        (c (make-add-2-c))
-        (a' (make-add-2-a'))
-        (a*a' (make-add-2-a*a')))
-    (assert-true (im-=? (im-multiply a 2.0) c))
-    (assert-true (im-=? (im-multiply a a') a*a'))))
+  (assert-true (im-=? (im-multiply %a 2.0) %c))
+  (assert-true (im-=? (im-multiply %a %a') %axa'))
+  (assert-true (im-=? (im-multiply %a %a' %a) %axa'xa)))
+
+(define %d1
+  `(2 3 1 (,#f32(2.0 4.0 8.0 16.0 32.0 64.0))))
+
+(define %d2
+  `(2 3 1 (,#f32(1.0 2.0 4.0 8.0 16.0 32.0))))
+
+(define %d3
+  `(3 2 1 (,#f32(2.0 8.0 32.0 4.0 16.0 64.0))))
+
+(define %d4 (im-transpose %d1))
+
+(define %d5
+  `(3 3 1 (,#f32(2.0 0.5 0.125 8.0 2.0 0.5 32.0 8.0 2.0))))
+
+(define %d6 (im-transpose %d5))
+
+(define %d7
+  `(3 3 1 (,#f32(3.0 0.75 0.1875 12.0 3.0 0.75 48.0 12.0 3.0))))
 
 (define-method (test-im-divide (self <guile-cv-tests-cv>))
-  (let* ((a `(2 3 1 (,#f32(2.0 4.0 8.0 16.0 32.0 64.0))))
-         (d (im-inverse
-             (im-transpose
-              `(2 3 1 (,#f32(2.0 4.0 8.0 16.0 32.0 64.0))))))
-         (a/d (im-multiply a d))
-         (a/d-chan (im-channel a/d 0))
-         (a/d-check '(2 1/2 1/8 8 2 1/2 32 8 2)))
-    (do ((i 0
-            (+ i 1)))
-        ((= i 9))
-      (assert-true (= (inexact->exact (f32vector-ref a/d-chan i))
-                      (list-ref a/d-check i))))))
+  (assert-true (im-=? (im-divide %d1 2.0) %d2))
+  (assert-true (im-=? (im-divide %d1 %d4) %d5))
+  (assert-true (im-=? (im-divide %d1 %d4 %d6) %d7)))
 
 (define (make-scrap-test-image)
   (let ((img (im-make 12 12 1)))

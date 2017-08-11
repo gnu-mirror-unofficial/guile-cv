@@ -57,6 +57,22 @@ f32vector-reduce:
   more naturel, imo at least, to 'reduce image using proc, return
   default if the image is empty'.
 
+im-add
+im-add-channel
+im-subtract
+im-subtract-channel
+im-multiply
+im-multiply-channel
+im-divide
+im-divide-channel:
+
+  All linear algrebra matrix methods now accept any number of images or
+  channels.  Note that due to the inherent checks between lines and
+  columns of internediate results, im-multiply-channel and
+  im-divide-channel methods arguments must be a series of at least one
+  tuple(s) composed of three values - channel width height - represented
+  in the manual as: c1 w1 h1 c2 w2 h2 c3 w3 h3 …
+
 **** New interfaces
 
 im-range
