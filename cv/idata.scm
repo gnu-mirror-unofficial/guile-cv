@@ -186,15 +186,15 @@
     ((image . rest)
      (match image
 	((width height n-chan _)
-	 (if (and (apply = (cons width (im-collect rest 'width)))
-		  (apply = (cons height (im-collect rest 'height)))
-		  (apply = (cons n-chan (im-collect rest 'n-channel))))
+	 (if (and (apply = (apply im-collect 'width rest))
+		  (apply = (apply im-collect 'height rest))
+		  (apply = (apply im-collect 'n-channel rest)))
 	     (catch 'exit
 	       (lambda ()
 		 (let ((n-cell (* width height)))
 		   (for-each (lambda (k)
 			       (let* ((chan-k (n-chan->symbol k))
-				      (channels (im-collect images chan-k)))
+				      (channels (apply im-collect chan-k images)))
 				 (unless (f32vector-list=? channels #:prec prec)
 				   (throw 'exit #f))))
 		       (iota n-chan))
@@ -336,7 +336,7 @@
      (and (string=? chan "chan")
 	  (string->number id)))))
 
-(define (im-collect images what)
+(define (im-collect what . images)
   (case what
     ((width) (map im-width images))
     ((height) (map im-height images))

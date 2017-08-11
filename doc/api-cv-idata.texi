@@ -267,9 +267,9 @@ use it at your own risk.
 
 
 @anchor{im-collect}
-@deffn Procedure im-collect images what
+@deffn Procedure im-collect what i1 i2 i3 @dots{}
 
-Returns a list of @var{what} collected from the list of @var{images}.
+Returns a list of @var{what} collected from @var{i1 i2 i3} @dots{}
 
 The valid @var{what} synbols are:
 @indentedblock

@@ -68,7 +68,7 @@
       ((image . rest)
        (match image
          ((_ _ n-chan _)
-          (if (apply = (im-collect images 'n-channel))
+          (if (apply = (apply im-collect 'n-channel images))
               (let* ((map-proc (if (and (> n-chan 1)
                                         (%use-par-map)) par-map map))
                      (composed-channels
@@ -78,10 +78,10 @@
                                      (im-compose-channels position
                                                           alignment
                                                           channels
-                                                          (im-collect images 'width)
-                                                          (im-collect images 'height)
+                                                          (apply im-collect 'width images)
+                                                          (apply im-collect 'height images)
                                                           #:value value))))
-                          (zip (apply zip (im-collect images 'channels))
+                          (zip (apply zip (apply im-collect 'channels images))
                                (if (> n-chan 1)
                                    color
                                    (list (/ (reduce + 0 color) 3)))))))

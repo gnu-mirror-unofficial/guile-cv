@@ -73,6 +73,12 @@ im-divide-channel:
   tuple(s) composed of three values - channel width height - represented
   in the manual as: c1 w1 h1 c2 w2 h2 c3 w3 h3 …
 
+im-collect:
+
+  Updated so its interface is 'identical' to im-map and friends, and a
+  tipical call now looks like:  im-collect what i1 i2 i3 … (instead of
+  im-collect images what).
+
 **** New interfaces
 
 im-range
