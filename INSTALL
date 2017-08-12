@@ -92,8 +92,8 @@ Guile-CV releases are here:
 
 	http://ftp.gnu.org/gnu/guile-cv/
 
-		guile-cv-0.1.5.tar.gz
-		guile-cv-0.1.5.tar.gz.sig
+		guile-cv-0.1.6.tar.gz
+		guile-cv-0.1.6.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -102,8 +102,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.1.5.tar.gz
-	cd guile-cv-0.1.5
+	tar zxf guile-cv-0.1.6.tar.gz
+	cd guile-cv-0.1.6
 	./configure [--prefix=/your/prefix]
 	make
 	make install
