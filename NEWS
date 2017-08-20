@@ -27,6 +27,42 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
+** Septermber the xx, 2017
+
+Guile-CV version 0.1.7 is released!
+
+Here is a summary of the changes since version 0.1.6. See GNU Guile-CV's
+git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.6
+
+**** Interface changes
+
+**** New interfaces
+
+**** Bug fixes
+
+im-set!:
+im-images?:
+
+  both procedures have been 'relaxed' and do not check anymore that
+  either the value or pixel values respectively are in the [0 255]
+  range, as doing so was actually incorrect: images need to be
+  normalized and scaled (as in bringing their pixel values in the [0
+  255] range) only to be displayed, but otherwise, their should be no
+  such limitations.
+
+im-binary?:
+
+  was returning #f for BALCK and WHITE images, so either composed of
+  eiher 0.0 or 255.0, fixed.
+
+
+* Older News
+
 ** August the xx, 2017
 
 Guile-CV version 0.1.6 is released!
@@ -112,10 +148,6 @@ f32vector-matrix-multiply:
   the sub results were inadvertently using 'n' instead of 'p' to compute
   their destination position in the 'n x p' cells returned result
   f32vector, now fixed.
-
-
-
-* Older News
 
 ** July the 24th, 2017
 
