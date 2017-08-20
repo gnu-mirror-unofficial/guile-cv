@@ -169,10 +169,15 @@
 	    ((c)
 	     (receive (n-val vals)
 		 (f32vector-count-distinct c)
-	       (and (= n-val 2)
-		    (float-member 0.0 vals)
-		    (float-member 255.0 vals)))))
-	  #t))))
+               (match vals
+                 ((a) (or (float=? a 0.0 0)
+                          (float=? a 255.0 0)))
+                 ((a b) (or (and (float=? a 0.0 0)
+                                 (float=? b 255.0 0))
+                            (and (float=? a 255.0 0)
+                                 (float=? b 0.0 0))))
+                 (else
+                  #f)))))))))
 
 (define-method (im-gray? (image <list>))
   (match image
@@ -300,13 +305,10 @@
     ((k val)
      (match image
        ((width height n-chan idata)
-	(if (and (>= val 0.0)
-		 (<= val 255.0))
-	    (if (and (>= k 0)
-		     (< k n-chan))
-		(im-channel-set! (list-ref idata k) i j width height val)
-		(error "Out of bound: " k))
-	    (error "Invalid pixel value: " val)))))))
+        (if (and (>= k 0)
+                 (< k n-chan))
+            (im-channel-set! (list-ref idata k) i j width height val)
+            (error "Out of bound: " k)))))))
 
 (define (im-fast-set! image i j . rest)
   (match (match rest
