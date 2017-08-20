@@ -188,11 +188,7 @@
     (assert-true (im-gray? empty))
     (assert-false (im-rgb? empty))
     (assert-true (im-rgb? img-1))
-    (assert-false (im-gray? img-1))
-    (im-fast-set! empty 0 0 -1.0)
-    (assert-false (im-image? empty))
-    (im-fast-set! empty 0 0 256.0)
-    (assert-false (im-image? empty))))
+    (assert-false (im-gray? img-1))))
 
 
 (define-method (test-impex (self <guile-cv-tests-cv>))

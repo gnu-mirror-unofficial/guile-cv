@@ -149,14 +149,17 @@
 	       (>= height 0)
 	       (integer? n-chan)
 	       (>= n-chan 1)
-	       (let ((n-cell (* width height)))
-		 (and (and-l (map f32vector? idata))
-		      (apply = (cons n-cell
-				     (map f32vector-length idata)))
-		      (apply <= (cons 0.0
-				      (sort (map f32vector-min idata) <)))
-		      (apply >= (cons 255.0
-				      (sort (map f32vector-max idata) >))))))))))
+               (= n-chan (length idata))
+               (and-l (map f32vector? idata)))))))
+
+#!
+(apply = (cons n-cell
+               (map f32vector-length idata)))
+(apply <= (cons 0.0
+                (sort (map f32vector-min idata) <)))
+(apply >= (cons 255.0
+                (sort (map f32vector-max idata) >)))
+!#
 
 (define (im-binary? image)
   (match image
