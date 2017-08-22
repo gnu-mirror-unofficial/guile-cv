@@ -30,6 +30,7 @@
   #:use-module (oop goops)
   #:use-module (system foreign)
   #:use-module (rnrs bytevectors)
+  #:use-module (ice-9 format)
   #:use-module (ice-9 match)
   #:use-module (ice-9 threads)
   #:use-module (ice-9 receive)
@@ -367,28 +368,32 @@
 		 (number->string (+ n 1))))
 
 (define* (im-display-channel channel width height
-			     #:key (proc identity)
+			     #:key (proc #f)
 			     (port (current-output-port)))
-  (do ((i 0
+  (let ((proc (if proc
+                  proc
+                  (lambda (val)
+                    (if (float>? val 1000.0 0)
+                        (format #t "~9e" val)
+                        (format #f "~9,5,,,f" val))))))
+    (do ((i 0
 	    (+ i 1)))
 	((= i height))
       (do ((j 0
 	      (+ j 1)))
-	  ((>= j width)
-	   (newline port))
-	(display "  ")
-	(display (proc (im-fast-channel-ref channel i j width)) port))))
+	  ((>= j width) (newline port))
+        (format port "  ~A"
+                (proc (im-fast-channel-ref channel i j width)))))))
 
 (define* (im-display image
-		     #:key (proc identity)
+		     #:key (proc #f)
 		     (port (current-output-port)))
   (match image
     ((width height n-chan idata)
      (for-each (lambda (channel i)
-		 (display (channel-name i) port)
-		 (newline port)
+                 (format port "\n~A\n\n" (channel-name i))
 		 (im-display-channel channel width height
-				     #:proc proc
-				     #:port port))
+                                     #:proc proc #:port port))
 	 idata
-       (iota n-chan)))))
+       (iota n-chan))))
+  (newline port))
