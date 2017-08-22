@@ -57,7 +57,7 @@ im-images?:
 
 im-binary?:
 
-  was returning #f for BALCK and WHITE images, so either composed of
+  was returning #f for BLACK and WHITE images, so either composed of
   eiher 0.0 or 255.0, fixed.
 
 
