@@ -31,7 +31,7 @@ AC_PREREQ(2.69)
 
 AC_INIT(
   [guile-cv],
-  [0.1.6],
+  [0.1.7-dev],
   [david at altosw dot be])
 
 AC_CONFIG_AUX_DIR([build-aux])
