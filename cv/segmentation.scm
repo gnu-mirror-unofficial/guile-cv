@@ -144,7 +144,7 @@ to))))
 (define* (im-canny-channel channel width height
                            #:key (sigma 1.0) (threshold 0.0) (marker 255.0))
   (let ((to (im-make-channel width height)))
-    (case (vigra-canny-edge-image channel to width height sigma threshold marker)
+    (case (vigra-canny-edge-channel channel to width height sigma threshold marker)
       ((0) to)
       (else
        (error "Canny failed.")))))
@@ -187,14 +187,14 @@ to))))
 		     width
 		     height))
 
-(define (vigra-canny-edge-image from to width height sigma threshold marker)
-  (vigra-canny-edge-image-c (bytevector->pointer from)
-                            (bytevector->pointer to)
-                            width
-                            height
-                            sigma
-                            threshold
-                            marker))
+(define (vigra-canny-edge-channel from to width height sigma threshold marker)
+  (vigra-canny-edge-channel-c (bytevector->pointer from)
+                              (bytevector->pointer to)
+                              width
+                              height
+                              sigma
+                              threshold
+                              marker))
 
 
 ;;;
@@ -231,7 +231,7 @@ to))))
 			    int	     ;; width
 			    int)))   ;; height
 
-(define vigra-canny-edge-image-c
+(define vigra-canny-edge-channel-c
   (pointer->procedure int
 		      (dynamic-func "vigra_cannyedgeimage_c"
 				    %libvigra-c)
