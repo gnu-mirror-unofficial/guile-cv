@@ -44,3 +44,9 @@
 @set UEUCLIDEAN https://en.wikipedia.org/wiki/Euclidean_distance
 @set UCANNYEDGE https://en.wikipedia.org/wiki/Canny_edge_detector
 @set UEDGETHINNING https://en.wikipedia.org/wiki/Edge_detection#Edge_thinning
+@set UCONVOLUTION https://en.wikipedia.org/wiki/Kernel_(image_processing)#Convolution
+@set UKERNEL https://en.wikipedia.org/wiki/Kernel_(image_processing)
+@set UHARALICK-ET-AL http://haralick.org/journals/TexturalFeatures.pdf
+
+@set UGLCM-TEXTURE-TUTORIAL https://prism.ucalgary.ca/handle/1880/51900
+@set UCC-4.0 http://creativecommons.org/licenses/by-nc/4.0/
