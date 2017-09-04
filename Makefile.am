@@ -44,6 +44,7 @@ SOURCES = \
 	cv/support.scm				\
 	cv/init.scm				\
 	cv/idata.scm				\
+	cv/kdata.scm				\
 	cv/impex.scm				\
 	cv/imgproc.scm				\
 	cv/adds.scm				\

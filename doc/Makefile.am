@@ -44,6 +44,7 @@ guile_cv_TEXINFOS = \
   api-abreviations.texi		\
   api-overview.texi		\
   api-cv-idata.texi		\
+  api-cv-kdata.texi		\
   api-cv-impex.texi		\
   api-cv-imgproc.texi		\
   api-cv-features.texi		\

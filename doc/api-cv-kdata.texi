@@ -1,0 +1,384 @@
+@c -*- mode: texinfo; coding: utf-8 -*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
+@c See the file guile-cv.texi for copying conditions.
+
+
+@node Kernel Structure and Accessors
+@subsection Kernel Structure and Accessors
+
+The Guile-CV procedures and methods related to kernels data structure,
+creating and accessing kernels.
+
+
+@subheading Kernel Data Structure
+
+A Guile-CV kernel is represented by a list containing the following
+elements:
+
+@lisp
+(@var{width} @var{height} @var{kdata})
+@end lisp
+
+where @var{kdata} is a vector of @code{(* @var{width} @var{height})}
+cells. More precisely, @var{kdata} is an @code{srfi-4} homogeneous
+numeric vector of 64 bit floats, called @code{f64vector}, knowing that
+@code{f64} is the C type @code{double}.
+
+The external representation (ie. read syntax) for @var{kdata} vectors is
+@code{#f64(@dots{})}. As an example, a kernel of width 3 and height 3,
+initialized to 0.0 is represented by the following expression:
+
+@lisp
+(3 3 #f64(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
+@end lisp
+
+Kernel @var{width} and @var{height} can be different (kernels can be
+rectangular), but both @var{width} and @var{height} must be odd values.
+
+Guile-CV defines a few usefull kernels, stored in variables named using
+with a @code{%k-} prefix, all exported, for example @code{%k-laplacian},
+which is a @code{3x3} kernel defined as:
+
+@lisp
+,use (cv)
+(k-display %k-laplacian)
+@print{}
+    0.37500    0.25000    0.37500
+    0.25000   -2.50000    0.25000
+    0.37500    0.25000    0.37500
+@end lisp
+
+Guile-CV provides usefull accessors for kernel fields, however, if you
+need them all, just like for accessing image fields, your best friend is
+@code{(ice-9 match)}, here is an example:
+
+@lisp
+,use (cv)
+(match kernel
+  ((width height kdata)
+   ... your code here ...))
+@end lisp
+
+Note that the @code{(cv)} module imports and re-exports, among may
+others, the public interface of @code{(ice-9 match)}.
+
+
+@subheading Procedures
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{k-make}
+
+@item @ref{k-size}
+@item @ref{k-width}
+@item @ref{k-height}
+
+@item @ref{kernel?}
+
+@item @ref{k-ref}
+@item @ref{k-fast-ref}
+@item @ref{k-set!}
+@item @ref{k-fast-set!}
+
+@item @ref{k-offset}
+@item @ref{k-fast-offset}
+
+@item @ref{k-display}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{k-make}
+@deffn Procedure k-make width height [values #f] [norm #f]
+
+Returns a new kernel.
+
+The @code{kdata} value of this new kernel is an srfi-4 homogeneous
+numeric vector of 64 bit floats, @code{f64vector}, composed of
+@var{width} by @var{height} cells.
+
+The optional @var{values} argument can be:
+
+@indentedblock
+@table @code
+@item #f
+@code{kdata} is initialized to the @samp{identity} kernel (all zeros
+except the center of the kernel, initialzed to 1)
+
+@item a single value
+all @code{kdata} cells are initialized using that single value
+
+@item a list of values
+a list of @var{width} by @var{height} values, used to initialzed
+@code{kdata}, in the order they are given
+@end table
+@end indentedblock
+
+The optional @var{norm} argument can be:
+
+@indentedblock
+@table @code
+@item #f
+in this case, @code{kdata} is not normalized
+
+@item #t
+unless @var{values} would be @code{#f}, @code{kdata} is normalized using
+@code{(reduce + 0 values)}
+
+@item a single value
+all @code{kdata} cells are normalized using that value, which must be a
+number different from @code{0}
+@end table
+@end indentedblock
+
+If both @var{values} and @var{norm} are passed, @var{values} must
+precede @var{norm} on the arguments list.
+
+As an example, here is how the @ref{%k-box-blur} is defined@footnote{You
+will find other @code{k-make} examples by looking at the @code{(cv
+kdata)} module}:
+
+@lisp
+,use (cv)
+(k-make 3 3 1 #t)
+@print{}
+$2 = (3 3 #f64(0.1111111111111111 0.1111111111111111  # # # # …))
+(k-display $2)
+@print{}
+
+    0.11111    0.11111    0.11111
+    0.11111    0.11111    0.11111
+    0.11111    0.11111    0.11111
+
+@end lisp
+
+@end deffn
+
+
+@anchor{k-size}
+@deffn Procedure k-size kernel
+
+Returns the list of @var{width} and @var{height} for @var{kernel}.
+@end deffn
+
+
+@anchor{k-width}
+@anchor{k-height}
+@deffn Procedure k-width kernel
+@deffnx Procedure k-height kernel
+
+Returns, respectively the @var{width} and @var{height} for @var{kernel}.
+@end deffn
+
+
+@anchor{kernel?}
+@deffn Procedure kernel? kernel
+
+Returns @code{#t} if @var{kernel} is a Guile-CV kernel.
+@end deffn
+
+
+@anchor{k-ref}
+@anchor{k-fast-ref}
+@deffn Procedure k-ref kernel i j
+@deffnx Procedure k-fast-ref kernel i j
+
+Returns the value stored at position @var{i} and @var{j} of the
+@var{kernel}.
+
+@var{k-fast-ref} does not check the validity of its arguments: use it
+at your own risk.
+@end deffn
+
+
+@anchor{k-set!}
+@anchor{k-fast-set!}
+@deffn Procedure k-set! kernel i j value
+@deffnx Procedure k-fast-set! kernel i j value
+
+Returns nothing.
+
+Sets the value stored at position @var{i} and @var{j} of the
+@var{kernel} to @var{value}.
+
+@var{k-fast-set!} does not check the validity of its arguments: use it
+at your own risk.
+@end deffn
+
+
+@anchor{k-offset}
+@anchor{k-fast-offset}
+@deffn Procedure k-offset i j width height
+@deffnx Procedure k-fast-offset i j width
+
+Returns the kernel offset for the @var{i} and @var{j} indices, based on
+the @var{width} and @var{height} of the kernel.
+
+This procedure converts the matrix indices @var{i} and @var{j} to a
+vector offset for a kernel of size @var{width} and @var{height}.
+
+@var{k-fast-offset} does not check the validity of its arguments: use it
+at your own risk.
+@end deffn
+
+
+@anchor{k-display}
+@deffn Procedure k-display image @
+       [#:proc #f] [#:port (current-output-port)]
+
+Returns nothing.
+
+Displays the content of @var{kernel} on @var{port}, applying @var{proc}
+to each kernel value.
+
+@lisp
+,use (cv)
+(k-display %k-laplacian)
+@print{}
+    0.37500    0.25000    0.37500
+    0.25000   -2.50000    0.25000
+    0.37500    0.25000    0.37500
+@end lisp
+@end deffn
+
+@subheading Variables
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{%k-identity}
+@item @ref{%k-edge0}
+@item @ref{%k-edge1}
+@item @ref{%k-edge2}
+@item @ref{%k-sharpen}
+@item @ref{%k-box-blur}
+@item @ref{%k-gaussian-blur0}
+@item @ref{%k-gaussian-blur1}
+@item @ref{%k-unsharp}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{%k-identity}
+@defvr Variable %k-identity
+
+@lisp
+(k-display %k-identity)
+@print{}
+    0.00000    0.00000    0.00000
+    0.00000    1.00000    0.00000
+    0.00000    0.00000    0.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-edge0}
+@defvr Variable %k-edge0
+
+@lisp
+(k-display %k-edge0)
+@print{}
+    1.00000    0.00000   -1.00000
+    0.00000    0.00000    0.00000
+   -1.00000    0.00000    1.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-edge1}
+@defvr Variable %k-edge1
+
+@lisp
+(k-display %k-edge1)
+@print{}
+    0.00000    1.00000    0.00000
+    1.00000   -4.00000    1.00000
+    0.00000    1.00000    0.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-edge2}
+@defvr Variable %k-edge2
+
+@lisp
+(k-display %k-edge2)
+@print{}
+   -1.00000   -1.00000   -1.00000
+   -1.00000    8.00000   -1.00000
+   -1.00000   -1.00000   -1.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-sharpen}
+@defvr Variable %k-sharpen
+
+@lisp
+(k-display %k-sharpen)
+@print{}
+    0.00000   -1.00000    0.00000
+   -1.00000    5.00000   -1.00000
+    0.00000   -1.00000    0.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-box-blur}
+@defvr Variable %k-box-blur
+
+@lisp
+(k-display %k-box-blur)
+@print{}
+    0.11111    0.11111    0.11111
+    0.11111    0.11111    0.11111
+    0.11111    0.11111    0.11111
+@end lisp
+@end defvr
+
+
+@anchor{%k-gaussian-blur0}
+@defvr Variable %k-gaussian-blur0
+
+@lisp
+(k-display %k-gaussian-blur0)
+@print{}
+    0.06250    0.12500    0.06250
+    0.12500    0.25000    0.12500
+    0.06250    0.12500    0.06250
+@end lisp
+@end defvr
+
+
+@anchor{%k-gaussian-blur1}
+@defvr Variable %k-gaussian-blur1
+
+@lisp
+(k-display %k-gaussian-blur1)
+@print{}
+    0.00391    0.01563    0.02344    0.01563    0.00391
+    0.01563    0.06250    0.09375    0.06250    0.01563
+    0.02344    0.09375   -1.85938    0.09375    0.02344
+    0.01563    0.06250    0.09375    0.06250    0.01563
+    0.00391    0.01563    0.02344    0.01563    0.00391
+@end lisp
+@end defvr
+
+
+@anchor{%k-unsharp}
+@defvr Variable %k-unsharp
+
+@lisp
+(k-display %k-unsharp)
+@print{}
+   -0.00391   -0.01563   -0.02344   -0.01563   -0.00391
+   -0.01563   -0.06250   -0.09375   -0.06250   -0.01563
+   -0.02344   -0.09375    1.85938   -0.09375   -0.02344
+   -0.01563   -0.06250   -0.09375   -0.06250   -0.01563
+   -0.00391   -0.01563   -0.02344   -0.01563   -0.00391
+@end lisp
+@end defvr

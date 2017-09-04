@@ -28,6 +28,7 @@
 @section Guile-CV
 
 @include api-cv-idata.texi
+@include api-cv-kdata.texi
 @include api-cv-impex.texi
 @include api-cv-imgproc.texi
 @include api-cv-features.texi
