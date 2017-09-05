@@ -43,6 +43,19 @@ git summary [1] and git log [2] for a complete description:
 
 **** New interfaces
 
+k-make
+k-size
+k-width
+k-height
+kernel?
+k-ref
+k-fast-ref
+k-set!
+k-fast-set!
+k-offset
+k-fast-offset
+k-display
+
 **** Bug fixes
 
 im-set!:
