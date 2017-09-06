@@ -90,28 +90,42 @@ $prefix/share/doc/guile-cv/images
 @end example
 
 All examples using @code{im-load} and @code{im-save} given in this
-manual, unless a full pathname is specified, assume that the guile
-current working directory is the above mentioned directory.  Assuming
-you did install in @file{/opt}, just as an example of course, a typical
-Guile-CV (example) session inialization steps would be:
+manual, unless a full pathname is specified, assume that these images
+are available from the guile current working directory, see
+@code{getcwd} and @code{chdir} in Guile's manual
+
+Our best recommendation, at least to start with, is to create a working
+directory, such as @code{mkdir $HOME/guile-cv/images}, for example, and
+as you need them, copy the distributed images you are interested in.
+
+Having done this, open a terminal and:
 
 @lisp
-M-x run-guile
-...
-scheme@@(guile-user)> (chdir "/opt/share/doc/guile-cv/images")
+cd ~/guile-cv/images
+guile
 scheme@@(guile-user)> ,use (cv)
-scheme@@(guile-user)> (im-load "lenna.png")
+scheme@@(guile-user)> (im-load "sand.tif")
 @print{}
-$2 = (512 512 3 (#f32(226.0 226.0 223.0 223.0 227.0 …) …))
+$2 = (512 512 1 (#f32(125.0 128.0 124.0 118.0 108.0 75.0 76.0 # …)))
+@end lisp
+
+Or if you use @uref{@value{UEMACS}, Emacs} which, coupled with
+@uref{@value{UGEISER}, Geiser} absolutely rocks @code{:-)}, then a
+typical session becomes:
+
+@lisp
+fire Emacs
+M-x cd
+@print{}
+Change default directory: ~/guile-cv/images
+
+M-x run-guile
+scheme@@(guile-user)> ,use (cv)
+scheme@@(guile-user)> (im-load "sand.tif")
+@print{}
+$2 = (512 512 1 (#f32(125.0 128.0 124.0 118.0 108.0 75.0 76.0 # …)))
 @end lisp
 
 Note that to benefit from Emacs's Tab completion mechanism, while typing
-image filenames, Emacs itself must be in that directory, which you
-acheive like this (still assuming, as an example, that you did install
-in @file{/opt}):
-
-@example
-M-x cd
-@print{}
-Change default directory: /opt/share/doc/guile-cv/images
-@end example
+image filenames, Emacs itself must be in that directory, hence the above
+first step @code{M-x cd ...}
