@@ -98,7 +98,19 @@ Our best recommendation, at least to start with, is to create a working
 directory, such as @code{mkdir $HOME/guile-cv/images}, for example, and
 as you need them, copy the distributed images you are interested in.
 
-Having done this, open a terminal and:
+
+@node Starting Guile-CV
+@section Starting Guile-CV
+
+@indentedblock
+@strong{Special note:}
+
+Before you start to use Guile-CV, make sure you read and implement the
+recommendation made in @ref{Configuring Guile's repl-print procedure}
+@end indentedblock
+
+With the previous @ref{Images used in Guile-CV's documentation}
+recommendations in mind, open a terminal and:
 
 @lisp
 cd ~/guile-cv/images
@@ -129,3 +141,4 @@ $2 = (512 512 1 (#f32(125.0 128.0 124.0 118.0 108.0 75.0 76.0 # …)))
 Note that to benefit from Emacs's Tab completion mechanism, while typing
 image filenames, Emacs itself must be in that directory, hence the above
 first step @code{M-x cd ...}
+
