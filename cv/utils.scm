@@ -81,6 +81,16 @@
     (im-save image filename)
     (im-show filename)))
 
+(define-method (im-show (image <list>) (scale <boolean>))
+  (unless (access? %image-cache F_OK)
+    (mk-dir %image-cache))
+  (let ((filename (string-append %image-cache
+				 "/"
+				 (symbol->string (gensym "im-show-"))
+				 "." %image-cache-format)))
+    (im-save image filename scale)
+    (im-show filename)))
+
 (define-method (im-show (image <list>) (name <string>))
   (unless (access? %image-cache F_OK)
     (mk-dir %image-cache))
@@ -89,4 +99,14 @@
 				 name
 				 "." %image-cache-format)))
     (im-save image filename)
+    (im-show filename)))
+
+(define-method (im-show (image <list>) (name <string>) (scale <boolean>))
+  (unless (access? %image-cache F_OK)
+    (mk-dir %image-cache))
+  (let ((filename (string-append %image-cache
+				 "/"
+				 name
+				 "." %image-cache-format)))
+    (im-save image filename scale)
     (im-show filename)))

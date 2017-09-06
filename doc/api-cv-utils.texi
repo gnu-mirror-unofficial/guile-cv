@@ -147,11 +147,28 @@ centered.
 
 @anchor{im-show}
 @deffn Method im-show filename
-@deffnx Method im-show image
-@deffnx Method im-show image name
+@deffnx Method im-show image [scale #f]
+@deffnx Method im-show image name [scale #f]
 
 Returns the string "#<Image: @dots{}>", where "@dots{}" is
 either @var{filename} or a filename constructed by im-show, see below.
+
+The optional @var{scale} argument can take the following values:
+
+@indentedblock
+@table @code
+@item #f
+pixel values are @samp{clipped}: values @code{< 0} are saved as
+@code{0}, values @code{> 255} are saved as @code{255}, and otherwise are
+saved unchanged
+
+@item #t
+all pixel values are scaled@footnote{Note that in this particular
+context, @code{scale} does not mean a change in dimension, but rather
+bringing pixel values from the range they occupy in memory to the
+@code{[0 255]} range} to the @code{[0 255]} range
+@end table
+@end indentedblock
 
 These three methods will also effectively dislay the image if you are
 using @uref{@value{UGEISER}, Geiser}, which analyzes Guile's procedures
