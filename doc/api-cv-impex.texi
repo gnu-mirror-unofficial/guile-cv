@@ -42,18 +42,36 @@ JPEG, BMP, EXR, HDR, PNM (PBM, PGM, PPM), PNG, SunRaster, KHOROS-VIFF.
 
 
 @anchor{im-save}
-@deffn Procedure im-save image filename
+@deffn Procedure im-save image filename [scale #f]
 
 Returns #t.
 
-Saves @var{image} in @var{filename}.  The type in which @var{image} is
-saved is determined by the @var{filename} extension.
+Saves @var{image} in @var{filename}.
+
+The optional @var{scale} argument can take the following values:
+
+@indentedblock
+@table @code
+@item #f
+pixel values are @samp{clipped}: values @code{< 0} are saved as
+@code{0}, values @code{> 255} are saved as @code{255}, and otherwise are
+saved unchanged
+
+@item #t
+all pixel values are scaled@footnote{Note that in this particular
+context, @code{scale} does not mean a change in dimension, but rather
+bringing pixel values from the range they occupy in memory to the
+@code{[0 255]} range} to the @code{[0 255]} range
+@end table
+@end indentedblock
+
+The type in which @var{image} is saved is determined by the
+@var{filename} extension, as in the folowing example:
 
 @lisp
-,use (cv)
-(define img-1 (im-load "images/lenna.png"))
+(im-load "edx.png")
 ...
-(im-save img-1 "/tmp/lenna.jpg")
+(im-save $4 "/tmp/edx.jpg")
 @end lisp
 
 @end deffn
