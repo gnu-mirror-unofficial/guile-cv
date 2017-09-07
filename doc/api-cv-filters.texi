@@ -19,6 +19,8 @@ The Guile-CV procedures and methods to filter images.
 @item @ref{im-gaussian-blur-channel}
 @item @ref{im-gaussian-gradient}
 @item @ref{im-gaussian-gradient-channel}
+@item @ref{im-convolve}
+@item @ref{im-convolve-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -54,4 +56,49 @@ strength of the first order partial derivatives by means of a
 convolution of @var{image} or @var{channel} with the first order
 derivative of a 2D Gaussian function, where @var{sigma} is the standard
 deviation of the Gaussian distribution.
+@end deffn
+
+
+@anchor{im-convolve}
+@anchor{im-convolve-channel}
+@deffn Procedure im-convolve image kernel [#:obs 'repeat]
+@deffnx Procedure im-convolve-channel channel width height @
+                  kernel k-width k-height [#:obs 'repeat]
+@cindex Image convolution
+
+Returns a new image or channel.
+
+The new image or new channel is the result of the
+@uref{@value{UCONVOLUTION}, convolution} of @var{image} using
+@var{kernel}.  The @uref{@value{UKERNEL}, kernel} @var{k-width} and
+@var{k-height} values can be different, but they must be @code{odd}
+numbers, inferior to @var{width} and @var{height} respectively.
+
+The optional keyword argument @var{#:obs} determines the
+@samp{out-of-bound strategy}. Valid @var{#:obs} symbols are:
+
+@indentedblock
+@table @code
+@item avoid
+do not operate on pixels upon which (centering) the kernel does not fit
+in the image
+@item clip
+clip the kernel when operating on pixels upon which (centering) the
+kernel does not fit in the image (this is only useful if the kernel is
+>= 0 everywhere)
+@item repeat
+repeat the nearest pixels
+@item mirror
+mirror the nearest pixels
+@item wrap
+wrap image around (periodic boundary conditions)
+@item zero
+assume out-of-bound pixel values is @code{0.0}
+@end table
+@end indentedblock
+
+Kernel data structure, accessors, procedures and predefined kernels are
+all described in this node of the Guile-CV manual:
+@ref{Kernel Structure and Accessors}.
+
 @end deffn

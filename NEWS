@@ -70,6 +70,8 @@ k-fast-set!
 k-offset
 k-fast-offset
 k-display
+im-convolve
+im-convolve-channel
 
 **** Bug fixes
 

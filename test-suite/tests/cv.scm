@@ -546,4 +546,10 @@
       (zip (im-reduce %glcm-test-result + 0)
            '(12.0 9.0 12.0 9.0))))
 
+(define-method (test-im-convolve (self <guile-cv-tests-cv>))
+  (let ((i1 %texture-test-image)
+        (i2 %glcm-test-result))
+    (assert-true (im-=? i1 (im-convolve i1 %k-identity)))
+    (assert-true (im-=? i2 (im-convolve i2 %k-identity)))))
+
 (exit-with-summary (run-all-defined-test-cases))
