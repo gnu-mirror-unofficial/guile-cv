@@ -249,10 +249,10 @@
   (pointer->procedure int
 		      (dynamic-func "vigra_exportrgbimage_c"
 				    %libvigra-c)
-		      (list '* '* '* int int '*)))
+		      (list '* '* '* int int '* int)))
 
 (define vigra-exportrgbaimage-c
   (pointer->procedure int
 		      (dynamic-func "vigra_exportrgbaimage_c"
 				    %libvigra-c)
-		      (list '* '* '* '* int int '*)))
+		      (list '* '* '* '* int int '* int)))
