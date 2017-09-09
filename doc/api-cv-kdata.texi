@@ -390,7 +390,7 @@ to each kernel value.
 @anchor{%k-prewitt}
 @defvr Variable %k-prewitt
 
-A 3 x 3 kernel which that emphasize horizontal edges by approximating a
+A 3 x 3 kernel which that emphasizes horizontal edges by approximating a
 vertical gradient.
 
 @lisp
@@ -406,7 +406,7 @@ vertical gradient.
 @anchor{%k-prewitt'}
 @defvr Variable %k-prewitt'
 
-A 3 x 3 kernel which that emphasize horizontalvertical by approximating
+A 3 x 3 kernel which that emphasizes horizontalvertical by approximating
 an horizontal gradient.
 
 @lisp
@@ -425,7 +425,7 @@ an horizontal gradient.
 @lisp
 (k-display %k-sobel)
 
-A 3 x 3 kernel which that emphasize horizontal edges using the smoothing
+A 3 x 3 kernel which that emphasizes horizontal edges using the smoothing
 effect by approximating a vertical gradient.
 
 @print{}
@@ -442,7 +442,7 @@ effect by approximating a vertical gradient.
 @lisp
 (k-display %k-sobel')
 
-A 3 x 3 kernel which that emphasize vertical edges using the smoothing
+A 3 x 3 kernel which that emphasizes vertical edges using the smoothing
 effect by approximating an horizontal gradient.
 
 @print{}
