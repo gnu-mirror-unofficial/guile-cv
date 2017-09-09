@@ -258,6 +258,9 @@ to each kernel value.
 @item @ref{%k-gaussian-blur0}
 @item @ref{%k-gaussian-blur1}
 @item @ref{%k-unsharp}
+@item @ref{%k-prewitt}
+@item @ref{%k-prewitt'}
+@item @ref{%k-sobel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -380,5 +383,71 @@ to each kernel value.
    -0.02344   -0.09375    1.85938   -0.09375   -0.02344
    -0.01563   -0.06250   -0.09375   -0.06250   -0.01563
    -0.00391   -0.01563   -0.02344   -0.01563   -0.00391
+@end lisp
+@end defvr
+
+
+@anchor{%k-prewitt}
+@defvr Variable %k-prewitt
+
+A 3 x 3 kernel which that emphasize horizontal edges by approximating a
+vertical gradient.
+
+@lisp
+(k-display %k-prewitt)
+@print{}
+    1.00000    1.00000    1.00000
+    0.00000    0.00000    0.00000
+   -1.00000   -1.00000   -1.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-prewitt'}
+@defvr Variable %k-prewitt'
+
+A 3 x 3 kernel which that emphasize horizontalvertical by approximating
+an horizontal gradient.
+
+@lisp
+(k-display %k-prewitt')
+@print{}
+    1.00000    0.00000   -1.00000
+    1.00000    0.00000   -1.00000
+    1.00000    0.00000   -1.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-sobel}
+@defvr Variable %k-sobel
+
+@lisp
+(k-display %k-sobel)
+
+A 3 x 3 kernel which that emphasize horizontal edges using the smoothing
+effect by approximating a vertical gradient.
+
+@print{}
+    1.00000    2.00000    1.00000
+    0.00000    0.00000    0.00000
+   -1.00000   -2.00000   -1.00000
+@end lisp
+@end defvr
+
+
+@anchor{%k-sobel'}
+@defvr Variable %k-sobel'
+
+@lisp
+(k-display %k-sobel')
+
+A 3 x 3 kernel which that emphasize vertical edges using the smoothing
+effect by approximating an horizontal gradient.
+
+@print{}
+    1.00000    0.00000    -1.00000
+    2.00000    0.00000    -2.00000
+    1.00000    0.00000    -1.00000
 @end lisp
 @end defvr

@@ -74,7 +74,11 @@
             %k-gaussian-blur1
             %k-unsharp
             %k-emboss
-            %k-laplacian))
+            %k-laplacian
+            %k-prewitt
+            %k-sobel
+            %k-prewitt'
+            %k-sobel'))
 
 
 #;(g-export )
@@ -296,3 +300,19 @@ of (* WIDTH HEIGHT) numbers."
 (define %k-laplacian
   (k-make 3 3
           '(0.375 0.25 0.375 0.25 -2.5 0.25 0.375 0.25 0.375)))
+
+(define %k-prewitt
+  (k-make 3 3
+          '(1 1 1 0 0 0 -1 -1 -1)))
+
+(define %k-prewitt'
+  (k-make 3 3
+          '(1 0 -1 1 0 -1 1 0 -1)))
+
+(define %k-sobel
+  (k-make 3 3
+          '(1 2 1 0 0 0 -1 -2 -1)))
+
+(define %k-sobel'
+  (k-make 3 3
+          '(1 0 -1 2 0 -2 1 0 -1)))
