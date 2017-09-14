@@ -72,32 +72,52 @@ is used to padd @var{channels} that are inferior, in width or height
 @anchor{im-display}
 @anchor{im-display-channel}
 @deffn Procedure im-display image @
-       [#:proc identity] [#:port (current-output-port)]
+       [#:proc #f] [#:port (current-output-port)]
 @deffnx Procedure im-display-channel channel width height @
-        [#:proc identity] [#:port (current-output-port)]
+        [#:proc #f] [#:port (current-output-port)]
 
 Returns nothing.
 
-Displays the content of @var{image} or @var{channel} on @var{port},
-applying @var{proc} to each pixel value.
+Displays the content of @var{image} or @var{channel} on @var{port}.
+
+The optional @var{#:proc} keyword argument must either be @code{#f}, the
+default, or a procedure that accepts a single (32 bits float)
+argument. When @var{#:proc} is @code{#f}, @code{im-display} will use an
+internally defined procedure which formats its argument @samp{à la
+octave}: nine positions, six decimals, all number aligned on the
+dot. any value @code{>= 1000} is converted to use the exponential float
+notation.  Here is an @samp{hand made} example:
 
 @lisp
 ...
-$5 = (3 2 3 (#f32(0.0 1.0 2.0 3.0 4.0 5.0) ... ...)
-(im-display $5 #:proc inexact->exact)
+$2 = (4 3 3 (#f32(0.0 1.0 2.0 3.0 4.0 5.0) ... ...)
+scheme@@(guile-user)> (im-divide $2 99)
+$3 = (4 3 3 (#f32(10.1010103225708 0.010101010091602802 …) …))
+scheme@@(guile-user)> (im-set! $3 0 0 0 10000)
+$4 = (4 3 3 (#f32(10000.0 0.010101010091602802 # # # # …) …))
+scheme@@(guile-user)> (im-display $4)
 @print{}
+
 Channel 1
-  0  1  2
-  3  4  5
+
+     1.0E+4    0.01010    0.02020    0.03030
+    0.04040    0.05051    0.06061    0.07071
+    0.08081    0.09091    0.10101    0.11111
+
 Channel 2
-  6  7  8
-  9  10  11
+
+    0.12121    0.13131    0.14141    0.15152
+    0.16162    0.17172    0.18182    0.19192
+    0.20202    0.21212    0.22222    0.23232
+
 Channel 3
-  12  13  14
-  15  16  17
+
+    0.24242    0.25253    0.26263    0.27273
+    0.28283    0.29293    0.30303    0.31313
+    0.32323    0.33333    0.34343    0.35354
 @end lisp
 
-Caution: unless you specify @var{port}, both this and
+@strong{Caution:} unless you specify @var{port}, both this and
 @ref{im-display-channel} procedures are ment to be used on very small
 and testing images, otherwise even on a small image, it might be ok in a
 terminal, but it will definitely will kill your emacs.

@@ -76,8 +76,8 @@
 	    n-chan->symbol
 	    im-collect
 
-	    im-display-channel
-	    im-display))
+	    im-display
+            im-display-channel))
 
 
 (g-export im-size
@@ -367,24 +367,6 @@
   (string-append "Channel "
 		 (number->string (+ n 1))))
 
-(define* (im-display-channel channel width height
-			     #:key (proc #f)
-			     (port (current-output-port)))
-  (let ((proc (if proc
-                  proc
-                  (lambda (val)
-                    (if (float>? val 1000.0 0)
-                        (format #t "~9e" val)
-                        (format #f "~9,5,,,f" val))))))
-    (do ((i 0
-	    (+ i 1)))
-	((= i height))
-      (do ((j 0
-	      (+ j 1)))
-	  ((>= j width) (newline port))
-        (format port "  ~A"
-                (proc (im-fast-channel-ref channel i j width)))))))
-
 (define* (im-display image
 		     #:key (proc #f)
 		     (port (current-output-port)))
@@ -397,3 +379,21 @@
 	 idata
        (iota n-chan))))
   (newline port))
+
+(define* (im-display-channel channel width height
+			     #:key (proc #f)
+			     (port (current-output-port)))
+  (let ((proc (if proc
+                  proc
+                  (lambda (val)
+                    (if (float>=? val 1000.0 0)
+                        (format #f "~9e" val)
+                        (format #f "~9,5,,,f" val))))))
+    (do ((i 0
+	    (+ i 1)))
+	((= i height))
+      (do ((j 0
+	      (+ j 1)))
+	  ((>= j width) (newline port))
+        (format port "  ~A"
+                (proc (im-fast-channel-ref channel i j width)))))))
