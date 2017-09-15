@@ -49,10 +49,11 @@
   #:export (kernel?
 
             k-make
+            k-make-circular-mask
             
-            k-size
             k-width
             k-height
+            k-size
 	    
 	    k-ref
             k-fast-ref
@@ -88,10 +89,6 @@
 ;;; Dimensions
 ;;;
 
-(define (k-size kernel)
-  (match kernel
-    ((width height _) (list width height))))
-
 (define (k-width kernel)
   (match kernel
     ((width height _) width)))
@@ -99,6 +96,10 @@
 (define (k-height kernel)
   (match kernel
     ((width height _) height)))
+
+(define (k-size kernel)
+  (match kernel
+    ((width height _) (list width height))))
 
 
 ;;;
@@ -176,7 +177,66 @@ of (* WIDTH HEIGHT) numbers."
                                  (list-ref vals i)))
                             (#f 0.0)
                             (a (if n-val (/ a n-val) a))))))
-        (error "Kernel dimensions must be odd: " width height)))
+      (error "Kernel width and height must be odd values: " width height)))
+
+(define (make-lradii radius)
+  (let* ((radius (cond ((and (float>=? radius 1.5)
+                             (float<=? radius 1.75))
+                        1.75)
+                       ((and (float>=? radius 2.5)
+                             (float<=? radius 2.85))
+                        2.85)
+                       (else
+                        radius)))
+         (r2 (float->int (+ (* radius radius) 1)))
+         (kradius (float->int (sqrt (+ r2 1e-10))))
+         (2kradius (* 2 kradius))
+         (2kradius1 (+ 2kradius 1))
+         (kheight 2kradius1)
+         (lradii (make-s32vector (* 2 kheight) 0.0))
+         (npoints kheight))
+    (s32vector-set! lradii 2kradius (- kradius))
+    (s32vector-set! lradii 2kradius1 kradius)
+    #;(dimfi 2kradius 2kradius1 lradii npoints)
+    (do ((y 1
+            (+ y 1)))
+        ((> y kradius)
+         (values lradii npoints kradius))
+      (let* ((dx (float->int (sqrt (+ (- r2 (* y y)) 1e-10))))
+             (-dx (- dx))
+             (a (* 2 (- kradius y)))
+             (b (+ a 1))
+             (c (* 2 (+ kradius y)))
+             (d (+ c 1)))
+        (s32vector-set! lradii a -dx)
+        (s32vector-set! lradii b dx)
+        (s32vector-set! lradii c -dx)
+        (s32vector-set! lradii d dx)
+        (set! npoints (+ npoints (+ (* 4 dx) 2)))))))
+
+(define* (k-make-circular-mask radius #:optional (val 1) (norm #f))
+  (if (float>=? radius 0.5)
+      (receive (lradii npoints kradius)
+          (make-lradii radius)
+        #;(dimfi lradii npoints kradius)
+        (let* ((width (+ (* 2 kradius) 1))
+               (w/2 (float->int (/ width 2)))
+               (height width)
+               (kernel (make-f64vector (* width height) 0.0))
+               (k-val (if norm
+                          (/ val (* val npoints))
+                          val)))
+          (do ((y 0
+                  (+ y 1)))
+              ((= y height)
+               (list width height kernel))
+            (do ((x (+ w/2 (s32vector-ref lradii (* 2 y)))
+                    (+ x 1)))
+                ((> x (+ w/2 (s32vector-ref lradii (+ (* 2 y) 1)))))
+              (f64vector-set! kernel
+                              (+ x (* y width))
+                              k-val)))))
+      (error "Radius must be a float > 0:" radius)))
 
 
 ;;;
@@ -225,8 +285,8 @@ of (* WIDTH HEIGHT) numbers."
   (let ((proc (if proc
                   proc
                   (lambda (val)
-                    (if (float>? val 1000.0 0)
-                        (format #t "~9e" val)
+                    (if (float>=? val 1000.0 0)
+                        (format #f "~9e" val)
                         (format #f "~9,5,,,f" val))))))
     (newline port)
     (match kernel
@@ -279,10 +339,10 @@ of (* WIDTH HEIGHT) numbers."
   (k-make 5 5 
           '(1 4 6 4 1
             4 16 24 16 4
-            6 24 -476 24 6
+            6 24 36 24 6
             4 16 24 16 4
             1 4 6 4 1)
-          256)) ;; reduce would return -256
+          #t)) ;; 256
 
 (define %k-unsharp
   (k-make 5 5 

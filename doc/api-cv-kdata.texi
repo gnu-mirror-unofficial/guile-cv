@@ -13,8 +13,8 @@ creating and accessing kernels.
 
 @subheading Kernel Data Structure
 
-A Guile-CV kernel is represented by a list containing the following
-elements:
+A Guile-CV @uref{@value{UKERNEL}, kernel} is represented by a list
+containing the following elements:
 
 @lisp
 (@var{width} @var{height} @var{kdata})
@@ -26,28 +26,16 @@ numeric vector of 64 bit floats, called @code{f64vector}, knowing that
 @code{f64} is the C type @code{double}.
 
 The external representation (ie. read syntax) for @var{kdata} vectors is
-@code{#f64(@dots{})}. As an example, a kernel of width 3 and height 3,
-initialized to 0.0 is represented by the following expression:
+@code{#f64(@dots{})}. As an example, the @code{identity} kernel of width
+3 and height 3, initialized to 0.0 is represented by the following
+expression:
 
 @lisp
-(3 3 #f64(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0))
+(3 3 #f64(0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0))
 @end lisp
 
-Kernel @var{width} and @var{height} can be different (kernels can be
+The kernel @var{width} and @var{height} can be different (kernels can be
 rectangular), but both @var{width} and @var{height} must be odd values.
-
-Guile-CV defines a few usefull kernels, stored in variables named using
-with a @code{%k-} prefix, all exported, for example @code{%k-laplacian},
-which is a @code{3x3} kernel defined as:
-
-@lisp
-,use (cv)
-(k-display %k-laplacian)
-@print{}
-    0.37500    0.25000    0.37500
-    0.25000   -2.50000    0.25000
-    0.37500    0.25000    0.37500
-@end lisp
 
 Guile-CV provides usefull accessors for kernel fields, however, if you
 need them all, just like for accessing image fields, your best friend is
@@ -63,6 +51,11 @@ need them all, just like for accessing image fields, your best friend is
 Note that the @code{(cv)} module imports and re-exports, among may
 others, the public interface of @code{(ice-9 match)}.
 
+Guile-CV defines a few usefull kernels, see @ref{kernel variables} at
+the end of this section, that you both may want to use and reuse: it
+will be easier, if you need to do so, to define your own kernels reusing
+an existing one, see the @code{(cv kdata)} module.
+
 
 @subheading Procedures
 
@@ -70,6 +63,7 @@ others, the public interface of @code{(ice-9 match)}.
 @indentedblock
 @table @code
 @item @ref{k-make}
+@item @ref{k-make-circular-mask}
 
 @item @ref{k-size}
 @item @ref{k-width}
@@ -134,12 +128,13 @@ number different from @code{0}
 @end table
 @end indentedblock
 
-If both @var{values} and @var{norm} are passed, @var{values} must
-precede @var{norm} on the arguments list.
+When both @var{values} and @var{norm} are passed - which is mandatory if
+you want to pass @var{norm} (since these are optional arguments, as
+opposed to keyword arguments) - @var{values} must precede @var{norm} on
+the arguments list.
 
-As an example, here is how the @ref{%k-box-blur} is defined@footnote{You
-will find other @code{k-make} examples by looking at the @code{(cv
-kdata)} module}:
+As an example, here is how to define a @code {3 x 3} normalized mean
+kernel:
 
 @lisp
 ,use (cv)
@@ -152,9 +147,93 @@ $2 = (3 3 #f64(0.1111111111111111 0.1111111111111111  # # # # …))
     0.11111    0.11111    0.11111
     0.11111    0.11111    0.11111
     0.11111    0.11111    0.11111
+@end lisp
+@end deffn
 
+
+@anchor{k-make-circular-mask}
+@deffn Procedure k-make-circular-mask radius [value 1] [norm #f]
+
+Returns a new @code{circular mask} kernel.
+
+The @code{kdata} value of this new kernel is an srfi-4 homogeneous
+numeric vector of 64 bit floats, @code{f64vector}, composed of
+@var{width} by @var{height} cells where @var{width} and @var{height} are
+@code{equal} and @code{odd} values determined by the procedure.
+
+The mandatory @code{radius} argument must be a floating point number
+satisfying the following predicate: @code{(float>=? radius 0.5)}.
+
+The optional @var{norm} argument can be:
+
+@indentedblock
+@table @code
+@item #f
+in this case, @code{kdata} is not normalized
+
+@item #t
+@code{kdata} values are normalized using @code{(* n value)}, where
+@code{n} is the number of none zero elements of the circular kernel mask
+being defined.
+@end table
+@end indentedblock
+
+When both @var{value} and @var{norm} are passed - which is mandatory if
+you want to pass @var{norm} (since these are optional arguments, as
+opposed to optional keyword arguments) - @var{value} must precede
+@var{norm} on the arguments list.
+
+To illustrate, here are the circular kernel masks of @var{radius 0.5},
+@code{1}, @code{1.5} respectively:
+
+@lisp
+...
+(for-each (lambda (i)
+            (k-display (k-make-circular-mask i)
+                       #:proc float->int))
+  '(0.5 1.0 1.5))
+@print{}
+
+  0  1  0
+  1  1  1
+  0  1  0
+
+
+  1  1  1
+  1  1  1
+  1  1  1
+
+
+  0  0  1  0  0
+  0  1  1  1  0
+  1  1  1  1  1
+  0  1  1  1  0
+  0  0  1  0  0
 @end lisp
 
+To better illustrate, let's define a bigger circular kernel mask,
+transform it to an image and @ref{im-show} it:
+
+@lisp
+...
+(match (k-make-circular-mask 49)
+  ((w h kdata) (list w h 1 (list (f64vector->f32vector kdata)))))
+  @print{}
+$6 = (99 99 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
+(im-show $6 'scale)
+@end lisp
+
+And you should see the following image@footnote{The @code{'scale}
+optional argument passed to @ref{im-show} so that @ref{im-save} scales
+the kernel values, which in this case means that @code{1.0} values will
+be saved as @code{255.0}, otherwise, it would be almost impossible for a
+human eye to actually see the shape of the circle @dots{}}
+
+@ifnottex
+@indentedblock
+@image{images/circular-kernel-mask-49,,,circular-kernel-mask-49,,,circular-kernel-mask-49,png}
+@end ifnottex
+@end indentedblock
 @end deffn
 
 
@@ -244,6 +323,7 @@ to each kernel value.
 @end lisp
 @end deffn
 
+@anchor{kernel variables}
 @subheading Variables
 
 @ifhtml
