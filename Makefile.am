@@ -39,6 +39,7 @@ SOURCES = \
 	cv/support/keyword.scm			\
 	cv/support/s32vector.scm		\
 	cv/support/f32vector.scm		\
+	cv/support/f64vector.scm		\
 	cv/support/libguile-cv.scm		\
 	cv/support/latex.scm			\
 	cv/support.scm				\
