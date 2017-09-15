@@ -54,6 +54,7 @@
             k-width
             k-height
             k-size
+            k-kdata
 	    
 	    k-ref
             k-fast-ref
@@ -100,6 +101,10 @@
 (define (k-size kernel)
   (match kernel
     ((width height _) (list width height))))
+
+(define (k-kdata kernel)
+  (match kernel
+    ((_ _ kdata) kdata)))
 
 
 ;;;

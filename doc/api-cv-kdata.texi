@@ -65,9 +65,10 @@ an existing one, see the @code{(cv kdata)} module.
 @item @ref{k-make}
 @item @ref{k-make-circular-mask}
 
-@item @ref{k-size}
 @item @ref{k-width}
 @item @ref{k-height}
+@item @ref{k-size}
+@item @ref{k-kdata}
 
 @item @ref{kernel?}
 
@@ -237,19 +238,17 @@ human eye to actually see the shape of the circle @dots{}}
 @end deffn
 
 
-@anchor{k-size}
-@deffn Procedure k-size kernel
-
-Returns the list of @var{width} and @var{height} for @var{kernel}.
-@end deffn
-
-
 @anchor{k-width}
 @anchor{k-height}
+@anchor{k-size}
+@anchor{k-kdata}
 @deffn Procedure k-width kernel
 @deffnx Procedure k-height kernel
+@deffnx Procedure k-size kernel
+@deffnx Procedure k-kdata kernel
 
-Returns, respectively the @var{width} and @var{height} for @var{kernel}.
+Returns, respectively, the @var{width}, the @var{height}, the list of
+@var{width} and @var{height} or the @var{kdata} for @var{kernel}.
 @end deffn
 
 
