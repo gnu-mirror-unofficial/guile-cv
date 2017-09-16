@@ -54,7 +54,7 @@
             k-width
             k-height
             k-size
-            k-kdata
+            k-channel
 	    
 	    k-ref
             k-fast-ref
@@ -71,7 +71,7 @@
             %k-edge1
             %k-edge2
             %k-sharpen
-            %k-box-blur
+            %k-mean
             %k-gaussian-blur0
             %k-gaussian-blur1
             %k-unsharp
@@ -102,7 +102,7 @@
   (match kernel
     ((width height _) (list width height))))
 
-(define (k-kdata kernel)
+(define (k-channel kernel)
   (match kernel
     ((_ _ kdata) kdata)))
 
@@ -330,7 +330,7 @@ of (* WIDTH HEIGHT) numbers."
   (k-make 3 3
           '(0 -1 0 -1 5 -1 0 -1 0)))
 
-(define %k-box-blur
+(define %k-mean
   (k-make 3 3
           '(1 1 1 1 1 1 1 1 1)
           #t))

@@ -68,7 +68,7 @@ an existing one, see the @code{(cv kdata)} module.
 @item @ref{k-width}
 @item @ref{k-height}
 @item @ref{k-size}
-@item @ref{k-kdata}
+@item @ref{k-channel}
 
 @item @ref{kernel?}
 
@@ -225,10 +225,11 @@ $6 = (99 99 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
 @end lisp
 
 And you should see the following image@footnote{The @code{'scale}
-optional argument passed to @ref{im-show} so that @ref{im-save} scales
-the kernel values, which in this case means that @code{1.0} values will
-be saved as @code{255.0}, otherwise, it would be almost impossible for a
-human eye to actually see the shape of the circle @dots{}}
+optional argument passed to @ref{im-show}, as its name indicate, is so
+that kernel values will be scaled, which in this case means that
+@code{1.0} values will become @code{255.0} - otherwise, it would be
+almost impossible for a human eye to actually see the shape of the
+circle @dots{}}
 
 @ifnottex
 @indentedblock
@@ -241,11 +242,11 @@ human eye to actually see the shape of the circle @dots{}}
 @anchor{k-width}
 @anchor{k-height}
 @anchor{k-size}
-@anchor{k-kdata}
+@anchor{k-channel}
 @deffn Procedure k-width kernel
 @deffnx Procedure k-height kernel
 @deffnx Procedure k-size kernel
-@deffnx Procedure k-kdata kernel
+@deffnx Procedure k-channel kernel
 
 Returns, respectively, the @var{width}, the @var{height}, the list of
 @var{width} and @var{height} or the @var{kdata} for @var{kernel}.
@@ -333,10 +334,12 @@ to each kernel value.
 @item @ref{%k-edge1}
 @item @ref{%k-edge2}
 @item @ref{%k-sharpen}
-@item @ref{%k-box-blur}
+@item @ref{%k-mean}
 @item @ref{%k-gaussian-blur0}
 @item @ref{%k-gaussian-blur1}
 @item @ref{%k-unsharp}
+@item @ref{%k-emboss}
+@item @ref{%k-laplacian}
 @item @ref{%k-prewitt}
 @item @ref{%k-prewitt'}
 @item @ref{%k-sobel}
@@ -344,16 +347,20 @@ to each kernel value.
 @end indentedblock
 @end ifhtml
 
+Here is how these kernels are defined. Note that in order to make these
+definitions easier to read, we've hand added some spaces and linefeeds
+where applicable:
+
 
 @anchor{%k-identity}
 @defvr Variable %k-identity
 
 @lisp
-(k-display %k-identity)
+(k-display %k-identity #:proc float->int)
 @print{}
-    0.00000    0.00000    0.00000
-    0.00000    1.00000    0.00000
-    0.00000    0.00000    0.00000
+  0  0  0
+  0  1  0
+  0  0  0
 @end lisp
 @end defvr
 
@@ -362,11 +369,10 @@ to each kernel value.
 @defvr Variable %k-edge0
 
 @lisp
-(k-display %k-edge0)
-@print{}
-    1.00000    0.00000   -1.00000
-    0.00000    0.00000    0.00000
-   -1.00000    0.00000    1.00000
+(k-make 3 3
+        '(  1  0 -1
+            0  0  0
+           -1  0  1  ))
 @end lisp
 @end defvr
 
@@ -375,11 +381,10 @@ to each kernel value.
 @defvr Variable %k-edge1
 
 @lisp
-(k-display %k-edge1)
-@print{}
-    0.00000    1.00000    0.00000
-    1.00000   -4.00000    1.00000
-    0.00000    1.00000    0.00000
+(k-make 3 3
+        '(  0  1  0
+            1 -4  1
+            0  1  0  ))
 @end lisp
 @end defvr
 
@@ -388,11 +393,10 @@ to each kernel value.
 @defvr Variable %k-edge2
 
 @lisp
-(k-display %k-edge2)
-@print{}
-   -1.00000   -1.00000   -1.00000
-   -1.00000    8.00000   -1.00000
-   -1.00000   -1.00000   -1.00000
+(k-make 3 3
+        '( -1 -1  -1
+           -1  8  -1
+           -1 -1  -1  ))
 @end lisp
 @end defvr
 
@@ -401,24 +405,23 @@ to each kernel value.
 @defvr Variable %k-sharpen
 
 @lisp
-(k-display %k-sharpen)
-@print{}
-    0.00000   -1.00000    0.00000
-   -1.00000    5.00000   -1.00000
-    0.00000   -1.00000    0.00000
+(k-make 3 3
+        '(  0  -1   0
+           -1   5  -1
+            0  -1   0  ))
 @end lisp
 @end defvr
 
 
-@anchor{%k-box-blur}
-@defvr Variable %k-box-blur
+@anchor{%k-mean}
+@defvr Variable %k-mean
 
 @lisp
-(k-display %k-box-blur)
-@print{}
-    0.11111    0.11111    0.11111
-    0.11111    0.11111    0.11111
-    0.11111    0.11111    0.11111
+(k-make 3 3
+        '(  1  1  1
+            1  1  1
+            1  1  1  )
+        9)
 @end lisp
 @end defvr
 
@@ -426,12 +429,16 @@ to each kernel value.
 @anchor{%k-gaussian-blur0}
 @defvr Variable %k-gaussian-blur0
 
+The use of @ref{im-convolve} with this and the following kernels will
+only give an approximation of the real Gaussian bluring algorithm.  For
+any serious work, use @ref{im-gaussian-blur} instead.
+
 @lisp
-(k-display %k-gaussian-blur0)
-@print{}
-    0.06250    0.12500    0.06250
-    0.12500    0.25000    0.12500
-    0.06250    0.12500    0.06250
+(k-make 3 3
+        '(  1  2  1
+            2  4  2
+            1  2  1  )
+        16)
 @end lisp
 @end defvr
 
@@ -440,13 +447,13 @@ to each kernel value.
 @defvr Variable %k-gaussian-blur1
 
 @lisp
-(k-display %k-gaussian-blur1)
-@print{}
-    0.00391    0.01563    0.02344    0.01563    0.00391
-    0.01563    0.06250    0.09375    0.06250    0.01563
-    0.02344    0.09375   -1.85938    0.09375    0.02344
-    0.01563    0.06250    0.09375    0.06250    0.01563
-    0.00391    0.01563    0.02344    0.01563    0.00391
+(k-make 5 5
+        '(  1   4   6   4  1
+            4  16  24  16  4
+            6  24  36  24  6
+            4  16  24  16  4
+            1   4   6   4  1  )
+        256)
 @end lisp
 @end defvr
 
@@ -455,13 +462,37 @@ to each kernel value.
 @defvr Variable %k-unsharp
 
 @lisp
-(k-display %k-unsharp)
-@print{}
-   -0.00391   -0.01563   -0.02344   -0.01563   -0.00391
-   -0.01563   -0.06250   -0.09375   -0.06250   -0.01563
-   -0.02344   -0.09375    1.85938   -0.09375   -0.02344
-   -0.01563   -0.06250   -0.09375   -0.06250   -0.01563
-   -0.00391   -0.01563   -0.02344   -0.01563   -0.00391
+(k-make 5 5
+        '(  1   4    6   4  1
+            4  16   24  16  4
+            6  24 -476  24  6
+            4  16   24  16  4
+            1   4    6   4  1  )
+        -256)
+@end lisp
+@end defvr
+
+
+@anchor{%k-emboss}
+@defvr Variable %k-emboss
+
+@lisp
+(k-make 3 3
+        '(  -2  -2   0
+            -2   6   0
+             0   0   0  ))
+@end lisp
+@end defvr
+
+
+@anchor{%k-laplacian}
+@defvr Variable %k-laplacian
+
+@lisp
+(k-make 3 3
+        '(  0.375   0.25  0.375
+            0.25   -2.5   0.25
+            0.375   0.25  0.375  ))
 @end lisp
 @end defvr
 
@@ -473,11 +504,10 @@ A 3 x 3 kernel which that emphasizes horizontal edges by approximating a
 vertical gradient.
 
 @lisp
-(k-display %k-prewitt)
-@print{}
-    1.00000    1.00000    1.00000
-    0.00000    0.00000    0.00000
-   -1.00000   -1.00000   -1.00000
+(k-make 3 3
+        '(  1   1   1
+            0   0   0
+           -1  -1  -1  ))
 @end lisp
 @end defvr
 
@@ -489,11 +519,10 @@ A 3 x 3 kernel which that emphasizes horizontalvertical by approximating
 an horizontal gradient.
 
 @lisp
-(k-display %k-prewitt')
-@print{}
-    1.00000    0.00000   -1.00000
-    1.00000    0.00000   -1.00000
-    1.00000    0.00000   -1.00000
+(k-make 3 3
+        '(  1  0  -1
+            1  0  -1
+            1  0  -1  ))
 @end lisp
 @end defvr
 
@@ -502,15 +531,10 @@ an horizontal gradient.
 @defvr Variable %k-sobel
 
 @lisp
-(k-display %k-sobel)
-
-A 3 x 3 kernel which that emphasizes horizontal edges using the smoothing
-effect by approximating a vertical gradient.
-
-@print{}
-    1.00000    2.00000    1.00000
-    0.00000    0.00000    0.00000
-   -1.00000   -2.00000   -1.00000
+(k-make 3 3
+        '(  1   2   1
+            0   0   0
+           -1  -2  -1  ))
 @end lisp
 @end defvr
 
@@ -519,14 +543,9 @@ effect by approximating a vertical gradient.
 @defvr Variable %k-sobel'
 
 @lisp
-(k-display %k-sobel')
-
-A 3 x 3 kernel which that emphasizes vertical edges using the smoothing
-effect by approximating an horizontal gradient.
-
-@print{}
-    1.00000    0.00000    -1.00000
-    2.00000    0.00000    -2.00000
-    1.00000    0.00000    -1.00000
+(k-make 3 3
+        '(  1   0  -1
+            2   0  -2
+            1   0  -1  ))
 @end lisp
 @end defvr
