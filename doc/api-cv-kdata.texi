@@ -343,6 +343,7 @@ to each kernel value.
 @item @ref{%k-prewitt}
 @item @ref{%k-prewitt'}
 @item @ref{%k-sobel}
+@item @ref{%k-sobel'}
 @end table
 @end indentedblock
 @end ifhtml
