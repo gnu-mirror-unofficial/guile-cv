@@ -44,15 +44,17 @@ The GRAY feature list values are:
 The labeled object area in pixel
 
 @item left top right bottom
-The coordinates of the labeled object@footnote{Note that when passed to
-@ref{im-crop}, @code{right} and @code{bottom} must be increased by 1:
-@code{(im-crop image left top (+ right 1) (+ bottom 1))}.}
+The coordinates of the @samp{bounding box} labeled object@footnote{Note
+that when passed to @ref{im-crop}, @code{right} and @code{bottom} must
+be increased by 1: @code{(im-crop image left top (+ right 1) (+ bottom
+1))}.}
 
 @item mean-x mean-y
-The coordinates of the mean value of the labeled object. These two
-coordinate values are floating points, the @samp{mathematical} position
-of the mean value in @var{image}
-
+Also sometimes called the @samp{centroid}, these are the average of the
+x and y coordinates of all of the pixels in the labeled object. These
+two coordinate values are floating points, representing the
+@samp{mathematical position} of the mean x and y values of the labeled
+object
 
 @item min max mean std-dev
 The minimum, maximum, mean and standard gray deviaton labeled object
@@ -72,10 +74,11 @@ The coordinates of the labeled object (the corresponding GRAY
 feature footnote applies here too of course)
 
 @item mean-x mean-y
-The coordinates of the mean (red green blue) values of the labeled
-object. These two coordinate values are floating points, the
-@samp{mathematical} position of the mean value in @var{image}
-
+Also sometimes called the @samp{centroid}, these are the average of the
+x and y coordinates of all of the (red green blue) pixels in the labeled
+object. These two coordinate values are floating points, representing
+the @samp{mathematical position} of the mean x and y values of tha
+labeled object
 
 @item min-r min-g min-b max-r max-g max-b mean-r mean-g mean-b std-dev-r std-dev-g std-dev-b
 The minimum, maximum, mean and standard deviaton labeled object values of
