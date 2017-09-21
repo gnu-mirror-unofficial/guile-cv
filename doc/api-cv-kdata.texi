@@ -37,7 +37,7 @@ expression:
 The kernel @var{width} and @var{height} can be different (kernels can be
 rectangular), but both @var{width} and @var{height} must be odd values.
 
-Guile-CV provides usefull accessors for kernel fields, however, if you
+Guile-CV provides useful accessors for kernel fields, however, if you
 need them all, just like for accessing image fields, your best friend is
 @code{(ice-9 match)}, here is an example:
 
@@ -51,7 +51,7 @@ need them all, just like for accessing image fields, your best friend is
 Note that the @code{(cv)} module imports and re-exports, among may
 others, the public interface of @code{(ice-9 match)}.
 
-Guile-CV defines a few usefull kernels, see @ref{kernel variables} at
+Guile-CV defines a few useful kernels, see @ref{kernel variables} at
 the end of this section, that you both may want to use and reuse: it
 will be easier, if you need to do so, to define your own kernels reusing
 an existing one, see the @code{(cv kdata)} module.
@@ -174,7 +174,7 @@ in this case, @code{kdata} is not normalized
 
 @item #t
 @code{kdata} values are normalized using @code{(* n value)}, where
-@code{n} is the number of none zero elements of the circular kernel mask
+@code{n} is the number of non zero elements of the circular kernel mask
 being defined.
 @end table
 @end indentedblock
@@ -340,10 +340,10 @@ to each kernel value.
 @item @ref{%k-unsharp}
 @item @ref{%k-emboss}
 @item @ref{%k-laplacian}
-@item @ref{%k-prewitt}
-@item @ref{%k-prewitt'}
-@item @ref{%k-sobel}
-@item @ref{%k-sobel'}
+@item @ref{%k-prewitt-y}
+@item @ref{%k-prewitt-x}
+@item @ref{%k-sobel-y}
+@item @ref{%k-sobel-x}
 @end table
 @end indentedblock
 @end ifhtml
@@ -498,10 +498,12 @@ any serious work, use @ref{im-gaussian-blur} instead.
 @end defvr
 
 
-@anchor{%k-prewitt}
-@defvr Variable %k-prewitt
+@subheading Prewitt filtering
 
-A 3 x 3 kernel which that emphasizes horizontal edges by approximating a
+@anchor{%k-prewitt-y}
+@defvr Variable %k-prewitt-y
+
+A 3 x 3 kernel which emphasizes horizontal edges by approximating a
 vertical gradient.
 
 @lisp
@@ -513,11 +515,11 @@ vertical gradient.
 @end defvr
 
 
-@anchor{%k-prewitt'}
-@defvr Variable %k-prewitt'
+@anchor{%k-prewitt-x}
+@defvr Variable %k-prewitt-x
 
-A 3 x 3 kernel which that emphasizes horizontalvertical by approximating
-an horizontal gradient.
+A 3 x 3 kernel which emphasizes vertical edges by approximating an
+horizontal gradient.
 
 @lisp
 (k-make 3 3
@@ -527,9 +529,21 @@ an horizontal gradient.
 @end lisp
 @end defvr
 
+@subheading Sobel filtering
 
-@anchor{%k-sobel}
-@defvr Variable %k-sobel
+Filtering an image using a @samp{Sobel} filter requires a three steps
+approach: (1) filtering the image using the @samp{Sobel column filter},
+(2) dito using the @samp{Sobel line filter}, and (3) combining the
+results to obtain what is called the @samp{Sobel magnitude}, which
+implements the following (pseudo code) formula: @math{sqrt (sqrt
+(sobel-y ) + sqrt (sobel-x))}.
+
+Guile-CV @code{im-flter} provides a @code{'sobel} filter of course, but
+here are the definition of the @samp{Sobel column} and @samp{Sobel line}
+filters, should you need these individually.
+
+@anchor{%k-sobel-y}
+@defvr Variable %k-sobel-y
 
 @lisp
 (k-make 3 3
@@ -540,8 +554,8 @@ an horizontal gradient.
 @end defvr
 
 
-@anchor{%k-sobel'}
-@defvr Variable %k-sobel'
+@anchor{%k-sobel-x}
+@defvr Variable %k-sobel-x
 
 @lisp
 (k-make 3 3

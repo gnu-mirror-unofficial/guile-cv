@@ -77,10 +77,10 @@
             %k-unsharp
             %k-emboss
             %k-laplacian
-            %k-prewitt
-            %k-sobel
-            %k-prewitt'
-            %k-sobel'))
+            %k-prewitt-y
+            %k-prewitt-x
+            %k-sobel-y
+            %k-sobel-x))
 
 
 #;(g-export )
@@ -366,18 +366,18 @@ of (* WIDTH HEIGHT) numbers."
   (k-make 3 3
           '(0.375 0.25 0.375 0.25 -2.5 0.25 0.375 0.25 0.375)))
 
-(define %k-prewitt
+(define %k-prewitt-y
   (k-make 3 3
           '(1 1 1 0 0 0 -1 -1 -1)))
 
-(define %k-prewitt'
+(define %k-prewitt-x
   (k-make 3 3
           '(1 0 -1 1 0 -1 1 0 -1)))
 
-(define %k-sobel
+(define %k-sobel-y
   (k-make 3 3
           '(1 2 1 0 0 0 -1 -2 -1)))
 
-(define %k-sobel'
+(define %k-sobel-x
   (k-make 3 3
           '(1 0 -1 2 0 -2 1 0 -1)))
