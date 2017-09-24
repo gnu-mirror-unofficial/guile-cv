@@ -59,9 +59,11 @@ im-show
 **** New interfaces
 
 k-make
+k-make-circular-mask
 k-size
 k-width
 k-height
+k-channel
 kernel?
 k-ref
 k-fast-ref
