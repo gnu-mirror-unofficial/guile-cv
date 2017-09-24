@@ -41,6 +41,7 @@
   #:use-module (cv support libguile-cv)
   #:use-module (cv support utils)
   #:use-module (cv support latex)
+  #:use-module (cv support pi)
 
   #:duplicates (merge-generics
 		replace
@@ -63,4 +64,5 @@
                               (cv support f64vector)
                               (cv support libguile-cv)
                               (cv support utils)
-                              (cv support latex)))
+                              (cv support latex)
+                              (cv support pi)))

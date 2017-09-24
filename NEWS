@@ -75,6 +75,10 @@ k-display
 im-convolve
 im-convolve-channel
 
+%pi
+%2pi
+%pi/2
+
 **** Bug fixes
 
 im-set!

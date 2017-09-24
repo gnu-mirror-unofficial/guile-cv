@@ -15,6 +15,7 @@ support goops))}, ...
 * Modules::
 * Goops::
 * G-export::
+* Pi::
 * Utils::
 @end menu
 
@@ -25,9 +26,40 @@ support goops))}, ...
 @node Goops
 @subsection Goops
 
+
 @node G-export
 @subsection G-export
 
+
+@node Pi
+@subsection Pi
+
+
+@anchor{PI variables}
+@subheading Variables
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{%pi}
+@item @ref{%2pi}
+@item @ref{%pi/2}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{%pi}
+@anchor{%2pi}
+@anchor{%pi/2}
+@defvr Variable %pi
+@defvrx Variable %2pi
+@defvrx Variable %pi/2
+
+Respectively bound to @code{(acos -1)}, @code{(* 2 %pi)} and
+@code{(/%pi 2)}.
+@end defvr
+
+
 @node Utils
 @subsection Utils
-
