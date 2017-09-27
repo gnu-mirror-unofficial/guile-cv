@@ -50,3 +50,7 @@
 
 @set UGLCM-TEXTURE-TUTORIAL https://prism.ucalgary.ca/handle/1880/51900
 @set UCC-4.0 http://creativecommons.org/licenses/by-nc/4.0/
+
+@set UEIGENV https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+@set USKEWNESS https://en.wikipedia.org/wiki/Skewness
+@set UKURTOSIS https://en.wikipedia.org/wiki/Kurtosis

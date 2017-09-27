@@ -29,6 +29,7 @@
 (define-module (cv features)
   #:use-module (oop goops)
   #:use-module (system foreign)
+  #:use-module (ice-9 format)
   #:use-module (ice-9 match)
   #:use-module (ice-9 receive)
   #:use-module (ice-9 threads)
@@ -67,14 +68,13 @@
                ((c)
                 (im-features-gray c l-c width height #:n-label n-label))
                ((r g b)
-                (im-features-rgb r g b l-c width height
-                                   #:n-label n-label))
+                (im-features-rgb r g b l-c width height #:n-label n-label))
                (else
                 (error "Not a GRAY neither an RGB image.")))))))
        (else
         (error "Not a labeled image."))))))
 
-(define %vigra-feature-length-gray 11)
+(define %vigra-feature-length-gray 22)
 
 (define* (im-features-gray channel l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
@@ -129,13 +129,21 @@
   ;;  | Index         | Feature                       |
   ;;  | ------------- | ----------------------------- |
   ;;  |  0            | region_size                   |
-  ;;  |  1,  2        | upperleft-x and y-coord       |
-  ;;  |  3,  4        | lowerright-x and y-coord      |
+  ;;  |  1,  2        | upperleft-x, y-coord          |
+  ;;  |  3,  4        | lowerright-x, y-coord         |
   ;;  |  5,  6        | mean-x and y-coord            |
   ;;  |  7            | min gray value                |
   ;;  |  8            | max gray value                |
   ;;  |  9            | mean gray value               |
-  ;;  | 10            | std.dev. gray value           |
+  ;;  | 10            | std. dev. gray value          |
+  ;;  | 11, 12        | major-ev-x, major-ev-y        |
+  ;;  | 13, 14        | minor-ev-x, minor-ev-y        |
+  ;;  | 15            | major axis                    |
+  ;;  | 16            | minor axis                    |
+  ;;  | 17, 18        | center of mass x, y           |
+  ;;  | 19            | perimeter                     |
+  ;;  | 20            | skewness                      |
+  ;;  | 21            | kurtosis                      |
   ;;
   (let* ((p-size %vigra-feature-length-gray)
          (offset (* i p-size)))
@@ -146,7 +154,15 @@
         left top right bottom
         mean-x mean-y
         mini maxi meani
-        std-dev)
+        std-dev
+        major-ev-x major-ev-y
+        minor-ev-x minor-ev-y
+        major-axis
+        minor-axis
+        center-mass-x center-mass-y
+        perimeter
+        skewness
+        kurtosis)
        (list (float->int (float-round area 0))
              (float->int (float-round left 0))
              (float->int (float-round top 0))
@@ -154,7 +170,51 @@
              (float->int (float-round bottom 0))
              mean-x mean-y
              mini maxi meani
-             std-dev)))))
+             std-dev
+             major-ev-x major-ev-y
+             minor-ev-x minor-ev-y
+             ;; vigra returns radius, guile-cv returns diameters
+             major-axis #;(* major-axis 2)
+             minor-axis #;(* minor-axis 2)
+             center-mass-x center-mass-y
+             perimeter
+             skewness
+             kurtosis
+             ;; circularity
+             (/ (* 4 %pi area) (expt perimeter 2))
+             ;; aspect ratio
+             (/ major-axis minor-axis)
+             ;; roundness
+             ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
+             (/ minor-axis major-axis))))))
+
+(define* (f-display vals #:key (port (current-output-port)))
+  (case (length vals)
+    ((25) ;; gray particle
+     (match vals
+       ((area left top right bottom mean-x mean-y mini maxi meani std-dev
+         major-ev-x major-ev-y minor-ev-x minor-ev-y
+         major-axis minor-axis center-mass-x center-mass-y
+         perimeter skewness kurtosis
+         circularity ar roundness)
+        (newline port)
+        (format port "                   area : ~A\n" area)
+        (format port "  left top right bottom : ~A ~A ~A ~A\n" left top right bottom)
+        (format port "          mean-x mean-y : ~9,5,,,f ~9,5,,,f\n" mean-x mean-y)
+        (format port "           min max mean : ~9,5,,,f ~9,5,,,f ~9,5,,,f\n" mini maxi meani)
+        (format port "     standard deviation : ~9,5,,,f\n" std-dev)
+        (format port " major ev x, major ev y : ~9,5,,,f ~9,5,,,f\n" major-ev-x major-ev-y)
+        (format port " minor ev x, minor ev y : ~9,5,,,f ~9,5,,,f\n" minor-ev-x minor-ev-y)
+        (format port " major axis, minor axis : ~9,5,,,f ~9,5,,,f\n" major-axis minor-axis)
+        (format port "    center of mass x, y : ~9,5,,,f ~9,5,,,f\n" center-mass-x center-mass-y)
+        (format port "              perimeter : ~9,5,,,f\n" perimeter)
+        (format port "               skewness : ~9,5,,,f\n" skewness)
+        (format port "               kurtosis : ~9,5,,,f\n" kurtosis)
+        (format port "            circularity : ~9,5,,,f\n" circularity)
+        (format port "           aspect ratio : ~9,5,,,f\n" ar)
+        (format port "              roundness : ~9,5,,,f\n" roundness)
+        (newline port)
+        (values))))))
 
 (define (vigra-feature-rgb features i)
   ;;

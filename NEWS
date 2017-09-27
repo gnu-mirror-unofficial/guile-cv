@@ -27,7 +27,7 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
-** Septermber the xx, 2017
+** September the xx, 2017
 
 Guile-CV version 0.1.7 is released!
 
@@ -37,9 +37,9 @@ git summary [1] and git log [2] for a complete description:
 	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
 	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
 
-*** Changes since 0.1.6
+** Changes since 0.1.6
 
-**** Interface changes
+*** Interface changes
 
 im-save
 im-show
@@ -56,7 +56,7 @@ im-show
   are saved as 255, and otherwise are saved unchanged.  Bingo, now
   WYSIWYC - what you see is what you computed :-)
 
-**** New interfaces
+*** New interfaces
 
 k-make
 k-make-circular-mask
@@ -79,7 +79,18 @@ im-convolve-channel
 %2pi
 %pi/2
 
-**** Bug fixes
+*** New features
+
+**** New GRAY features
+
+major-ev-x major-ev-y minor-ev-x minor-ev-y
+major-axis minor-axis
+center-mass-x center-mass-y
+perimeter
+skewness kurtosis
+circularity aspect-ratio roundness
+
+*** Bug fixes
 
 im-set!
 im-images?
