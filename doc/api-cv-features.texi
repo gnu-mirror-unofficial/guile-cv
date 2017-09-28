@@ -65,7 +65,8 @@ values
 
 @item major-ev-x major-ev-y minor-ev-x minor-ev-y
 Respectively the major and minor @uref{@value{UEIGENV}, eigen vectors}
-@code{x} and @code{y} coordinates
+@code{x} and @code{y} normalized coordinates: @code{(= (sqrt (+ (expt
+x 2) (expt y 2))) 1)}
 
 @item major-axis minor-axis
 Respectively the major and minor @uref{@value{UEIGENV}, eigen values}
@@ -74,7 +75,7 @@ Respectively the major and minor @uref{@value{UEIGENV}, eigen values}
 The center of mass @code{x} and @code{y} coordinates
 
 @item perimeter
-The labeled objec perimeter in pixels
+The labeled object perimeter in pixels
 
 @item skewness kurtosis
 Respectively the @uref{@value{USKEWNESS}, skewness} and the
@@ -86,6 +87,57 @@ Respectively the circularity @code{(/ (* 4 %pi area) (expt perimeter
 roundness @code{(/ minor-axis major-axis)} of the labeled object
 @end table
 @end indentedblock
+
+
+The RGB feature list values are:
+
+@indentedblock
+@table @code
+@item area
+The labeled object area in pixel
+
+@item left top right bottom
+The coordinates of the labeled object (the corresponding GRAY
+feature footnote applies here too of course)
+
+@item mean-x mean-y
+Also sometimes called the @samp{centroid}, these are the average of the
+x and y coordinates of all of the (red green blue) pixels in the labeled
+object. These two coordinate values are floating points, representing
+the @samp{mathematical position} of the mean x and y values of tha
+labeled object
+
+@item min-r min-g min-b max-r max-g max-b mean-r mean-g mean-b std-dev-r std-dev-g std-dev-b
+The minimum, maximum, mean and standard deviaton labeled object values of
+the red, green and blue channels
+
+@item major-ev-x major-ev-y minor-ev-x minor-ev-y
+Respectively the major and minor @uref{@value{UEIGENV}, eigen vectors}
+@code{x} and @code{y} normalized coordinates: @code{(= (sqrt (+ (expt
+x 2) (expt y 2))) 1)}
+
+@item major-axis minor-axis
+Respectively the major and minor @uref{@value{UEIGENV}, eigen values}
+
+@item center-mass-x center-mass-y
+The center of mass @code{x} and @code{y} coordinates
+
+@item perimeter
+The labeled object perimeter in pixels
+
+@item skewness-r skewness-g skewness-b kurtosis-r kurtosis-g kurtosis-b
+Respectively the @uref{@value{USKEWNESS}, skewness} and the
+@uref{@value{UKURTOSIS}, kurtosis} labeled object values of the red,
+green and blue channels
+
+@item circularity aspect-ratio roundness
+Respectively the circularity @code{(/ (* 4 %pi area) (expt perimeter
+2))}, the aspect ratio @code{(/ major-axis minor-axis)} and the
+roundness @code{(/ minor-axis major-axis)} of the labeled object
+
+@end table
+@end indentedblock
+
 
 Though we did not make it public, Guile-CV has an internal feature
 display procedure that you might be interested to (re)use, so here is an
@@ -111,7 +163,7 @@ scheme@@(guile-user)> ((@@@@ (cv features) f-display) (match $6 ((bg a) a)))
      standard deviation :  20.57977
  major ev x, major ev y :  -0.22380   0.97463
  minor ev x, minor ev y :  -0.97463  -0.22380
- major axis, minor axis :  42.91395  36.89884
+ major axis, minor axis :  21.45698  18.44942 (radius)
     center of mass x, y :  40.95933  48.17778
               perimeter : 367.16147
                skewness :  -2.93505
@@ -121,28 +173,10 @@ scheme@@(guile-user)> ((@@@@ (cv features) f-display) (match $6 ((bg a) a)))
               roundness :   0.85983
 @end lisp
 
+As we mentioned above, @code{f-diplay} is defined in the @code{(cv
+features)} module, but it is not exported: in Guile, calling none
+exported procedure (which should not be @samp{abused}) is done using the
+syntax @code{@@@@ module-name binding-name}, which in this example
+translates to @code{(@@@@ (cv features) f-display)}.
 
-The RGB feature list values are:
-
-@indentedblock
-@table @code
-@item area
-The labeled object area in pixel
-
-@item left top right bottom
-The coordinates of the labeled object (the corresponding GRAY
-feature footnote applies here too of course)
-
-@item mean-x mean-y
-Also sometimes called the @samp{centroid}, these are the average of the
-x and y coordinates of all of the (red green blue) pixels in the labeled
-object. These two coordinate values are floating points, representing
-the @samp{mathematical position} of the mean x and y values of tha
-labeled object
-
-@item min-r min-g min-b max-r max-g max-b mean-r mean-g mean-b std-dev-r std-dev-g std-dev-b
-The minimum, maximum, mean and standard deviaton labeled object values of
-the red, green and blue channels
-@end table
-@end indentedblock
 @end deffn

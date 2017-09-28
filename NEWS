@@ -53,8 +53,7 @@ im-show
   really want here, most of the time at least, and hence it becomes the
   default from now on, is what is called 'clipping': pixel values are
   ‘clipped’, which means that values < 0 are saved as 0, values > 255
-  are saved as 255, and otherwise are saved unchanged.  Bingo, now
-  WYSIWYC - what you see is what you computed :-)
+  are saved as 255, and otherwise are saved unchanged.
 
 *** New interfaces
 
@@ -89,6 +88,16 @@ center-mass-x center-mass-y
 perimeter
 skewness kurtosis
 circularity aspect-ratio roundness
+
+**** New RGB features
+
+major-ev-x major-ev-y minor-ev-x minor-ev-y
+major-axis minor-axis
+center-mass-x center-mass-y
+perimeter
+skewness-r skewness-g skewness-b
+kurtosis-r kurtosis-g kurtosis-b
+circularity ar roundness
 
 *** Bug fixes
 

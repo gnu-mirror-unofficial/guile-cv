@@ -89,7 +89,7 @@
       (else
        (vigra-features->list features n-prop 'gray)))))
 
-(define %vigra-feature-length-rgb 19)
+(define %vigra-feature-length-rgb 34)
 
 (define* (im-features-rgb r g b l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
@@ -188,33 +188,49 @@
              ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
              (/ minor-axis major-axis))))))
 
+(define %f-display-gray-format-str
+  "\n                     area : ~A
+    left top right bottom : ~A ~A ~A ~A
+            mean-x mean-y : ~9,5,,,f ~9,5,,,f
+             min max mean : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+       standard deviation : ~9,5,,,f
+            major ev x, y : ~9,5,,,f ~9,5,,,f
+            minor ev x, y : ~9,5,,,f ~9,5,,,f
+        major, minor axis : ~9,5,,,f ~9,5,,,f (radius)
+      center of mass x, y : ~9,5,,,f ~9,5,,,f
+                perimeter : ~9,5,,,f
+                 skewness : ~9,5,,,f
+                 kurtosis : ~9,5,,,f
+              circularity : ~9,5,,,f
+             aspect ratio : ~9,5,,,f
+                roundness : ~9,5,,,f\n\n")
+
+(define %f-display-rgb-format-str
+  "\n                          area : ~A
+         left top right bottom : ~A ~A ~A ~A
+                 mean-x mean-y : ~9,5,,,f ~9,5,,,f
+        min (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+        max (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+       mean (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+  std. dev. (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+                 major ev x, y : ~9,5,,,f ~9,5,,,f
+                 minor ev x, y : ~9,5,,,f ~9,5,,,f
+             major, minor axis : ~9,5,,,f ~9,5,,,f (radius)
+           center of mass x, y : ~9,5,,,f ~9,5,,,f
+                     perimeter : ~9,5,,,f
+   skewness (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+   kurtosis (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
+                   circularity : ~9,5,,,f
+                  aspect ratio : ~9,5,,,f
+                     roundness : ~9,5,,,f\n\n")
+
 (define* (f-display vals #:key (port (current-output-port)))
   (case (length vals)
     ((25) ;; gray particle
-     (match vals
-       ((area left top right bottom mean-x mean-y mini maxi meani std-dev
-         major-ev-x major-ev-y minor-ev-x minor-ev-y
-         major-axis minor-axis center-mass-x center-mass-y
-         perimeter skewness kurtosis
-         circularity ar roundness)
-        (newline port)
-        (format port "                   area : ~A\n" area)
-        (format port "  left top right bottom : ~A ~A ~A ~A\n" left top right bottom)
-        (format port "          mean-x mean-y : ~9,5,,,f ~9,5,,,f\n" mean-x mean-y)
-        (format port "           min max mean : ~9,5,,,f ~9,5,,,f ~9,5,,,f\n" mini maxi meani)
-        (format port "     standard deviation : ~9,5,,,f\n" std-dev)
-        (format port " major ev x, major ev y : ~9,5,,,f ~9,5,,,f\n" major-ev-x major-ev-y)
-        (format port " minor ev x, minor ev y : ~9,5,,,f ~9,5,,,f\n" minor-ev-x minor-ev-y)
-        (format port " major axis, minor axis : ~9,5,,,f ~9,5,,,f\n" major-axis minor-axis)
-        (format port "    center of mass x, y : ~9,5,,,f ~9,5,,,f\n" center-mass-x center-mass-y)
-        (format port "              perimeter : ~9,5,,,f\n" perimeter)
-        (format port "               skewness : ~9,5,,,f\n" skewness)
-        (format port "               kurtosis : ~9,5,,,f\n" kurtosis)
-        (format port "            circularity : ~9,5,,,f\n" circularity)
-        (format port "           aspect ratio : ~9,5,,,f\n" ar)
-        (format port "              roundness : ~9,5,,,f\n" roundness)
-        (newline port)
-        (values))))))
+     (format port "~?" %f-display-gray-format-str vals))
+    ((37) ;; rgb particle
+     (format port "~?" %f-display-rgb-format-str vals)))
+  (values))
 
 (define (vigra-feature-rgb features i)
   ;;
@@ -226,10 +242,18 @@
   ;;  |  1,  2        | upperleft-x and y-coord       |
   ;;  |  3,  4        | lowerright-x and y-coord      |
   ;;  |  5,  6        | mean-x and y-coord            |
-  ;;  |  7,  8,  9    | min red,green,blue value      |
-  ;;  | 10, 11, 12    | max red,green,blue value      |
-  ;;  | 13, 14, 15    | mean red,green,blue value     |
-  ;;  | 16, 17, 18    | std.dev. red,green,blue value |
+  ;;  |  7,  8,  9    | min red, green, blue          |
+  ;;  | 10, 11, 12    | max red, green, blue          |
+  ;;  | 13, 14, 15    | mean red, green, blue         |
+  ;;  | 16, 17, 18    | std.dev. red, green, blue     |
+  ;;  | 19, 20        | major-ev-x, major-ev-y        |
+  ;;  | 21, 22        | minor-ev-x, minor-ev-y        |
+  ;;  | 23            | major axis                    |
+  ;;  | 24            | minor axis                    |
+  ;;  | 25, 26        | center of mass x, y           |
+  ;;  | 27            | perimeter                     |
+  ;;  | 28, 29, 30    | skewness red, green, blue     |
+  ;;  | 31, 23, 33    | kurtosis red, green, blue     |
   ;;
   (let* ((p-size %vigra-feature-length-rgb)
          (offset (* i p-size)))
@@ -242,7 +266,15 @@
         min-r min-g min-b
         max-r max-g max-b
         mean-r mean-g mean-b
-        std-dev-r std-dev-g std-dev-b)
+        std-dev-r std-dev-g std-dev-b
+        major-ev-x major-ev-y
+        minor-ev-x minor-ev-y
+        major-axis
+        minor-axis
+        center-mass-x center-mass-y
+        perimeter
+        skewness-r skewness-g skewness-b
+        kurtosis-r kurtosis-g kurtosis-b)
        (list (float->int (float-round area 0))
              (float->int (float-round left 0))
              (float->int (float-round top 0))
@@ -252,7 +284,23 @@
              min-r min-g min-b
              max-r max-g max-b
              mean-r mean-g mean-b
-             std-dev-r std-dev-g std-dev-b)))))
+             std-dev-r std-dev-g std-dev-b
+             major-ev-x major-ev-y
+             minor-ev-x minor-ev-y
+             ;; vigra returns radius
+             major-axis
+             minor-axis
+             center-mass-x center-mass-y
+             perimeter
+             skewness-r skewness-g skewness-b
+             kurtosis-r kurtosis-g kurtosis-b
+             ;; circularity
+             (/ (* 4 %pi area) (expt perimeter 2))
+             ;; aspect ratio
+             (/ major-axis minor-axis)
+             ;; roundness
+             ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
+             (/ minor-axis major-axis))))))
 
 
 ;;;
