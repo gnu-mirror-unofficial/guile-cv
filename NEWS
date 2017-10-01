@@ -73,6 +73,8 @@ k-fast-offset
 k-display
 im-convolve
 im-convolve-channel
+im-gaussian-sharp
+im-gaussian-sharp-channel
 
 %pi
 %2pi

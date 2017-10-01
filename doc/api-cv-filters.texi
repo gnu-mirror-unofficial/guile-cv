@@ -19,6 +19,8 @@ The Guile-CV procedures and methods to filter images.
 @item @ref{im-gaussian-blur-channel}
 @item @ref{im-gaussian-gradient}
 @item @ref{im-gaussian-gradient-channel}
+@item @ref{im-gaussian-sharp}
+@item @ref{im-gaussian-sharp-channel}
 @item @ref{im-convolve}
 @item @ref{im-convolve-channel}
 @end table
@@ -56,6 +58,22 @@ strength of the first order partial derivatives by means of a
 convolution of @var{image} or @var{channel} with the first order
 derivative of a 2D Gaussian function, where @var{sigma} is the standard
 deviation of the Gaussian distribution.
+@end deffn
+
+
+@anchor{im-gaussian-sharp}
+@anchor{im-gaussian-sharp-channel}
+@deffn Procedure im-gaussian-sharp image factor scale
+@deffnx Procedure im-gaussian-sharp-channel channel width height factor scale
+@cindex Gaussian sharp
+
+Returns a new image or channel.
+
+The new image or new channel is the result of the computation of the
+Gaussian sharpening: the procedure does (a) perform a Gaussian smoothing
+at the given @var{scale} to create a temporary image @code{smooth} and
+(b) blends @var{image} and @code{smooth} according to the formula
+@code{(- (* (+ factor 1) image) (* smooth factor))}.
 @end deffn
 
 

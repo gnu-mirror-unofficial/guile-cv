@@ -45,7 +45,9 @@
 	    im-gaussian-blur-channel
 	    im-gaussian-gradient
 	    im-gaussian-gradient-channel
-            im-convolve
+            im-gaussian-sharp
+	    im-gaussian-sharp-channel
+	    im-convolve
             im-convolve-channel))
 
 
@@ -89,6 +91,23 @@
       ((0) to)
       (else
        (error "Gaussian gradient failed.")))))
+
+(define (im-gaussian-sharp image factor scale)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-gaussian-sharp-channel channel width height factor scale))
+		       idata))))))
+
+(define (im-gaussian-sharp-channel channel width height factor scale)
+  (let ((to (im-make-channel width height)))
+    (case (vigra-gaussian-sharpening channel to width height factor scale)
+      ((0) to)
+      (else
+       (error "Gaussian sharp failed.")))))
 
 (define (convolve-obs->int obs)
   (case obs
@@ -149,6 +168,14 @@
 			      height
 			      sigma))
 
+(define (vigra-gaussian-sharpening from to width height factor scale)
+  (vigra-gaussian-sharpening-c (bytevector->pointer from)
+                               (bytevector->pointer to)
+                               width
+                               height
+                               factor
+                               scale))
+
 (define (vigra-convolve-channel from to width height kernel k-width k-height obs)
   (vigra-convolve-channel-c (bytevector->pointer from)
                             (bytevector->pointer kernel)
@@ -183,6 +210,17 @@
 			    int	     ;; width
 			    int	     ;; height
 			    float))) ;; sigma
+
+(define vigra-gaussian-sharpening-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_gaussiansharpening_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            float    ;; factor
+			    float))) ;; scale
 
 (define vigra-convolve-channel-c
   (pointer->procedure int
