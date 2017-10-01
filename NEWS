@@ -75,6 +75,8 @@ im-convolve
 im-convolve-channel
 im-gaussian-sharp
 im-gaussian-sharp-channel
+im-sharpen
+im-sharpen-channel
 
 %pi
 %2pi

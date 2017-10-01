@@ -21,6 +21,8 @@ The Guile-CV procedures and methods to filter images.
 @item @ref{im-gaussian-gradient-channel}
 @item @ref{im-gaussian-sharp}
 @item @ref{im-gaussian-sharp-channel}
+@item @ref{im-sharpen}
+@item @ref{im-sharpen-channel}
 @item @ref{im-convolve}
 @item @ref{im-convolve-channel}
 @end table
@@ -74,6 +76,27 @@ Gaussian sharpening: the procedure does (a) perform a Gaussian smoothing
 at the given @var{scale} to create a temporary image @code{smooth} and
 (b) blends @var{image} and @code{smooth} according to the formula
 @code{(- (* (+ factor 1) image) (* smooth factor))}.
+@end deffn
+
+
+@anchor{im-sharpen}
+@anchor{im-sharpen-channel}
+@deffn Procedure im-sharpen image factor
+@deffnx Procedure im-sharpen-channel channel width height factor
+
+Returns a new image or channel.
+
+This procedure performs a @samp{simple sharpening} operation on
+@var{image}. It actually calls @ref{im-convolve} with the following
+kernel:
+
+@lisp
+            -1/16  -1/8  -1/16      0  0  0
+( * factor  -1/8    3/4  -1/8  ) +  0  1  0
+            -1/16  -1/8  -1/16      0  0  0
+@end lisp
+
+and uses @code{mirror} as the @samp{out of bound strategy}.
 @end deffn
 
 

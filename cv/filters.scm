@@ -47,6 +47,8 @@
 	    im-gaussian-gradient-channel
             im-gaussian-sharp
 	    im-gaussian-sharp-channel
+            im-sharpen
+            im-sharpen-channel
 	    im-convolve
             im-convolve-channel))
 
@@ -108,6 +110,23 @@
       ((0) to)
       (else
        (error "Gaussian sharp failed.")))))
+
+(define (im-sharpen image factor)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-sharpen-channel channel width height factor))
+		       idata))))))
+
+(define (im-sharpen-channel channel width height factor)
+  (let ((to (im-make-channel width height)))
+    (case (vigra-simple-sharpening channel to width height factor)
+      ((0) to)
+      (else
+       (error "Sharpen failed.")))))
 
 (define (convolve-obs->int obs)
   (case obs
@@ -176,6 +195,13 @@
                                factor
                                scale))
 
+(define (vigra-simple-sharpening from to width height factor)
+  (vigra-simple-sharpening-c (bytevector->pointer from)
+                               (bytevector->pointer to)
+                               width
+                               height
+                               factor))
+
 (define (vigra-convolve-channel from to width height kernel k-width k-height obs)
   (vigra-convolve-channel-c (bytevector->pointer from)
                             (bytevector->pointer kernel)
@@ -221,6 +247,16 @@
 			    int	     ;; height
                             float    ;; factor
 			    float))) ;; scale
+
+(define vigra-simple-sharpening-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_simplesharpening_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            float))) ;; factor
 
 (define vigra-convolve-channel-c
   (pointer->procedure int
