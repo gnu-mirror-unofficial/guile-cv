@@ -56,7 +56,7 @@
 	    f32vector-pred-at-offset?
 	    f32vector-index
 	    f32vector-count-distinct
-            f32vector-inverse
+            f32vector-invert
             f32vector-matrix-multiply
             f32vector->s32vector))
 
@@ -342,7 +342,7 @@
                 (+ sub (* (f32vector-ref a (+ (* i m) k))
                           (f32vector-ref b (+ (* k p) j))))))))))
 
-(define (f32vector-inverse v)
+(define (f32vector-invert v)
   (let* ((n-cell (f32vector-length v))
 	 (to (make-f32vector n-cell)))
     (do ((i 0

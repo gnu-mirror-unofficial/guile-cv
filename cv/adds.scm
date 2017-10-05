@@ -63,8 +63,8 @@
             im-map-channel
             im-reduce
             im-reduce-channel
-            im-inverse
-            im-inverse-channel
+            im-invert
+            im-invert-channel
             im-transpose
             im-transpose-channel
             im-normalize
@@ -238,7 +238,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (matrix-divide c1 width-1 height-1 c2 width-2)
   (f32vector-matrix-multiply c1 width-1 height-1
-                             (f32vector-inverse c2) width-2))
+                             (f32vector-invert c2) width-2))
 
 (define (im-matrix-multdiv-op img-1 img-2 op)
   ;; The product is defined only if the number of columns in img-1 is
@@ -352,7 +352,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (match rest
         ((channel-i width-i height-i . rest)
          (im-divide-channel-1 (f32vector-matrix-multiply channel width height
-                                                         (f32vector-inverse channel-i)
+                                                         (f32vector-invert channel-i)
                                                          width-i)
                                 width-i height rest)))))
 
@@ -596,18 +596,18 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                               (im-fast-channel-ref channel i j width))))
     to))
 
-(define (im-inverse image)
+(define (im-invert image)
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-inverse-channel channel width height))
+			 (im-invert-channel channel width height))
                        idata))))))
 
-(define (im-inverse-channel channel width height)
-  (f32vector-inverse channel))
+(define (im-invert-channel channel width height)
+  (f32vector-invert channel))
 
 (define* (im-normalize image #:key (val 255.0))
   (match image

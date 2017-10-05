@@ -56,7 +56,7 @@
 	    f64vector-pred-at-offset?
 	    f64vector-index
 	    f64vector-count-distinct
-            f64vector-inverse
+            f64vector-invert
             f64vector-matrix-multiply
             f64vector->f32vector))
 
@@ -326,7 +326,7 @@
                 (+ sub (* (f64vector-ref a (+ (* i m) k))
                           (f64vector-ref b (+ (* k p) j))))))))))
 
-(define (f64vector-inverse v)
+(define (f64vector-invert v)
   (let* ((n-cell (f64vector-length v))
 	 (to (make-f64vector n-cell)))
     (do ((i 0

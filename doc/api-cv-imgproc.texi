@@ -20,8 +20,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-rotate-channel}
 @item @ref{im-flip}
 @item @ref{im-flip-channel}
-@item @ref{im-inverse}
-@item @ref{im-inverse-channel}
+@item @ref{im-invert}
+@item @ref{im-invert-channel}
 @item @ref{im-transpose}
 @item @ref{im-transpose-channel}
 @item @ref{im-normalize}
@@ -136,10 +136,10 @@ Valid flipping @var{plane} values are:
 @end deffn
 
 
-@anchor{im-inverse}
-@anchor{im-inverse-channel}
-@deffn Procedure im-inverse image
-@deffnx Procedure im-inverse-channel channel width height
+@anchor{im-invert}
+@anchor{im-invert-channel}
+@deffn Procedure im-invert image
+@deffnx Procedure im-invert-channel channel width height
 
 Returns a new inversed image or channel.
 

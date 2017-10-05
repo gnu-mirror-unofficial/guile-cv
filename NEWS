@@ -55,6 +55,14 @@ im-show
   ‘clipped’, which means that values < 0 are saved as 0, values > 255
   are saved as 255, and otherwise are saved unchanged.
 
+im-invert
+im-channel-invert
+f32vector-invert
+f64vector-invert
+
+  Previously, these procedures were using the name 'inverse', but that
+  was not 'optimal', fixed.
+
 *** New interfaces
 
 k-make
