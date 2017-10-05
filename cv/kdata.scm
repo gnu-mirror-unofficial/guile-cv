@@ -328,7 +328,8 @@ of (* WIDTH HEIGHT) numbers."
 
 (define %k-sharpen
   (k-make 3 3
-          '(0 -1 0 -1 5 -1 0 -1 0)))
+          #;'(0 -1 0 -1 5 -1 0 -1 0)
+          '(-1 -1 -1 -1 12 -1 -1 -1 -1)))
 
 (define %k-mean
   (k-make 3 3

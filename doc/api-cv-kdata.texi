@@ -407,9 +407,9 @@ where applicable:
 
 @lisp
 (k-make 3 3
-        '(  0  -1   0
-           -1   5  -1
-            0  -1   0  ))
+        '( -1  -1  -1
+           -1  12  -1
+           -1  -1  -1  ))
 @end lisp
 @end defvr
 
