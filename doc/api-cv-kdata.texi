@@ -348,9 +348,14 @@ to each kernel value.
 @end indentedblock
 @end ifhtml
 
-Here is how these kernels are defined. Note that in order to make these
-definitions easier to read, we've hand added some spaces and linefeeds
-where applicable:
+Notes: (a) the following kernels are merely offered as @samp{didactic}
+examples, some of these were used @samp{in the old days}, but in most
+cases, you will find and prefer to use a @samp{specific} and
+@samp{modern} procedure that will give (much) better results, such as,
+@ref{im-gaussian-blur}, @ref{im-gaussian-sharp}, @ref{im-sharpen} (a
+simple sharpening procedure), @ref{im-canny} (edge detection) ... and
+(b) in order to make these definitions easier to read, we've added some
+spaces and newlines.
 
 
 @anchor{%k-identity}
@@ -409,7 +414,8 @@ where applicable:
 (k-make 3 3
         '( -1  -1  -1
            -1  12  -1
-           -1  -1  -1  ))
+           -1  -1  -1  )
+        4)
 @end lisp
 @end defvr
 
@@ -430,9 +436,9 @@ where applicable:
 @anchor{%k-gaussian-blur0}
 @defvr Variable %k-gaussian-blur0
 
-The use of @ref{im-convolve} with this and the following kernels will
-only give an approximation of the real Gaussian bluring algorithm.  For
-any serious work, use @ref{im-gaussian-blur} instead.
+@c The use of @ref{im-convolve} with this and the following kernels will
+@c only give an approximation of the real Gaussian bluring algorithm.  For
+@c any serious work, use @ref{im-gaussian-blur} instead.
 
 @lisp
 (k-make 3 3
