@@ -299,9 +299,9 @@
     (assert-true (im-=? (im-transpose a) a'))
     (assert-true (im-=? (im-transpose a') a))))
 
-(define-method (test-im-inverse (self <guile-cv-tests-cv>))
+(define-method (test-im-invert (self <guile-cv-tests-cv>))
   (let* ((d `(2 3 1 (,#f32(2.0 4.0 8.0 16.0 32.0 64.0))))
-         (di (im-inverse d))
+         (di (im-invert d))
          (di-chan (im-channel di 0))
          (di-check '(1/2 1/4 1/8 1/16 1/32 1/64)))
     (do ((i 0
