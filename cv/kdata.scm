@@ -69,7 +69,6 @@
             %k-identity
             %k-edge0
             %k-edge1
-            %k-edge2
             %k-sharpen
             %k-mean
             %k-gaussian-blur0
@@ -321,10 +320,6 @@ of (* WIDTH HEIGHT) numbers."
 (define %k-edge1
   (k-make 3 3
           '(0 1 0 1 -4 1 0 1 0)))
-
-(define %k-edge2
-  (k-make 3 3
-          '(-1 -1 -1 -1 8 -1 -1 -1 -1)))
 
 (define %k-sharpen
   (k-make 3 3
