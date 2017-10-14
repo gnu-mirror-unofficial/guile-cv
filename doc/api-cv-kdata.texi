@@ -332,7 +332,6 @@ to each kernel value.
 @item @ref{%k-identity}
 @item @ref{%k-edge0}
 @item @ref{%k-edge1}
-@item @ref{%k-edge2}
 @item @ref{%k-sharpen}
 @item @ref{%k-mean}
 @item @ref{%k-gaussian-blur0}
@@ -391,18 +390,6 @@ spaces and newlines.
         '(  0  1  0
             1 -4  1
             0  1  0  ))
-@end lisp
-@end defvr
-
-
-@anchor{%k-edge2}
-@defvr Variable %k-edge2
-
-@lisp
-(k-make 3 3
-        '( -1 -1  -1
-           -1  8  -1
-           -1 -1  -1  ))
 @end lisp
 @end defvr
 
@@ -537,16 +524,15 @@ horizontal gradient.
 
 @subheading Sobel filtering
 
-Filtering an image using a @samp{Sobel} filter requires a three steps
+Filtering an image using a @samp{Sobel filter} requires a three steps
 approach: (1) filtering the image using the @samp{Sobel column filter},
 (2) dito using the @samp{Sobel line filter}, and (3) combining the
-results to obtain what is called the @samp{Sobel magnitude}, which
-implements the following (pseudo code) formula: @math{sqrt (sqrt
-(sobel-y ) + sqrt (sobel-x))}.
+results to obtain @samp{Sobel magnitude}: @code{(sqrt (+ (sqrt sobel-y)
+(sqrt sobel-x))}.
 
-Guile-CV @code{im-flter} provides a @code{'sobel} filter of course, but
-here are the definition of the @samp{Sobel column} and @samp{Sobel line}
-filters, should you need these individually.
+@c Guile-CV @code{im-flter} provides a @code{'sobel} filter of course, but
+@c here are the definition of the @samp{Sobel column} and @samp{Sobel line}
+@c filters, should you need these individually.
 
 @anchor{%k-sobel-y}
 @defvr Variable %k-sobel-y
