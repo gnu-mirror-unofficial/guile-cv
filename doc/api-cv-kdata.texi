@@ -400,9 +400,8 @@ spaces and newlines.
 @lisp
 (k-make 3 3
         '( -1  -1  -1
-           -1  12  -1
-           -1  -1  -1  )
-        4)
+           -1   9  -1
+           -1  -1  -1  ))
 @end lisp
 @end defvr
 
@@ -470,6 +469,13 @@ spaces and newlines.
 @anchor{%k-emboss}
 @defvr Variable %k-emboss
 
+Also called @code{%k-compass} or @code{%k-directional}, this kind of
+filter is useful to enhance edges in given directions. With a @code{3 x
+3} kernel, one normally uses filters for @code{0}, @code{45}, @code{90}
+and @code{135} degrees. The various angles are obtained @samp{rotating}
+the positive and negative values to @samp{align} with the various
+directions.
+
 @lisp
 (k-make 3 3
         '(  -2  -2   0
@@ -481,6 +487,12 @@ spaces and newlines.
 
 @anchor{%k-laplacian}
 @defvr Variable %k-laplacian
+
+This is a variation of the more traditional Laplacian kernels, that are
+meant to enhance edges, in this case in an isotropic fashion
+(non-directional). This the implementation in the Vigra code and it
+atributes large weights to the diagonal pixels of the
+kernel. Nevertheless, the total weight is zero.
 
 @lisp
 (k-make 3 3
@@ -525,8 +537,8 @@ horizontal gradient.
 @subheading Sobel filtering
 
 Filtering an image using a @samp{Sobel filter} requires a three steps
-approach: (1) filtering the image using the @samp{Sobel column filter},
-(2) dito using the @samp{Sobel line filter}, and (3) combining the
+approach: (1) filtering the image using the @samp{Sobel y filter},
+(2) dito using the @samp{Sobel x filter}, and (3) combining the
 results to obtain @samp{Sobel magnitude}: @code{(sqrt (+ (sqrt sobel-y)
 (sqrt sobel-x))}.
 
