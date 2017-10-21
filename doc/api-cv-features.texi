@@ -65,11 +65,22 @@ values
 
 @item major-ev-x major-ev-y minor-ev-x minor-ev-y
 Respectively the major and minor @uref{@value{UEIGENV}, eigen vectors}
-@code{x} and @code{y} normalized coordinates: @code{(= (sqrt (+ (expt
-x 2) (expt y 2))) 1)}
+@code{x} and @code{y} normalized coordinates@footnote{Note that Vigra
+calculates and returns these values in the image coordinate system,
+where the @code{y-axis} is @samp{flipped} compared to the trigonometric
+circle @samp{traditional} representation. Guile-CV however transforms
+and returns these values using the trigonometric circle reference
+system.}: @code{(= (sqrt (+ (expt x 2) (expt y 2))) 1)}
 
 @item major-axis minor-axis
-Respectively the major and minor @uref{@value{UEIGENV}, eigen values}
+Respectively the major and minor @uref{@value{UEIGENV}, eigen values},
+optimized so that they actually correspond to major and minor
+@code{radius} of the ellipse covering the same @code{area} as the
+particle itself
+
+@item angle
+The angle of the major eigen vector axis, in @code{degrees} in the
+trigonometirc circle reference system
 
 @item center-mass-x center-mass-y
 The center of mass @code{x} and @code{y} coordinates
@@ -111,13 +122,15 @@ labeled object
 The minimum, maximum, mean and standard deviaton labeled object values of
 the red, green and blue channels
 
-@item major-ev-x major-ev-y minor-ev-x minor-ev-y
-Respectively the major and minor @uref{@value{UEIGENV}, eigen vectors}
-@code{x} and @code{y} normalized coordinates: @code{(= (sqrt (+ (expt
-x 2) (expt y 2))) 1)}
-
 @item major-axis minor-axis
-Respectively the major and minor @uref{@value{UEIGENV}, eigen values}
+Respectively the major and minor @uref{@value{UEIGENV}, eigen values},
+optimized so that they actually correspond to major and minor
+@code{radius} of the ellipse covering the same @code{area} as the
+particle itself
+
+@item angle
+The angle of the major eigen vector axis, in @code{degrees} in the
+trigonometirc circle reference system
 
 @item center-mass-x center-mass-y
 The center of mass @code{x} and @code{y} coordinates
@@ -144,33 +157,36 @@ display procedure that you might be interested to (re)use, so here is an
 example of a GRAY feature list display:
 
 @lisp
-scheme@@(guile-user)> (im-load "pp-17-bf-gray.png")
-$2 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
-scheme@@(guile-user)> (im-threshold $2 136)
-$3 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
-scheme@@(guile-user)> (im-label $3)
-$4 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
-$5 = 1
-scheme@@(guile-user)> (im-features $2 $4)
-$6 = ((3772 0 0 84 94 43.18716812133789 45.65641403198242 0.0 # …) #)
-scheme@@(guile-user)> ((@@@@ (cv features) f-display) (match $6 ((bg a) a)))
-@print{}
+scheme@@(guile-user)> (im-load "pp-17-bf.png")
+$2 = (85 95 3 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 …) …))
+scheme@@(guile-user)> (im-rgb->gray $2)
+$3 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
+$4 = (0.0 251.0 128.0 8075)
+scheme@@(guile-user)> (im-threshold $3 136)
+$5 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
+scheme@@(guile-user)> (im-label $5)
+$6 = (85 95 1 (#f32(0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 # …)))
+$7 = 1
+scheme@@(guile-user)> (im-features $3 $6)
+$8 = ((3780 0 0 84 94 43.19735336303711 45.65052795410156 0.0 # # …) #)
+scheme@@(guile-user)> ((@@@@ (cv features) f-display) (match $8 ((bg a) a)))
 
-                   area : 4303
-  left top right bottom : 0 0 84 94
-          mean-x mean-y :  40.95933  48.17778
-           min max mean : 136.00000 255.00000 237.51616
-     standard deviation :  20.57977
- major ev x, major ev y :  -0.22380   0.97463
- minor ev x, minor ev y :  -0.97463  -0.22380
- major axis, minor axis :  21.45698  18.44942 (radius)
-    center of mass x, y :  40.95933  48.17778
-              perimeter : 367.16147
-               skewness :  -2.93505
-               kurtosis :   8.68352
-            circularity :   0.40111
-           aspect ratio :   1.16302
-              roundness :   0.85983
+                     area : 4295 (pixels)
+    left top right bottom : 0 0 84 94
+            mean-x mean-y :  40.94622  48.18766
+             min max mean : 137.00000 251.00000 233.94669
+       standard deviation :  19.80314
+            major ev x, y :   0.22270   0.97489
+            minor ev x, y :   0.97489  -0.22270
+        major, minor axis :  39.87575  34.28503 (radius)
+                    angle :  77.13236 (degrees)
+      center of mass x, y :  40.94622  48.18766
+                perimeter : 367.74725
+                 skewness :  -2.94312
+                 kurtosis :   8.75887
+              circularity :   0.39909
+             aspect ratio :   1.16307
+                roundness :   0.85980
 @end lisp
 
 As we mentioned above, @code{f-diplay} is defined in the @code{(cv

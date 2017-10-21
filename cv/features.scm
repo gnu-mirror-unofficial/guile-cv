@@ -122,6 +122,63 @@
       (set! result
             (cons (proc features i) result))))
 
+(define (eigen-vigra-coord->trigono-coord x y)
+  ;; vigra returns eigen major and minor vector coordinates in the image
+  ;; coordinate system (Y axis points down), but we prefer to return
+  ;; these values using the trigonometric model (Y axis points up).  To
+  ;; do this, we actually just have to change the sign, here are the
+  ;; possibilities
+
+  ;;      |             Y                     X   Y   Angle
+  ;;      |           . |             Vigra   1   1    45
+  ;;      |             |             Trigo  -1   1   135
+  ;;  ----|---> X   ----|---> X
+  ;;      | .           |
+  ;;      |             |
+  ;;      Y             |
+
+  ;;      |             Y                     X   Y   Angle
+  ;;      |             | .           Vigra  -1   1    135
+  ;;      |             |             Trigo   1   1     45
+  ;;  ----|---> X   ----|---> X
+  ;;    . |             |
+  ;;      |             |
+  ;;      Y             |
+
+  ;;      |             Y                     X   Y   Angle
+  ;;    . |             |             Vigra  -1  -1    -135
+  ;;      |             |             Trigo   1  -1     -45
+  ;;  ----|---> X   ----|---> X
+  ;;      |             | .
+  ;;      |             |
+  ;;      Y             |
+
+  ;;      |             Y                     X   Y   Angle
+  ;;      | .           |             Vigra   1  -1    -45
+  ;;      |             |             Trigo  -1  -1   -135
+  ;;  ----|---> X   ----|---> X
+  ;;      |           . |
+  ;;      |             |
+  ;;      Y             |
+
+  (cond ((and (positive? x) (positive? y))
+         (values (- x) y))
+        ((and (negative? x) (positive? y))
+         (values (- x) y))
+        ((and (negative? x) (negative? y))
+         (values (- x) y))
+        ((and (positive? x) (negative? y))
+         (values (- x) y))
+        (else
+         ;; some tests images would call this procedure with either x
+         ;; and/or y equal to 0, in which case we just return 'as is',
+         ;; they won't be used anyway and we don't want to raise an
+         ;; exception.
+         (values x y))))
+
+(define (ellipse-axis-optimization-factor a b area)
+  (sqrt (/ area (* %pi a b))))
+
 (define (vigra-feature-gray features i)
   ;;
   ;;  Gray object's offset and feature names are:
@@ -157,39 +214,46 @@
         std-dev
         major-ev-x major-ev-y
         minor-ev-x minor-ev-y
-        major-axis
-        minor-axis
+        major-axis minor-axis
         center-mass-x center-mass-y
         perimeter
         skewness
         kurtosis)
-       (list (float->int (float-round area 0))
-             (float->int (float-round left 0))
-             (float->int (float-round top 0))
-             (float->int (float-round right 0))
-             (float->int (float-round bottom 0))
-             mean-x mean-y
-             mini maxi meani
-             std-dev
-             major-ev-x major-ev-y
-             minor-ev-x minor-ev-y
-             ;; vigra returns radius, guile-cv returns diameters
-             major-axis #;(* major-axis 2)
-             minor-axis #;(* minor-axis 2)
-             center-mass-x center-mass-y
-             perimeter
-             skewness
-             kurtosis
-             ;; circularity
-             (/ (* 4 %pi area) (expt perimeter 2))
-             ;; aspect ratio
-             (/ major-axis minor-axis)
-             ;; roundness
-             ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
-             (/ minor-axis major-axis))))))
+       (let* ((axis-optimization-factor
+               (ellipse-axis-optimization-factor major-axis minor-axis area))
+              (semi-major-axis (* major-axis axis-optimization-factor))
+              (semi-minor-axis (* minor-axis axis-optimization-factor)))
+         (receive (major-ev-trigo-x major-ev-trigo-y)
+             (eigen-vigra-coord->trigono-coord major-ev-x major-ev-y)
+           (receive (minor-ev-trigo-x minor-ev-trigo-y)
+               (eigen-vigra-coord->trigono-coord minor-ev-x minor-ev-y)
+             (list (float->int (float-round area 0))
+                   (float->int (float-round left 0))
+                   (float->int (float-round top 0))
+                   (float->int (float-round right 0))
+                   (float->int (float-round bottom 0))
+                   mean-x mean-y
+                   mini maxi meani
+                   std-dev
+                   major-ev-trigo-x major-ev-trigo-y
+                   minor-ev-trigo-x minor-ev-trigo-y
+                   semi-major-axis
+                   semi-minor-axis
+                   (radian->degree (atan major-ev-trigo-y major-ev-trigo-x))
+                   center-mass-x center-mass-y
+                   perimeter
+                   skewness
+                   kurtosis
+                   ;; circularity
+                   (/ (* 4 %pi area) (expt perimeter 2))
+                   ;; aspect ratio
+                   (/ semi-major-axis semi-minor-axis)
+                   ;; roundness
+                   ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
+                   (/ semi-minor-axis semi-major-axis)))))))))
 
 (define %f-display-gray-format-str
-  "\n                     area : ~A
+  "\n                     area : ~A (pixels)
     left top right bottom : ~A ~A ~A ~A
             mean-x mean-y : ~9,5,,,f ~9,5,,,f
              min max mean : ~9,5,,,f ~9,5,,,f ~9,5,,,f
@@ -197,6 +261,7 @@
             major ev x, y : ~9,5,,,f ~9,5,,,f
             minor ev x, y : ~9,5,,,f ~9,5,,,f
         major, minor axis : ~9,5,,,f ~9,5,,,f (radius)
+                    angle : ~9,5,,,f (degrees)
       center of mass x, y : ~9,5,,,f ~9,5,,,f
                 perimeter : ~9,5,,,f
                  skewness : ~9,5,,,f
@@ -206,7 +271,7 @@
                 roundness : ~9,5,,,f\n\n")
 
 (define %f-display-rgb-format-str
-  "\n                          area : ~A
+  "\n                          area : ~A (pixels)
          left top right bottom : ~A ~A ~A ~A
                  mean-x mean-y : ~9,5,,,f ~9,5,,,f
         min (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
@@ -216,6 +281,7 @@
                  major ev x, y : ~9,5,,,f ~9,5,,,f
                  minor ev x, y : ~9,5,,,f ~9,5,,,f
              major, minor axis : ~9,5,,,f ~9,5,,,f (radius)
+                         angle : ~9,5,,,f (degrees)
            center of mass x, y : ~9,5,,,f ~9,5,,,f
                      perimeter : ~9,5,,,f
    skewness (red, green, blue) : ~9,5,,,f ~9,5,,,f ~9,5,,,f
@@ -226,9 +292,9 @@
 
 (define* (f-display vals #:key (port (current-output-port)))
   (case (length vals)
-    ((25) ;; gray particle
+    ((26) ;; gray particle
      (format port "~?" %f-display-gray-format-str vals))
-    ((37) ;; rgb particle
+    ((38) ;; rgb particle
      (format port "~?" %f-display-rgb-format-str vals)))
   (values))
 
@@ -275,32 +341,40 @@
         perimeter
         skewness-r skewness-g skewness-b
         kurtosis-r kurtosis-g kurtosis-b)
-       (list (float->int (float-round area 0))
-             (float->int (float-round left 0))
-             (float->int (float-round top 0))
-             (float->int (float-round right 0))
-             (float->int (float-round bottom 0))
-             mean-x mean-y
-             min-r min-g min-b
-             max-r max-g max-b
-             mean-r mean-g mean-b
-             std-dev-r std-dev-g std-dev-b
-             major-ev-x major-ev-y
-             minor-ev-x minor-ev-y
-             ;; vigra returns radius
-             major-axis
-             minor-axis
-             center-mass-x center-mass-y
-             perimeter
-             skewness-r skewness-g skewness-b
-             kurtosis-r kurtosis-g kurtosis-b
-             ;; circularity
-             (/ (* 4 %pi area) (expt perimeter 2))
-             ;; aspect ratio
-             (/ major-axis minor-axis)
-             ;; roundness
-             ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
-             (/ minor-axis major-axis))))))
+       (let* ((axis-optimization-factor
+               (ellipse-axis-optimization-factor major-axis minor-axis area))
+              (semi-major-axis (* major-axis axis-optimization-factor))
+              (semi-minor-axis (* minor-axis axis-optimization-factor)))
+         (receive (major-ev-trigo-x major-ev-trigo-y)
+             (eigen-vigra-coord->trigono-coord major-ev-x major-ev-y)
+           (receive (minor-ev-trigo-x minor-ev-trigo-y)
+               (eigen-vigra-coord->trigono-coord minor-ev-x minor-ev-y)
+             (list (float->int (float-round area 0))
+                   (float->int (float-round left 0))
+                   (float->int (float-round top 0))
+                   (float->int (float-round right 0))
+                   (float->int (float-round bottom 0))
+                   mean-x mean-y
+                   min-r min-g min-b
+                   max-r max-g max-b
+                   mean-r mean-g mean-b
+                   std-dev-r std-dev-g std-dev-b
+                   major-ev-trigo-x major-ev-trigo-y
+                   minor-ev-trigo-x minor-ev-trigo-y
+                   semi-major-axis
+                   semi-minor-axis
+                   (radian->degree (atan major-ev-trigo-y major-ev-trigo-x))
+                   center-mass-x center-mass-y
+                   perimeter
+                   skewness-r skewness-g skewness-b
+                   kurtosis-r kurtosis-g kurtosis-b
+                   ;; circularity
+                   (/ (* 4 %pi area) (expt perimeter 2))
+                   ;; aspect ratio
+                   (/ major-axis minor-axis)
+                   ;; roundness
+                   ;; (/ (* 4 area) (* %pi (expt major-axis 2)))
+                   (/ minor-axis major-axis)))))))))
 
 
 ;;;

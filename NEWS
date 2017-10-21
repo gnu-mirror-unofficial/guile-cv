@@ -95,7 +95,7 @@ im-sharpen-channel
 **** New GRAY features
 
 major-ev-x major-ev-y minor-ev-x minor-ev-y
-major-axis minor-axis
+major-axis minor-axis angle
 center-mass-x center-mass-y
 perimeter
 skewness kurtosis
@@ -104,12 +104,12 @@ circularity aspect-ratio roundness
 **** New RGB features
 
 major-ev-x major-ev-y minor-ev-x minor-ev-y
-major-axis minor-axis
+major-axis minor-axis angle
 center-mass-x center-mass-y
 perimeter
 skewness-r skewness-g skewness-b
 kurtosis-r kurtosis-g kurtosis-b
-circularity ar roundness
+circularity aspect-ratio roundness
 
 *** Bug fixes
 
