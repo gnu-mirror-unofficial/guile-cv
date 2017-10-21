@@ -29,9 +29,17 @@
 (define-module (cv support pi)
   #:export (%pi
 	    %2pi
-	    %pi/2))
+	    %pi/2
+            radian->degree
+            degree->radian))
 
 
 (define %pi (acos -1))
 (define %2pi (* %pi 2))
 (define %pi/2 (/ %pi 2))
+
+(define (radian->degree rad)
+  (/ (* rad 180) %pi))
+
+(define (degree->radian deg)
+  (/ (* deg %pi) 180))
