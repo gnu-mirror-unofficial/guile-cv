@@ -27,7 +27,7 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
-** September the xx, 2017
+** October the 23rd, 2017
 
 Guile-CV version 0.1.7 is released!
 
@@ -38,6 +38,14 @@ git summary [1] and git log [2] for a complete description:
 	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
 
 ** Changes since 0.1.6
+
+*** Dependencies
+
+Vigra C >= commit a38f361 Sep 18, 2017
+
+  That commit introduces - kindly implemented by Benjamin Seppke upon
+  our request - the following new features: centre of mass, perimeter,
+  skewness, kurtosis.
 
 *** Interface changes
 

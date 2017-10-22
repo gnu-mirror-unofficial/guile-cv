@@ -119,9 +119,13 @@ essential adequate runtime optimization flags.
 @end indentedblock
 
 @item
-@uref{@value{UVIGRAC}, Vigra C}
+@uref{@value{UVIGRAC}, Vigra C} >= commit a38f361 Sep 18, 2017
 
 @indentedblock
+That commit introduces - kindly implemented by Benjamin Seppke upon our
+request - the following new features: centre of mass, perimeter,
+skewness, kurtosis.
+  
 Vigra C - a C wrapper [to some of] the Vigra functionality - is
 currently only available by cloning its source code @uref{@value{UGIT},
 git} repository: there is no release and no versioning scheme
@@ -174,7 +178,7 @@ for example, iwona is part of the texlive-fonts-extra package.
 @end itemize
 
 
-@subheading Quickstart
+@subheading Install from the tarball
 
 Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
@@ -197,6 +201,46 @@ you read and implement the recommendation made in the manual, section
 @end indentedblock
 
 Happy @uref{@value{UGUILE-CV}, Guile-CV}!
+
+
+@subheading Install from the source
+
+@uref{@value{UGUILE-CV}, Guile-CV} uses @uref{@value{UGIT}, Git} for
+revision control, hosted on @uref{@value{UGUILE-CV-SAVANNAH}, Savannah},
+you may browse the sources repository @uref{@value{UGUILE-CV-GIT}, here}.
+
+There are currently 2 [important] branches: @code{master} and
+@code{devel}. @uref{@value{UGUILE-CV}, Guile-CV} stable branch is
+master, developments occur on the devel branch.
+
+So, to grab, compile and install from the source, open a terminal and:
+
+@example
+git clone git://git.savannah.gnu.org/guile-cv.git
+cd guile-cv
+./autogen.sh
+./configure [--prefix=/your/prefix]
+make
+make install
+@end example
+
+@indentedblock
+@strong{Special notes:}
+
+Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
+you read and implement the recommendation made in the manual, section
+@xref{Configuring Guile's repl-print procedure}.
+@end indentedblock
+
+The above steps ensure you're using @uref{@value{UGUILE-CV}, Guile-CV}
+bleeding edge @code{stable} version. If you wish to participate to
+developments, checkout the @code{devel} branch:
+
+@example
+git checkout --track -b devel origin/devel
+@end example
+
+Happy @code{hacking!}
 
 @*
 @strong{Notes:}

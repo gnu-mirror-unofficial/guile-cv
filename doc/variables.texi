@@ -20,6 +20,7 @@
 @set UGUILE-CV-SAVANNAH http://savannah.gnu.org/projects/guile-cv
 @set UGUILE-CV-RELEASES http://ftp.gnu.org/gnu/guile-cv
 @set UGUILE-CV-LATEST http://ftp.gnu.org/gnu/guile-cv/guile-cv-@value{VERSION}.tar.gz
+@set UGUILE-CV-GIT http://git.savannah.gnu.org/cgit/guile-cv.git
 
 @set GUILE-CV-BUGS @email{bugs-guile-cv@@gnu.org}
 
