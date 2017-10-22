@@ -234,8 +234,8 @@ circle @dots{}}
 @ifnottex
 @indentedblock
 @image{images/circular-kernel-mask-49,,,circular-kernel-mask-49,,,circular-kernel-mask-49,png}
-@end ifnottex
 @end indentedblock
+@end ifnottex
 @end deffn
 
 
