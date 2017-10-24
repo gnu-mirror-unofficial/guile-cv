@@ -88,36 +88,40 @@
 ;;; Guile-CV additional API
 ;;;
 
-(define (im-rgb->gray-1 c r g b i mini maxi total n-cell)
-  (if (= i n-cell)
-      (list mini maxi (round (/ total n-cell)) n-cell)
-      (let ((k (/ (+ (f32vector-ref r i)
-		     (f32vector-ref g i)
-		     (f32vector-ref b i))
-		  3)))
-	(f32vector-set! c i k)
-	(im-rgb->gray-1 c r g b
-			(+ i 1)
-			(float-round (min mini k) 1)
-			(float-round (max maxi k) 1)
-			(+ total k)
-			n-cell))))
-
 (define (im-rgb->gray image)
   (match image
     ((width height n-chan idata)
-     (case n-chan
-       ((1)
-	image)
-       ((3)
-	(match idata
-	  ((r g b)
-	   (let* ((c (im-make-channel width height))
-		  (vals (im-rgb->gray-1 c r g b 0 0 0 0 (* width height))))
-	     (values (list width height 1 (list c))
-		     vals)))))
+     (match idata
+       ((c)
+        image)
+       ((r g b)
+        (im-rgb->gray-1 width height r g b))
        (else
 	(error "Not an RGB (nor a GRAY) image."))))))
+
+(define (im-rgb->gray-1 width height r g b)
+  (letrec* ((rgb->gray (lambda (i)
+                         (/ (+ (f32vector-ref r i)
+                               (f32vector-ref g i)
+                               (f32vector-ref b i))
+                            3)))
+            (to (im-make-channel width height))
+            (n-cell (* width height))
+            (k0 (rgb->gray 0))
+            (t0 (f32vector-set! to 0 k0)))
+    (let loop ((i 1)
+               (mini k0)
+               (maxi k0)
+               (total k0))
+      (if (= i n-cell)
+          (values (list width height 1 (list to))
+                  mini maxi (/ total n-cell))
+          (let ((k (rgb->gray i)))
+            (f32vector-set! to i k)
+            (loop (+ i 1)
+                  (min mini k)
+                  (max maxi k)
+                  (+ total k)))))))
 
 #!
 Source => Target = (BGColor + Source) =
