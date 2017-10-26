@@ -163,7 +163,7 @@ FIXME.
 
 Returns a new image or channel.
 
-Also know as @samp{Edge Enhancement}, this procedure performs the
+Also known as @samp{Edge Enhancement}, this procedure performs the
 delineation of @var{image}, obtained by applying the following pseudo
 code algorithm:
 

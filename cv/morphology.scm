@@ -138,7 +138,9 @@
     (do ((i 0
 	    (+ i 1)))
 	((= i (* new-w new-h)))
-      (if (float=? (f32vector-ref l-channel i) bg-label)
+      ;; labels are 'discrete' floats, by definition, so we can use =
+      ;; instead of float=?, which is 3 to 4 times faster
+      (if (= #;float=? (f32vector-ref l-channel i) bg-label)
 	  (f32vector-set! l-channel i 0.0)
 	  (f32vector-set! l-channel i 255.0)))
     (im-unpadd-channel l-channel new-w new-h 1 1 1 1
