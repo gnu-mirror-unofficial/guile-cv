@@ -78,7 +78,7 @@ Channel 1
 
 Returns a new image or channel.
 
-Performs the morpholgical dilatation of @var{image} using a disc of a
+Performs the morpholgical dilation of @var{image} using a disc of a
 given @var{radius}. Here is an example:
 
 @lisp
@@ -122,23 +122,25 @@ Channel 1
 
 @anchor{im-open}
 @anchor{im-open-channel}
-@deffn Procedure im-open image
-@deffnx Procedure im-open-channel channel width height
+@deffn Procedure im-open image radius
+@deffnx Procedure im-open-channel channel width height radius
 
 Returns a new image or channel.
 
-FIXME.
+Performs the dilation of the erosion of @var{image} using
+@var{radius}. Opening removes small objects.
 @end deffn
 
 
 @anchor{im-close}
 @anchor{im-close-channel}
-@deffn Procedure im-close image
-@deffnx Procedure im-close-channel channel width height
+@deffn Procedure im-close image radius
+@deffnx Procedure im-close-channel channel width height radius
 
 Returns a new image or channel.
 
-FIXME.
+Performs the erosion of the dilation of @var{image} using
+@var{radius}. Closing removes small holes.
 @end deffn
 
 
