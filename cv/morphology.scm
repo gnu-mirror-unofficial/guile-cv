@@ -51,8 +51,8 @@
 	    im-open-channel
 	    im-close
 	    im-close-channel
-	    im-fill
-	    im-fill-channel
+	    im-fill-holes
+	    im-fill-holes-channel
             im-delineate
             im-delineate-channel
             im-distance-map
@@ -114,7 +114,7 @@
   (im-disc-erode-channel (im-disc-dilate-channel channel width height radius)
 			 width height radius))
 
-(define* (im-fill image #:key (con 8))
+(define* (im-fill-holes image #:key (con 8))
   ;; (im-binary? image) is rather expensive
   (match image
     ((width height n-chan idata)
@@ -123,12 +123,12 @@
        ((1)
 	(list width height n-chan
 	      (map (lambda (channel)
-		     (im-fill-channel channel width height #:con con))
+		     (im-fill-holes-channel channel width height #:con con))
 		idata)))
        (else
 	(error "Not a binary image."))))))
 
-(define* (im-fill-channel channel width height #:key (con 8))
+(define* (im-fill-holes-channel channel width height #:key (con 8))
   (let* ((new-w (+ width 2))
 	 (new-h (+ height 2))
 	 (p-channel (im-padd-channel channel width height 1 1 1 1

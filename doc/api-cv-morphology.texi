@@ -22,8 +22,8 @@ The Guile-CV procedures and methods related to morphology.
 @item @ref{im-open-channel}
 @item @ref{im-close}
 @item @ref{im-close-channel}
-@item @ref{im-fill}
-@item @ref{im-fill-channel}
+@item @ref{im-fill-holes}
+@item @ref{im-fill-holes-channel}
 @item @ref{im-delineate}
 @item @ref{im-delineate-channel}
 @item @ref{im-distance-map}
@@ -144,14 +144,15 @@ Performs the erosion of the dilation of @var{image} using
 @end deffn
 
 
-@anchor{im-fill}
-@anchor{im-fill-channel}
-@deffn Procedure im-fill image
-@deffnx Procedure im-fill-channel channel width height
+@anchor{im-fill-holes}
+@anchor{im-fill-holes-channel}
+@deffn Procedure im-fill-holes image
+@deffnx Procedure im-fill-holes-channel channel width height
 
 Returns a new image or channel.
 
-FIXME.
+The argument must be a BINARY @var{image}. As its name indicate, this
+procedure fill the holes of all and every objects in the image.
 @end deffn
 
 

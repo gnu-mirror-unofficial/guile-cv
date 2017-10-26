@@ -49,9 +49,9 @@ The @code{im-label-all} and @code{im-label-all-channel} procedures label
 all objects in the binary @var{image}, with no specific distinction for
 any @emph{background value}. As a result, these two procedures will
 label not only the continuous background, if any, but also any
-hole(s). As an example, they are used by @ref{im-fill}, defined in the
-module @code{(cv morphology)}, which you may have a look at for a better
-understanding of how it works.
+hole(s). As an example, they are used by @ref{im-fill-holes}, defined in
+the module @code{(cv morphology)}, which you may have a look at for a
+better understanding of how it works.
 
 Two pixels belong to the same object if they are neighbors.  By default
 the algorithm uses 8-connectivity to define a neighborhood, but this can

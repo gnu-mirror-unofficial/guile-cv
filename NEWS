@@ -47,6 +47,12 @@ Vigra C >= commit xxxxxxxxx XXX xx, 2017
 
 **** Interface changes
 
+im-fill-holes
+im-fill-holes-channel
+
+  Previously, these two procedures were respectively named im-fill and
+  im-fill-channel, but that was a bit ambiguous.
+
 **** New interfaces
 
 im-clip
@@ -65,7 +71,7 @@ im-rgb->gray
   as imagej does this operation almost instantaneously, so we have room
   for improvment still.
 
-im-fill
+im-fill-holes
 
   Labels are 'discrete' floats, by definition, so we can use = instead
   of float=?, which is 3 to 4 times faster.
