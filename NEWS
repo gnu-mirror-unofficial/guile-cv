@@ -27,6 +27,49 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
+** November xx, 2017
+
+Guile-CV version 0.1.8 is released!
+
+Here is a summary of the changes since version 0.1.7. See GNU Guile-CV's
+git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.7
+
+**** Dependencies
+
+Vigra C >= commit xxxxxxxxx XXX xx, 2017
+
+  That commit fixes a clipping bug
+
+**** Interface changes
+
+**** New interfaces
+
+im-clip
+im-clip-channel
+
+**** Performance improvements
+
+im-rgb->gray
+
+  Calls im-rgb->gray-1, which was unnecessary calling float-round at
+  each step, and I also noticed that recursive tail call procedures have
+  a tiny penalty compared to loop, so rewrote it, and although still too
+  slow for my taste, it is now twice as fast as before.  As a way to
+  compare, on my laptop, i5-2450M CPU @ 2.50GHz × 4 with 6 GB of mem,
+  processing a 4784 x 3712 image took +- 8 sec, now takes +-4 sec, where
+  as imagej does this operation almost instantaneously, so we have room
+  for improvment still.
+
+**** Bug fixes
+
+
+* Older News
+
 ** October the 23rd, 2017
 
 Guile-CV version 0.1.7 is released!
@@ -37,9 +80,9 @@ git summary [1] and git log [2] for a complete description:
 	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
 	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
 
-** Changes since 0.1.6
+*** Changes since 0.1.6
 
-*** Dependencies
+**** Dependencies
 
 Vigra C >= commit a38f361 Sep 18, 2017
 
@@ -47,7 +90,7 @@ Vigra C >= commit a38f361 Sep 18, 2017
   our request - the following new features: centre of mass, perimeter,
   skewness, kurtosis.
 
-*** Interface changes
+**** Interface changes
 
 im-save
 im-show
@@ -71,7 +114,7 @@ f64vector-invert
   Previously, these procedures were using the name 'inverse', but that
   was not 'optimal', fixed.
 
-*** New interfaces
+**** New interfaces
 
 k-make
 k-make-circular-mask
@@ -98,7 +141,7 @@ im-sharpen-channel
 %2pi
 %pi/2
 
-*** New features
+**** New features
 
 **** New GRAY features
 
@@ -119,7 +162,7 @@ skewness-r skewness-g skewness-b
 kurtosis-r kurtosis-g kurtosis-b
 circularity aspect-ratio roundness
 
-*** Bug fixes
+**** Bug fixes
 
 im-set!
 im-images?
@@ -135,9 +178,6 @@ im-binary?
 
   was returning #f for BLACK and WHITE images, so either composed of
   eiher 0.0 or 255.0, fixed.
-
-
-* Older News
 
 ** August the xx, 2017
 
@@ -420,24 +460,4 @@ New procedures:
 
 	im-add, im-add-channel, im-substract, im-substract-channel,
 	im-multiply, im-multiply-channel, im-divide, im-divide-channel
-
-** Special note
-
-The text below as well as 'Older News' are kept as a 'prototype' that we
-will use once the project effectively becomes part of GNU, if it does of
-course...
-
-*** dd Month year
-
-Guile-CV version 0.1.0-alpha is released.
-
-Here is a summary of the changes since version 0.0.0. See GNU
-Guile-CV's git summary [1] and git log [2] for a complete
-description:
-
-[1] http://git.savannah.gnu.org/cgit/guile-cv.git
-[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
-
-
-
 

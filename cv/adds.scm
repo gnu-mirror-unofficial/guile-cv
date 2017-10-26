@@ -69,6 +69,8 @@
             im-transpose-channel
             im-normalize
             im-normalize-channel
+            im-clip
+            im-clip-channel
             im-scrap
             im-particles
             im-particle-clean))
@@ -631,6 +633,26 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	((= i n-cell))
       (f32vector-set! to i (/ (f32vector-ref channel i)
                               val)))
+    to))
+
+(define* (im-clip image #:key (lower 0.0) (upper 255.0))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-clip-channel channel width height #:lower lower #:upper upper))
+	       idata))))))
+
+(define* (im-clip-channel channel width height #:key (lower 0.0) (upper 255.0))
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (f32vector-set! to i
+                      (max (min (f32vector-ref channel i) upper) lower)))
     to))
 
 (define* (im-scrap image val #:key (pred <) (con 8) (bg 'black))
