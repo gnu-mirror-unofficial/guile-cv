@@ -119,13 +119,13 @@ essential adequate runtime optimization flags.
 @end indentedblock
 
 @item
-@uref{@value{UVIGRAC}, Vigra C} >= commit a38f361 Sep 18, 2017
+@uref{@value{UVIGRAC}, Vigra C} >= commit 691b189b0 Oct 25, 2017
 
 @indentedblock
-That commit introduces - kindly implemented by Benjamin Seppke upon our
-request - the following new features: centre of mass, perimeter,
-skewness, kurtosis.
-  
+A clipping bug has been fixed in vigra_exportgrayimage_c,
+vigra_exportrgbimage_c and vigra_exportrgbaimage_c. A new
+vigra_clipimage_c function is available and Guile-CV uses it.
+
 Vigra C - a C wrapper [to some of] the Vigra functionality - is
 currently only available by cloning its source code @uref{@value{UGIT},
 git} repository: there is no release and no versioning scheme
