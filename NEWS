@@ -41,9 +41,11 @@ git summary [1] and git log [2] for a complete description:
 
 **** Dependencies
 
-Vigra C >= commit xxxxxxxxx XXX xx, 2017
+Vigra C >= commit 691b189b0 Oct 25, 2017
 
-  That commit fixes a clipping bug
+  A clipping bug has been fixed in vigra_exportgrayimage_c,
+  vigra_exportrgbimage_c and vigra_exportrgbaimage_c. A new
+  vigra_clipimage_c function is available and Guile-CV uses it.
 
 **** Interface changes
 
@@ -61,15 +63,15 @@ im-clip-channel
 **** Performance improvements
 
 im-rgb->gray
+im-threshold
 
   Calls im-rgb->gray-1, which was unnecessary calling float-round at
   each step, and I also noticed that recursive tail call procedures have
-  a tiny penalty compared to loop, so rewrote it, and although still too
-  slow for my taste, it is now twice as fast as before.  As a way to
-  compare, on my laptop, i5-2450M CPU @ 2.50GHz × 4 with 6 GB of mem,
-  processing a 4784 x 3712 image took +- 8 sec, now takes +-4 sec, where
-  as imagej does this operation almost instantaneously, so we have room
-  for improvment still.
+  a tiny penalty compared to loop, so rewrote both.  Now, in addition,
+  both procedures will split their work in between as many core as
+  available, except if the parameter %use-par-map has been set to #f.
+  On my laptop - i5-2450M CPU @ 2.50GHz × 4 and 5.7GB of mem - both
+  procedures are now 3 to 4 times faster.
 
 im-fill-holes
 
