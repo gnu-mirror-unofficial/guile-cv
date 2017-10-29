@@ -56,7 +56,9 @@
 	    im-padd-channel
 	    im-unpadd-size
 	    im-unpadd
-	    im-unpadd-channel))
+	    im-unpadd-channel
+            im-clip
+            im-clip-channel))
 
 
 #;(g-export )
@@ -263,6 +265,24 @@
       (else
        (error "Unpadd failed.")))))
 
+(define* (im-clip image #:key (lower 0.0) (upper 255.0))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-clip-channel channel width height #:lower lower #:upper upper))
+	       idata))))))
+
+(define* (im-clip-channel channel width height #:key (lower 0.0) (upper 255.0))
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (case (vigra-clip-channel channel to width height lower upper)
+      ((0) to)
+      (else
+        (error "Clip failed.")))))
+
 
 ;;;
 ;;; Guile vigra low level API
@@ -311,6 +331,14 @@
 			top
 			right
 			bottom))
+
+(define (vigra-clip-channel from to width height lower upper)
+  (vigra-clip-channel-c (bytevector->pointer from)
+			(bytevector->pointer to)
+			width
+			height
+			lower
+			upper))
 
 
 ;;;
@@ -375,3 +403,14 @@
 			    int		;; top
 			    int		;; right
 			    int)))	;; bottom
+
+(define vigra-clip-channel-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_clipimage_c"
+				    %libvigra-c)
+		      (list '*		;; from channel
+			    '*		;; to channel
+			    int		;; from width
+			    int		;; from height
+			    float	;; lower
+			    float)))	;; upper
