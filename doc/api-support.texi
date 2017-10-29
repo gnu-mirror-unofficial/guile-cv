@@ -34,6 +34,27 @@ support goops))}, ...
 @node Pi
 @subsection Pi
 
+@anchor{PI procedures}
+@subheading Procedures
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{radian->degree}
+@item @ref{degree->radian}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{radian->degree}
+@anchor{degree->radian}
+@deffn Procedure radian->degree rad
+@deffnx Procedure degree->radian deg
+
+Returns respectively a degree or a radian value.
+@end deffn
+
 
 @anchor{PI variables}
 @subheading Variables
@@ -57,7 +78,7 @@ support goops))}, ...
 @defvrx Variable %pi/2
 
 Respectively bound to @code{(acos -1)}, @code{(* 2 %pi)} and
-@code{(/%pi 2)}.
+@code{(/ %pi 2)}.
 @end defvr
 
 
