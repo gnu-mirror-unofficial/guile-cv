@@ -43,7 +43,8 @@
 		last)
 
   #:export (%image-cache
-	    %image-cache-format))
+	    %image-cache-format
+            n-cell->per-core-start-end))
 
 
 (g-export im-show)
@@ -110,3 +111,17 @@
 				 "." %image-cache-format)))
     (im-save image filename scale)
     (im-show filename)))
+
+(define* (n-cell->per-core-start-end n-cell #:optional (n-core #f))
+  (let* ((n-core (or n-core (current-processor-count)))
+         (q (quotient n-cell n-core))
+         (r (remainder n-cell n-core))
+         (offset1 (+ q r)))
+    (map (lambda (i)
+           (case i
+             ((0)
+              (list 0 (+ q r)))
+             (else
+              (let ((start (+ offset1 (* (- i 1) q))))
+                (list start (+ start q))))))
+      (iota n-core))))

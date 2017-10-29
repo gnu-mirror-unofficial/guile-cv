@@ -284,14 +284,13 @@ Returns a new GRAY image.
 
 
 @anchor{im-threshold}
-@deffn Procedure im-threshold image threshold @
-       [#:bg 'black] [#:prec 1.0e-4]
+@deffn Procedure im-threshold image threshold [#:bg 'black]
 
 Returns a new BLACK and WHITE image.
 
-Valid @var{#:bg} values are @code{'(black white)}, the default is
-@code{black}. If @var{image} is an RGB image, @ref{im-rgb->gray} is first
-called.
+The @var{image} argument can either be a GRAY or an an RGB image, in
+which case each pixel is converted to GRAY as it is processed. Valid
+@var{#:bg} values are @code{black} (the default) and @code{white}.
 
 Pixels for which the original value is @code{>=} @var{threshold} are set
 to 255.0 if @var{#:bg} is @code{'black}, and set to 0.0 if @var{#:bg} is
