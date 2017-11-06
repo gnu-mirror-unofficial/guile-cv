@@ -55,6 +55,10 @@ im-fill-holes-channel
   Previously, these two procedures were respectively named im-fill and
   im-fill-channel, but that was a bit ambiguous.
 
+im-scrap
+
+  New optional keyword, #:exclude-on-edges, for which the default is #f.
+
 **** New interfaces
 
 im-clip

@@ -690,7 +690,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                               val)))
     to))
 
-(define* (im-scrap image val #:key (pred <) (con 8) (bg 'black))
+(define* (im-scrap image val #:key (pred <) (con 8) (bg 'black) (exclude-on-edges #f))
   ;; (im-binary? image) is rather expensive
   (match image
     ((width height n-chan idata)
@@ -707,8 +707,14 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                        (n-feature (length features))
                        (to-scrap (fold (lambda (feature i prev)
                                          (match feature
-                                           ((area . rest)
-                                            (if (pred area val)
+                                           ((area left top right bottom . rest)
+                                            (if (and (not (= i 0))
+                                                     (or (pred area val)
+                                                         (and exclude-on-edges
+                                                              (or (= left 0)
+                                                                  (= top 0)
+                                                                  (= right (- width 1))
+                                                                  (= bottom (- height 1))))))
                                                 (cons i prev)
                                                 prev))))
                                        '()
@@ -740,7 +746,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (scrap-cache to-scrap n-label)
   (let ((n-scrap (length to-scrap))
-         (cache (make-vector (+ n-label 1) #f)))
+        (cache (make-vector (+ n-label 1) #f)))
     (do ((i 0
             (+ i 1)))
 	((= i n-scrap))

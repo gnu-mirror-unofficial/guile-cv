@@ -505,18 +505,19 @@ value is @code{(- 255.0 pixel-value)}.
 @end deffn
 
 @anchor{im-scrap}
-@deffn Procedure im-scrap image val [#:pred <] [#:con 8] [#:bg 'black]
+@deffn Procedure im-scrap image size [#:pred <] [#:con 8] [#:bg 'black] @
+                 [exclude-on-edges #f]
 
 Returns a new image.
 
-Scraping an image is the operation of removing objects of size
-@var{val}, according to @var{con}, @var{bg} and @var{pred}.
+Scraping an image is the operation of removing objects depending on
+their @var{size} (in pixels). When @var{exclude-on-edges} is #t, all
+objects that are on any edges are also removed.
 
-Using the above mentioned arguments, @code{im-scrap} first calls
-@ref{im-label} using @var{con} and @var{bg}, then calls
-@ref{im-features}.  The @code{area} feature of each object is then
-compared to @var{val} using @var{pred}, and the object is eliminated if
-the result is @code{#t}.
+The procedure first calls @ref{im-label} using @var{con} and @var{bg},
+then calls @ref{im-features}.  The @code{area} feature of each object is
+then compared to @var{size} using @var{pred} and the object is removed
+if the result is #t.
 
 Note that @var{image} must be a binary image.
 @end deffn
