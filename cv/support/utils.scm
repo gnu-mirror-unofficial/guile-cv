@@ -41,6 +41,7 @@
 	    warning
 	    abort
 	    and-l
+            or-l
 	    identities
 	    system-get
 	    mk-dir
@@ -112,6 +113,13 @@
       (if (car ll)
 	  (and-l (cdr ll))
 	  #f)))
+
+(define (or-l ll)
+  (if (null? ll)
+      #f
+      (if (car ll)
+	  #t
+	  (or-l (cdr ll)))))
 
 (define (identities . args)
   args)
