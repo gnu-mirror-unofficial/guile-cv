@@ -44,7 +44,11 @@
 
   #:export (%image-cache
 	    %image-cache-format
-            n-cell->per-core-start-end))
+            n-cell->per-core-start-end
+            features-bb
+            bb-points
+            bb-point-inside?
+            bb-intersect?))
 
 
 (g-export im-show)
@@ -125,3 +129,33 @@
               (let ((start (+ offset1 (* (- i 1) q))))
                 (list start (+ start q))))))
       (iota n-core))))
+
+(define (features-bb features)
+  (map (lambda (feature)
+         (match feature
+           ((area left top right bottom . rest)
+            (list left top right bottom))))
+    features))
+
+(define (bb-points bb)
+  (match bb
+    ((left top right bottom)
+     (list (list left top)		;; x1 y1
+           (list right top)		;; x2 y2
+           (list left bottom)		;; x3 y3
+           (list right bottom)))))	;; x4 y4
+
+(define (bb-point-inside? bb pt)
+  (match bb
+    ((left top right bottom)
+     (match pt
+       ((pt-x pt-y)
+        (or (and (>= pt-x left)
+                 (<= pt-x right)
+                 (>= pt-y top)
+                 (<= pt-y bottom))))))))
+
+(define (bb-intersect? b1 b2)
+  (or-l (map (lambda (pt)
+               (bb-point-inside? b1 pt))
+          (bb-points b2))))
