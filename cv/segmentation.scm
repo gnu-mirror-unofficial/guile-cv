@@ -71,24 +71,27 @@
 	   (receive (l-channel n-label)
 	       (im-label-channel c width height #:con con #:bg bg)
 	     (values (list width height 1 (list l-channel))
-		     n-label)))))
+                     n-label)))))
        (else
 	(error "Not a binary image."))))))
 
 (define* (im-label-channel channel width height #:key (con 8) (bg 'black))
   (let* ((to (im-make-channel width height))
-	 (result (vigra-label channel to width height con bg)))
-    (case result
+	 (n-object (vigra-label channel to width height con bg)))
+    (case n-object
       ((-1)
        (error "Label failed."))
       (else
-       (values to result)))))
+       (values to
+               ;; vigra returns the highest label value, which
+               ;; correspond to the number of object _but_ 0 is a label,
+               ;; so n-label is (+ n-object 1)
+               (+ n-object 1))))))
 
 (define* (im-label-all image #:key (con 8))
-  ;; (im-binary? image) is rather expensive
+  ;; (im-binary? image) is rather expensive so we only check for n-chan
   (match image
     ((width height n-chan idata)
-     ;; so we only check for n-chan
      (case n-chan
        ((1)
 	(match idata
@@ -102,12 +105,16 @@
 
 (define* (im-label-all-channel channel width height #:key (con 8))
   (let* ((to (im-make-channel width height))
-	 (result (vigra-label-all channel to width height con)))
-    (case result
+	 (n-object (vigra-label-all channel to width height con)))
+    (case n-object
       ((-1)
        (error "Label failed."))
       (else
-       (values to result)))))
+       (values to
+               ;; vigra returns the highest label value, which
+               ;; correspond to the number of object _but_ 0 is a label,
+               ;; so n-label is (+ n-object 1)
+               (+ n-object 1))))))
 
 #;(define (im-watershed image)
   (match image
