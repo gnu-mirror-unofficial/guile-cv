@@ -504,6 +504,7 @@ which for Guile-CV means that for each pixel of each channel, the new
 value is @code{(- 255.0 pixel-value)}.
 @end deffn
 
+
 @anchor{im-scrap}
 @deffn Procedure im-scrap image size [#:pred <] [#:con 8] [#:bg 'black] @
                  [exclude-on-edges #f]
@@ -528,7 +529,8 @@ Note that @var{image} must be a binary image.
 @c @cindex Image split
 @cindex Image decompose
 
-Returns a list of images.
+Returns two values, a list of images (the particles) and a list of their
+bounding boxes in the original @var{image}.
 
 Each returned image is a @samp{particle}, which is a subpart of
 @var{image} determined by its bounding box, given by the @code{left}

@@ -71,6 +71,7 @@
             im-normalize
             im-normalize-channel
             im-scrap
+            im-scrap-channel
             im-particles
             im-particle-clean))
 
@@ -96,12 +97,10 @@
        ((c)
         image)
        ((r g b)
-        (receive (c-chan mini maxi total)
+        (receive (c-chan extra)
             (im-rgb->gray-1 width height r g b)
           (values (list width height 1 (list c-chan))
-                  mini
-                  maxi
-                  total)))
+                  extra)))
        (else
 	(error "Not an RGB (nor a GRAY) image."))))))
 
@@ -133,15 +132,17 @@
         (let ((vals (par-map proc
                          (n-cell->per-core-start-end n-cell))))
           (values to
-                  (apply min (map car vals))
-                  (apply max (map cadr vals))
-                  (/ (reduce + 0 (map caddr vals)) n-cell)))
+                  (list (apply min (map car vals))
+                        (apply max (map cadr vals))
+                        (/ (reduce + 0 (map caddr vals)) n-cell)
+                        n-cell)))
         (match (proc (list 0 n-cell))
           ((mini maxi total)
            (values to
-                   mini
-                   maxi
-                   (/ total n-cell)))))))
+                   (list mini
+                         maxi
+                         (/ total n-cell)
+                         n-cell)))))))
 
 #;(define (im-rgb->gray-1 width height r g b)
   (letrec* ((rgb->gray (lambda (i)
@@ -726,34 +727,16 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
        (else
         (error "Not a binary image."))))))
 
-#!
-;; nice but too slow
-(define (im-scrap-channel channel l-channel width height to-scrap)
-  (let ((to (im-copy-channel channel width height))
-        (n-cell (* width height))
-        (to-scrap (list->vector (reverse! to-scrap))))
-    (do ((i 0
-	    (+ i 1)))
-	((= i n-cell))
-      (let ((val (f32vector-ref l-channel i)))
-        (f32vector-set! to i
-                        (if (or (= val 0.0)
-                                (binary-search-sorted-vector to-scrap val))
-                            0.0
-                            (f32vector-ref channel i)))))
-    to))
-!#
-
 (define (scrap-cache to-scrap n-label)
   (let ((n-scrap (length to-scrap))
-        (cache (make-vector (+ n-label 1) #f)))
+        (cache (make-vector n-label #f)))
     (do ((i 0
             (+ i 1)))
 	((= i n-scrap))
       (vector-set! cache (list-ref to-scrap i) #t))
     cache))
 
-(define* (im-scrap-channel channel l-channel width height to-scrap n-label)
+(define (im-scrap-channel channel l-channel width height to-scrap n-label)
   (let* ((to (im-copy-channel channel width height))
          (n-cell (* width height))
          (cache (scrap-cache to-scrap n-label)))
@@ -770,48 +753,61 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     to))
 
 (define* (im-particles image features #:key (clean #t))
-  (let ((map-proc (if (%use-par-map) par-map map)))
-    (map-proc (lambda (prop)
-                (match prop
-                  ((area left top right bottom . rest)
-                   (parameterize ((%use-par-map #f))
-                     (let ((particle (im-crop image left top (+ right 1) (+ bottom 1))))
-                       (if clean
-                           (im-particle-clean particle)
-                           particle))))))
-              (cdr features))))
+  (let* ((map-proc (if (%use-par-map) par-map map))
+         (particles (map-proc
+                        (lambda (prop)
+                          (match prop
+                            ((area left top right bottom . rest)
+                             (parameterize ((%use-par-map #f))
+                               (let ((particle (im-crop image
+                                                        left top (+ right 1) (+ bottom 1))))
+                                 (list (if clean
+                                           (im-particle-clean particle)
+                                           particle)
+                                       (list left top right bottom)))))))
+                        (cdr features))))
+    (values (map car particles)
+            (map cadr particles))))
 
 (define (im-particle-clean particle)
   (let* ((binary? (im-binary? particle))
-         (binary (if binary? particle (im-threshold particle 1.0)))
-         (cleaned (match binary
+         (p-bin (if binary? particle (im-threshold particle 1.0)))
+         (p-clean (match p-bin
                     ((width height n-chan idata)
-                     (receive (label-im n-label)
-                         (im-label binary)
-                       (let* ((r (- width 1))
+                     (receive (p-label n-label)
+                         (im-label p-bin)
+                       (let* ((n-object (- n-label 1))
+                              (r (- width 1))
                               (b (- height 1))
-                              (l-channel (im-channel label-im 0))
-                              (n-cel (* width height))
-                              (to-remove (fold (lambda (prop i prev)
-                                                 (match prop
-                                                   ((size left top right bottom . rest)
-                                                    (if (or (not (= left 0))
-                                                            (not (= top 0))
-                                                            (not (= right r))
-                                                            (not (= bottom b)))
-                                                        (cons i prev)
-                                                        prev))))
-                                               '()
-                                               (im-features binary label-im
-                                                            #:n-label n-label)
-                                               (iota (+ n-label 1))))
-                              (cache (scrap-cache to-remove n-label)))
-                         (do ((i 0
-                                 (+ i 1)))
-                             ((= i n-cel)
-                              (list width height n-chan (list l-channel)))
-                           (let ((val
-                                  (float->int (f32vector-ref l-channel i))))
-                             (when (vector-ref cache val)
-                               (f32vector-set! l-channel i 0.0))))))))))
-    (if binary? cleaned (im-and particle cleaned))))
+                              (p-bin-chan (im-channel p-bin 0))
+                              (p-label-chan (im-channel p-label 0))
+                              (n-cell (* width height))
+                              (to-scrap (fold (lambda (prop i prev)
+                                                (match prop
+                                                  ((_ left top right bottom . rest)
+                                                   (if (or (not (= left 0))
+                                                           (not (= top 0))
+                                                           (not (= right r))
+                                                           (not (= bottom b)))
+                                                       ;; we did skip the bg, so i needs 1+
+                                                       (cons (+ i 1) prev)
+                                                       prev))))
+                                              '()
+                                              (cdr (im-features p-bin p-label
+                                                                #:n-label n-label))
+                                              (iota n-object))))
+                         (list width height n-chan
+                               (list (match to-scrap
+                                       (() p-bin-chan)
+                                       (else
+                                        (let ((cache (scrap-cache to-scrap n-label)))
+                                          (do ((i 0
+                                                  (+ i 1)))
+                                              ((= i n-cell) p-bin-chan)
+                                            (let ((val
+                                                   (float->int (f32vector-ref p-label-chan i))))
+                                              (when (vector-ref cache val)
+                                                (f32vector-set! p-bin-chan i 0.0)))))))))))))))
+    (if binary?
+        p-clean
+        (im-and particle p-clean))))
