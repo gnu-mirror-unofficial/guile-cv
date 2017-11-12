@@ -32,12 +32,18 @@ The Guile-CV procedures and methods related to segmentation.
 @anchor{im-label-all}
 @anchor{im-label-all-channel}
 @deffn Procedure im-label image [#:con 8] [#:bg 'black]
-@deffnx Procedure im-label-channel channel width height [#:con 8] [#:bg 'black]
+@deffnx Procedure im-label-channel channel width height@
+                  [#:con 8] [#:bg 'black]
 @deffnx Procedure im-label-all image [#:con 8]
 @deffnx Procedure im-label-all-channel channel width height [#:con 8]
 
-Returns two values: a new GRAY image or GRAY channel, and the total
-number of objects.
+Returns two values: a new GRAY image or channel, and the total number of
+labels@footnote{The number of labels correspond to the highest label
+value + 1: earlier version of Guile-CV, prior to version 1.8.0, did
+return the number of objects, which correspond to the highest label
+value. This was less then optimal, since not only 0.0 is a label, but
+other procedures, im-features for example, do consider and return and
+element for the background as well.}.
 
 The @code{im-label} and @code{im-label-channel} procedures label
 foreground objects in the binary @var{image}.  In the new image or
@@ -64,7 +70,7 @@ be changed through the keyword argument @var{#:con}, which can be either
 @image{images/pp-17-label-all,,,pp-17-bf-label-all,png}
 
 Here above, left being the original image, you can see the difference
-between @code{im-label} (1 object) and @code{im-label-all} (6 objects).
+between @code{im-label} (2 labels) and @code{im-label-all} (6 labels).
 Note that we had to run @code{im-threshold} on the original image first
 (all labeling procedures take a binary image (or channel) as their
 mandatory argument), for the record, we used @code{128} as the threshold

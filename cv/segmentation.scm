@@ -114,7 +114,8 @@
                ;; vigra returns the highest label value, which
                ;; correspond to the number of object _but_ 0 is a label,
                ;; so n-label is (+ n-object 1)
-               (+ n-object 1))))))
+               #;(+ n-object 1)
+               n-object)))))
 
 #;(define (im-watershed image)
   (match image

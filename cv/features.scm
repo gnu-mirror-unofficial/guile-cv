@@ -61,7 +61,7 @@
      (match l-idata
        ((l-c)
         (let ((n-label (or n-label
-                           (float->int (f32vector-max l-c)))))
+                           (+ (float->int (f32vector-max l-c)) 1))))
           (match image
             ((width height n-chan idata)
              (match idata
@@ -78,38 +78,37 @@
 
 (define* (im-features-gray channel l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (float->int (f32vector-max l-c))))
-         (n-prop (+ n-label 1))
-	 (features (im-make-channel %vigra-feature-length-gray n-prop))
+		      (+ (float->int (f32vector-max l-c)) 1)))
+	 (features (im-make-channel %vigra-feature-length-gray n-label))
 	 (result (vigra-extract-features-gray channel l-c
                                               features width height n-label)))
     (case result
       ((1)
        (error "Features failed."))
       (else
-       (vigra-features->list features n-prop 'gray)))))
+       (vigra-features->list features n-label 'gray)))))
 
 (define %vigra-feature-length-rgb 34)
 
 (define* (im-features-rgb r g b l-c width height #:key (n-label #f))
   (let* ((n-label (or n-label
-		      (float->int (f32vector-max l-c))))
-         (n-prop (+ n-label 1))
-	 (features (im-make-channel %vigra-feature-length-rgb n-prop))
+		      (+ (float->int (f32vector-max l-c)) 1)))
+	 (features (im-make-channel %vigra-feature-length-rgb n-label))
 	 (result (vigra-extract-features-rgb r g b l-c
                                              features width height n-label)))
     (case result
       ((1)
        (error "Features failed."))
       (else
-       (vigra-features->list features n-prop 'rgb)))))
+       (vigra-features->list features n-label 'rgb)))))
 
-(define (vigra-features->list features n-prop im-type)
+(define (vigra-features->list features n-feature im-type)
   ;;
   ;; Notes:
-  ;;  - n-prop is n-label + 1 (one for the bg, tbc)
-  ;;  - features is a 'channel' (f32vector), see
-  ;;    below for a full description of a feature
+  ;;  - n-feature is n-label, since vigra returns one feature for
+  ;;    the background as well
+  ;;  - features is a 'channel' (f32vector), see below for a full
+  ;;    description of feature 'entries'
   ;;
   (do ((proc (case im-type
                ((gray) vigra-feature-gray)
@@ -117,7 +116,7 @@
        (result '())
        (i 0
           (+ i 1)))
-      ((= i n-prop)
+      ((= i n-feature)
        (reverse! result))
       (set! result
             (cons (proc features i) result))))
@@ -387,7 +386,7 @@
                                 (bytevector->pointer results)
                                 width
                                 height
-                                n-label))
+                                (- n-label 1))) ;; vigra wants n-object
 
 (define (vigra-extract-features-rgb r g b labels results width height n-label)
   (vigra-extractfeatures-rgb-c (bytevector->pointer r)
@@ -397,7 +396,7 @@
                                (bytevector->pointer results)
                                width
                                height
-                               n-label))
+                               (- n-label 1))) ;; vigra wants n-object
 
 
 ;;;
@@ -413,7 +412,7 @@
 			    '*     ;; results vector
 			    int    ;; width
 			    int    ;; height
-			    int))) ;; n-label
+			    int))) ;; n-object
 
 (define vigra-extractfeatures-rgb-c
   (pointer->procedure int
@@ -426,4 +425,4 @@
 			    '*     ;; results vector
 			    int    ;; width
 			    int    ;; height
-			    int))) ;; n-label
+			    int))) ;; n-object
