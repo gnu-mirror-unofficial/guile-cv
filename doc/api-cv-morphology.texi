@@ -28,6 +28,7 @@ The Guile-CV procedures and methods related to morphology.
 @item @ref{im-delineate-channel}
 @item @ref{im-distance-map}
 @item @ref{im-distance-map-channel}
+@item @ref{im-reconstruct}
 @end table
 @end indentedblock
 @end ifhtml
@@ -233,4 +234,33 @@ The default distance map mode is @uref{@value{UEUCLIDEAN},
 Here above, left being the original image - a few cells - you can see
 the results obtained by calling @code{im-distance-map} using respectively
 the @code{'euclidean}, @code{'manhattan} and @code{'chessboard} modes.
+@end deffn
+
+
+@anchor{im-reconstruct}
+@deffn Procedure im-reconstruct image seeds [#:con 8]
+@cindex Mathematical Morphology
+@cindex Morphological Reconstruction
+@cindex Geodesic Operators
+
+Returns a new image.
+
+This procedure implements a @samp{binary morphological reconstruction}
+algorithm, which extracts the connected components of @var{image} that
+are @samp{marked} by (any of) the connected components contained in
+@var{seeds}.
+
+Morphological reconstruction is part of a set of image operators often
+referred to as @samp{geodesic} (geodesic distance, geodesic dilation
+@dots{}). Morphological (or geodesic) operations upon digital images
+come from and use the @uref{@value{UWIKI-MM}, Mathematical morphology
+(MM)} theory and technique developed for the analysis and processing of
+geometrical structures.
+
+First described here@footnote{in Serra, Jean and Vincent, Luc (1992),
+"An overview of morphological filtering", Circuits, Systems and Signal
+Processing (Springer) 11 (1): 47-108}, this implementation is based on a
+revision of the same article published in @samp{the IEEE Transactions on
+Image Processing, Vol.  2, No.  2, pp.  176-201, April 1993}, available
+@uref{@value{UVL-93ieeeIP-RECONS}, here}.
 @end deffn

@@ -29,13 +29,19 @@
 (define-module (cv morphology)
   #:use-module (oop goops)
   #:use-module (system foreign)
+  #:use-module (ice-9 receive)
   #:use-module (ice-9 match)
   #:use-module (ice-9 threads)
+  #:use-module (srfi srfi-1)
   #:use-module (cv init)
   #:use-module (cv support)
   #:use-module (cv idata)
+  #:use-module (cv impex)
   #:use-module (cv imgproc)
+  #:use-module (cv adds)
+  #:use-module (cv features)
   #:use-module (cv segmentation)
+  #:use-module (cv utils)
 
   #:duplicates (merge-generics
 		replace
@@ -56,7 +62,8 @@
             im-delineate
             im-delineate-channel
             im-distance-map
-            im-distance-map-channel))
+            im-distance-map-channel
+            im-reconstruct))
 
 
 #;(g-export )
@@ -118,13 +125,10 @@
   ;; (im-binary? image) is rather expensive
   (match image
     ((width height n-chan idata)
-     ;; so we only check for n-chan
-     (case n-chan
-       ((1)
+     (match idata
+       ((c)
 	(list width height n-chan
-	      (map (lambda (channel)
-		     (im-fill-holes-channel channel width height #:con con))
-		idata)))
+	      (list (im-fill-holes-channel c width height #:con con))))
        (else
 	(error "Not a binary image."))))))
 
@@ -145,6 +149,35 @@
 	  (f32vector-set! l-channel i 255.0)))
     (im-unpadd-channel l-channel new-w new-h 1 1 1 1
 		       #:new-w width #:new-h height)))
+
+#!
+;; this is slower then the above, unexpectedly
+(define* (im-fill-holes-channel channel width height #:key (con 8))
+  (letrec* ((new-w (+ width 2))
+            (new-h (+ height 2))
+            (n-cell-new (* new-w new-h))
+            (p-channel (im-padd-channel channel width height 1 1 1 1
+                                        #:new-w new-w #:new-h new-h))
+            (l-channel (im-label-all-channel p-channel new-w new-h #:con con))
+            (bg-label (f32vector-ref l-channel 0))
+            (proc (lambda (range)
+                    (match range
+                      ((start end)
+                       (do ((i start
+                               (+ i 1)))
+                           ((= i end))
+                         ;; labels are 'discrete' floats, by definition, so we can use =
+                         ;; instead of float=?, which is 3 to 4 times faster
+                         (if (= #;float=? (f32vector-ref l-channel i) bg-label)
+                             (f32vector-set! l-channel i 0.0)
+                             (f32vector-set! l-channel i 255.0))))))))
+    (if (%use-par-map)
+        (par-for-each proc
+                      (n-cell->per-core-start-end n-cell-new))
+        (proc (list 0 n-cell-new)))
+    (im-unpadd-channel l-channel new-w new-h 1 1 1 1
+		       #:new-w width #:new-h height)))
+!#
 
 (define* (im-delineate image #:key (threshold  10) (radius 2))
   (match image
@@ -200,6 +233,129 @@
       ((0) to)
       (else
        (error "Distance map failed.")))))
+
+(define* (im-reconstruct image seeds #:key (con 8))
+  ;; Returns a copy of IMAGE excluding objects for which (a) none of the
+  ;; bounding boxes of the SEEDS objects intersect and (b) those for
+  ;; which none of the SEEDS objects that intersect actually 'share'
+  ;; pixels.  Note (remember) that im-features returns an ascending
+  ;; ordered list based on the label value, and the first feature is
+  ;; always the background feature.
+  (match image
+    ((i-width i-height i-n-chan _)
+     (match seeds
+       ((s-width s-height s-n-chan _)
+        (if (and (= i-width s-width)
+                 (= i-height s-height)
+                 (= i-n-chan s-n-chan 1))
+            (receive (i-labels i-n-label)
+                (im-label image #:con con)
+              (receive (s-labels s-n-label)
+                  (im-label seeds #:con con)
+                (let* ((i-chan (im-channel image 0))
+                       (i-label-chan (im-channel i-labels 0))
+                       (i-features (im-features image i-labels))
+                       (i-bb (features-bb i-features))
+                       (s-features (im-features seeds s-labels))
+                       (s-bb (features-bb s-features))
+                       (i-bb-s-bbs (map
+                                       (lambda (bbi)
+                                         (cons bbi
+                                               (filter-map (lambda (bbs)
+                                                             (and (bb-intersect? bbi bbs) bbs))
+                                                   ;; first feature is for the bg, do not process
+                                                   (cdr s-bb))))
+                                     ;; first feature is for the bg, do not process
+                                     (cdr i-bb)))
+                       (to-keep (cons 0 ;; keep the bg - that we on purpose did 'skip' above
+                                      (reverse!
+                                       (fold (lambda (a-bbi i prev)
+                                               ;; since we don't process the bg feature, the
+                                               ;; i we receive here is (- label-id 1), hence
+                                               ;; we add 1, so it will remove correct objects.
+                                               (let ((real-i (+ i 1)))
+                                                 (if (or (null? (cdr a-bbi))
+                                                         (member real-i prev)
+                                                         (not (any-seeds? image seeds a-bbi)))
+                                                     prev
+                                                     (cons real-i prev))))
+                                             '()
+                                             i-bb-s-bbs
+                                             (iota (length i-bb-s-bbs))))))
+                       (to-scrap (lset-difference = (iota i-n-label) to-keep)))
+                  (list i-width i-height 1
+                        (list (im-scrap-channel i-chan i-label-chan i-width i-height
+                                                to-scrap i-n-label))))))
+            (error "Wrong argument(s): both image and seeds must be binary images of the same size.")))))))
+
+(define (any-seeds? image seeds i-bb-s-bbs)
+  ;; Both IMAGE and SEEDS are binary images of the same size. I-BB-S-BBS
+  ;; is a list of bounding boxes. The first is a bounding box for an
+  ;; object in IMAGE, the rest is a list - which maybe empty - of
+  ;; bounding boxes in SEEDS, that are (at least partially) inside the
+  ;; former. This procedure returns #t if any of the later do 'share'
+  ;; some pixels or even a single pixel with the object defined in IMAGE
+  ;; by the first bounding box.
+
+  ;; Quick hack, we'll improve this later, to catch exit on the first
+  ;; s-bb that is a seed, if any...
+  (match i-bb-s-bbs
+    ((i-bb . rest)
+     (let ((n-rest (length rest))
+           (result #f))
+       (do ((i 0
+               (+ i 1)))
+           ((or result
+                (= i n-rest))
+            result)
+         (if (is-a-seed? image seeds i-bb
+                         (list-ref rest i))
+             (set! result #t)))))))
+
+(define (%is-a-seed-tmp-filename prefix left top right bottom)
+  (string-append "/tmp/david/guile-cv/"
+                 prefix
+                 (number->string left) "-"
+                 (number->string top) "-"
+                 (number->string right) "-"
+                 (number->string bottom) "-"
+                 ".png"))
+
+(define (is-a-seed? image seeds i-bb s-bb)
+  (match (shared-bb i-bb s-bb)
+    ((left top right bottom)
+     (let* ((crop-r (+ right 1))
+            (crop-b (+ bottom 1))
+            (i-crop (im-particle-clean (im-crop image left top crop-r crop-b)))
+            (i-chan (im-channel i-crop 0))
+            (s-crop (im-crop seeds left top crop-r crop-b))
+            (s-chan (im-channel s-crop 0))
+            (result #f))
+       ;; (im-save i-crop (%is-a-seed-tmp-filename "i-crop-" left top right bottom))
+       ;; (im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
+       (match i-crop
+         ((width height _ _)
+          (do ((i 0
+                  (+ i 1)))
+              ((or result
+                   (= i (* width height)))
+               (begin
+                 ;; (dimfi left top right bottom "i-bb" i-bb "s-bb" s-bb result)
+                 result))
+            (if (and (= (f32vector-ref i-chan i) 255.0)
+                     (= (f32vector-ref s-chan i) 255.0))
+                (set! result #t)))))))))
+
+(define (shared-bb i-bb s-bb)
+  (match i-bb
+    ((i-left i-top i-right i-bottom)
+     (match s-bb
+       ((s-left s-top s-right s-bottom)
+        (match (sort (list i-left i-right s-left s-right) <)
+          ((_ left right _)
+           (match (sort (list i-top i-bottom s-top s-bottom) <)
+             ((_ top bottom _)
+              (list left top right bottom))))))))))
 
 
 ;;;

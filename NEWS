@@ -63,6 +63,7 @@ im-scrap
 
 im-clip
 im-clip-channel
+im-reconstruct
 
 **** Performance improvements
 
