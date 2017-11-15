@@ -267,12 +267,12 @@
                                                    (cdr s-bb))))
                                      ;; first feature is for the bg, do not process
                                      (cdr i-bb)))
-                       (to-keep (cons 0 ;; keep the bg - that we on purpose did 'skip' above
+                       (to-keep (cons 0 ;; keep the bg that on purpose has been'skipped' above
                                       (reverse!
                                        (fold (lambda (a-bbi i prev)
-                                               ;; since we don't process the bg feature, the
+                                               ;; since we skipped the bg feature, the
                                                ;; i we receive here is (- label-id 1), hence
-                                               ;; we add 1, so it will remove correct objects.
+                                               ;; we must add 1 to get the correct label-id
                                                (let ((real-i (+ i 1)))
                                                  (if (or (null? (cdr a-bbi))
                                                          (member real-i prev)
@@ -286,7 +286,7 @@
                   (list i-width i-height 1
                         (list (im-scrap-channel i-chan i-label-chan i-width i-height
                                                 to-scrap i-n-label))))))
-            (error "Wrong argument(s): both image and seeds must be binary images of the same size.")))))))
+            (error "Wrong argument(s): expecting same size binary images.")))))))
 
 (define (any-seeds? image seeds i-bb-s-bbs)
   ;; Both IMAGE and SEEDS are binary images of the same size. I-BB-S-BBS
@@ -296,21 +296,54 @@
   ;; former. This procedure returns #t if any of the later do 'share'
   ;; some pixels or even a single pixel with the object defined in IMAGE
   ;; by the first bounding box.
-
-  ;; Quick hack, we'll improve this later, to catch exit on the first
-  ;; s-bb that is a seed, if any...
   (match i-bb-s-bbs
     ((i-bb . rest)
-     (let ((n-rest (length rest))
-           (result #f))
-       (do ((i 0
-               (+ i 1)))
-           ((or result
-                (= i n-rest))
-            result)
-         (if (is-a-seed? image seeds i-bb
-                         (list-ref rest i))
-             (set! result #t)))))))
+     (if (null? rest)
+         #f
+         ;; Note that it is essential to first obtain and clean the IMAGE
+         ;; particle given by I-BB
+         (match i-bb
+           ((i-left i-top i-right i-bottom)
+            (let ((i-p-clean (im-particle-clean
+                              (im-crop image i-left i-top (+ i-right 1) (+ i-bottom 1))))
+                  (n-rest (length rest))
+                  (result #f))
+              #;(im-save i-p-clean (%is-a-seed-tmp-filename "i-p-clean-"
+                                                          i-left i-top i-right i-bottom))
+              (do ((i 0
+                      (+ i 1)))
+                  ((or result
+                       (= i n-rest))
+                   result)
+                (if (is-a-seed? i-p-clean i-left i-top seeds i-bb (list-ref rest i))
+                    (set! result #t))))))))))
+
+(define (is-a-seed? i-p-clean i-left i-top seeds i-bb s-bb)
+  (match (shared-bb i-bb s-bb)
+    ((left top right bottom)
+     (let* ((i-p-left (- left i-left))
+            (i-p-top (- top i-top))
+            (i-p-right (- right i-left))
+            (i-p-bottom (- bottom i-top))
+            (i-crop (im-crop i-p-clean i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1)))
+            (i-chan (im-channel i-crop 0))
+            (s-crop (im-crop seeds left top (+ right 1) (+ bottom 1)))
+            (s-chan (im-channel s-crop 0))
+            (result #f))
+       #;(dimfi i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1))
+       #;(im-save i-crop (%is-a-seed-tmp-filename "i-crop-" i-p-left
+                                                i-p-top i-p-right i-p-bottom))
+       #;(im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
+     (match i-crop
+       ((width height _ _)
+        (do ((i 0
+                (+ i 1)))
+            ((or result
+                 (= i (* width height)))
+               result)
+          (if (and (= (f32vector-ref i-chan i) 255.0)
+                   (= (f32vector-ref s-chan i) 255.0))
+              (set! result #t)))))))))
 
 (define (%is-a-seed-tmp-filename prefix left top right bottom)
   (string-append "/tmp/david/guile-cv/"
@@ -320,31 +353,6 @@
                  (number->string right) "-"
                  (number->string bottom) "-"
                  ".png"))
-
-(define (is-a-seed? image seeds i-bb s-bb)
-  (match (shared-bb i-bb s-bb)
-    ((left top right bottom)
-     (let* ((crop-r (+ right 1))
-            (crop-b (+ bottom 1))
-            (i-crop (im-particle-clean (im-crop image left top crop-r crop-b)))
-            (i-chan (im-channel i-crop 0))
-            (s-crop (im-crop seeds left top crop-r crop-b))
-            (s-chan (im-channel s-crop 0))
-            (result #f))
-       ;; (im-save i-crop (%is-a-seed-tmp-filename "i-crop-" left top right bottom))
-       ;; (im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
-       (match i-crop
-         ((width height _ _)
-          (do ((i 0
-                  (+ i 1)))
-              ((or result
-                   (= i (* width height)))
-               (begin
-                 ;; (dimfi left top right bottom "i-bb" i-bb "s-bb" s-bb result)
-                 result))
-            (if (and (= (f32vector-ref i-chan i) 255.0)
-                     (= (f32vector-ref s-chan i) 255.0))
-                (set! result #t)))))))))
 
 (define (shared-bb i-bb s-bb)
   (match i-bb
