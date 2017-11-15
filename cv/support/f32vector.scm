@@ -156,15 +156,15 @@
          (f32vector-ref vector i))
     vectors))
 
-(define* (f32vector-and-at-offset vectors i
-				  #:key (prec 1.0e-4))
+(define (f32vector-and-at-offset vectors i)
   (let ((n-vec (length vectors))
 	(result #t))
     (do ((j 0
 	    (+ j 1)))
 	((or (= j n-vec)
 	     (not result)) result)
-      (unless (float>? (f32vector-ref (list-ref vectors j) i) 0.0 prec)
+      (when (= (f32vector-ref (list-ref vectors j) i)
+               0.0)
 	(set! result #f)))))
 
 (define* (f32vector-or-at-offset vectors i
