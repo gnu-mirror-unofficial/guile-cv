@@ -79,14 +79,13 @@
     (assert-false (f32vector-index pred3 v3 v4))))
 
 (define-method (test-f32vector-range (self <guile-cv-tests-support>))
-  (let ((v1 #f32(-2.0 -10.0 0.0 255.0 20.0))
-        (prec 1.0e-4))
-    (match (f32vector-range v1 #:prec prec)
+  (let ((v1 #f32(-2.0 -10.0 0.0 255.0 20.0)))
+    (match (f32vector-range v1 #:n-cell 5)
       ((mini p-mini maxi p-maxi)
-       (assert-numeric-= mini -10.0 prec)
-       (assert-numeric-= p-mini 1 prec))
-      (assert-numeric-= maxi 255.0 prec)
-      (assert-numeric-= p-maxi 3 prec))))
+       (assert-true (= mini -10.0))
+       (assert-true (= p-mini 1))
+       (assert-true (= maxi 255.0))
+       (assert-true (= p-maxi 3))))))
 
 (define %v1 #f32(2.0 4.0 4.0 4.0 5.0 5.0 7.0 9.0))
 

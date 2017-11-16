@@ -348,11 +348,11 @@
              (eigen-vigra-coord->trigono-coord major-ev-x major-ev-y)
            (receive (minor-ev-trigo-x minor-ev-trigo-y)
                (eigen-vigra-coord->trigono-coord minor-ev-x minor-ev-y)
-             (list (float->int (float-round area 0))
-                   (float->int (float-round left 0))
-                   (float->int (float-round top 0))
-                   (float->int (float-round right 0))
-                   (float->int (float-round bottom 0))
+             (list (float->int area)
+                   (float->int left)
+                   (float->int top)
+                   (float->int right)
+                   (float->int bottom)
                    mean-x mean-y
                    min-r min-g min-b
                    max-r max-g max-b
