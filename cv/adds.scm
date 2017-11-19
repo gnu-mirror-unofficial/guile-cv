@@ -533,8 +533,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                 (+ i 1)))
             ((= i n-cell))
           (f32vector-set! to i
-                          (apply proc
-                                 (f32vector-ref-at-offset channels i))))
+                          (f32vector-reduce-at-offset channels proc 0.0 i)))
         (do ((c (car channels))
              (i 0
                 (+ i 1)))
@@ -729,27 +728,18 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (scrap-cache to-scrap n-label)
   (let ((n-scrap (length to-scrap))
-        (cache (make-vector n-label #f)))
+        (cache (make-s32vector n-label 0)))
     (do ((i 0
             (+ i 1)))
 	((= i n-scrap))
-      (vector-set! cache (list-ref to-scrap i) #t))
+      (s32vector-set! cache (list-ref to-scrap i) 1))
     cache))
 
 (define (im-scrap-channel channel l-channel width height to-scrap n-label)
   (let* ((to (im-copy-channel channel width height))
          (n-cell (* width height))
          (cache (scrap-cache to-scrap n-label)))
-    (do ((i 0
-	    (+ i 1)))
-	((= i n-cell))
-      (let ((val #;(inexact->exact (f32vector-ref l-channel i))
-                 (float->int (f32vector-ref l-channel i))))
-        (f32vector-set! to i
-                        (if (or (zero? val)
-                                (vector-ref cache val))
-                            0.0
-                            (f32vector-ref channel i)))))
+    (f32vector-scrap channel l-channel n-cell cache to)
     to))
 
 (define* (im-particles image features #:key (clean #t))
@@ -769,9 +759,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (values (map car particles)
             (map cadr particles))))
 
-(define (im-particle-clean particle)
-  (let* ((binary? (im-binary? particle))
-         (p-bin (if binary? particle (im-threshold particle 1.0)))
+(define* (im-particle-clean particle #:key (binary? #t))
+  (let* ((p-bin (if binary? particle (im-threshold particle 1.0)))
          (p-clean (match p-bin
                     ((width height n-chan idata)
                      (receive (p-label n-label)
@@ -806,8 +795,45 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                               ((= i n-cell) p-bin-chan)
                                             (let ((val
                                                    (float->int (f32vector-ref p-label-chan i))))
-                                              (when (vector-ref cache val)
+                                              ;; (when (vector-ref cache val)
+                                              (unless (= (s32vector-ref cache val) 0)
                                                 (f32vector-set! p-bin-chan i 0.0)))))))))))))))
     (if binary?
         p-clean
         (im-and particle p-clean))))
+
+
+#!
+
+;; ok for small images, but too slow otherwise so, till Guile-3.0, I
+;; have to do this in C instead which is fine anyway, because memory is
+;; allocated on the scheme side. Let's keep these for now, once
+;; Guile-3.0 is out, it will be nice to try and compare with those
+;; versions hsing libgule-cv.
+
+(define (scrap-cache to-scrap n-label)
+  (let ((n-scrap (length to-scrap))
+        (cache (make-vector n-label #f)))
+    (do ((i 0
+            (+ i 1)))
+	((= i n-scrap))
+      (vector-set! cache (list-ref to-scrap i) #t))
+    cache))
+
+(define (im-scrap-channel channel l-channel width height to-scrap n-label)
+  (let* ((to (im-copy-channel channel width height))
+         (n-cell (* width height))
+         (cache (scrap-cache to-scrap n-label)))
+    (do ((i 0
+	    (+ i 1)))
+	((= i n-cell))
+      (let ((val #;(inexact->exact (f32vector-ref l-channel i))
+                 (float->int (f32vector-ref l-channel i))))
+        (f32vector-set! to i
+                        (if (or (zero? val)
+                                (vector-ref cache val))
+                            0.0
+                            (f32vector-ref channel i)))))
+    to))
+
+!#
