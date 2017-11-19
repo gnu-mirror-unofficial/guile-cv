@@ -23,4 +23,14 @@
 
 */
 
-int floattoint (float f);
+int float_to_int_c (float f);
+
+int f32vector_min_c (float *v, int len, float *r);
+int f32vector_max_c (float *v, int len, float *r);
+int f32vector_range_c (float *v, int len, float *r);
+
+int f32vector_scrap_c (float *chan,
+                       float *l_chan,
+                       int n_cell,
+                       int *scrap_cache,
+                       float *to);

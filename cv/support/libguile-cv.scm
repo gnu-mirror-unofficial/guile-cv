@@ -30,11 +30,49 @@
   #:use-module (system foreign)
   #:use-module (cv init)
 
-  #:export (float->int))
+  #:export (float-to-int-c
+            f32vector-min-c
+            f32vector-max-c
+            f32vector-range-c
+            f32vector-scrap-c))
 
 
-(define float->int
+(define float-to-int-c
   (pointer->procedure int
-                      (dynamic-func "floattoint"
+                      (dynamic-func "float_to_int_c"
                                     %libguile-cv)
                       (list float)))
+
+(define f32vector-min-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_min_c"
+                                    %libguile-cv)
+                      (list '*		;; channel
+                            int		;; n-cell
+                            '*)))	;; result vector
+
+(define f32vector-max-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_max_c"
+                                    %libguile-cv)
+                      (list '*		;; channel
+                            int		;; n-cell
+                            '*)))	;; result vector
+
+(define f32vector-range-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_range_c"
+                                    %libguile-cv)
+                      (list '*		;; channel
+                            int		;; n-cell
+                            '*)))	;; result vector
+
+(define f32vector-scrap-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_scrap_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            '*		;; l-chan
+                            int		;; n-cell
+                            '*		;; scrap-cache
+                            '*)))	;; to

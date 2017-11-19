@@ -23,10 +23,79 @@
 
 */
 
-int floattoint (float f)
+int float_to_int_c (float f)
 {
   int i;
 
   i = (int)f;
   return (i);
+}
+
+int f32vector_min_c (float *v, int n_cell, float *r)
+{
+  int i;
+
+  r[0] = v[0];
+  r[1] = 0.0;
+  for (i = 1; i < n_cell; i++) {
+    if (v[i] < r[0]) {
+        r[0] = v[i];
+        r[1] = (float)i;
+    }
+  }
+  return 1;
+}
+
+int f32vector_max_c (float *v, int n_cell, float *r)
+{
+  int i;
+
+  r[0] = v[0];
+  r[1] = 0.0;
+  for (i = 1; i < n_cell; i++) {
+    if (v[i] > r[0]) {
+      r[0] = v[i];
+      r[1] = (float)i;
+    }
+  }
+  return 1;
+}
+
+int f32vector_range_c (float *v, int n_cell, float *r)
+{
+  int i;
+
+  r[0] = r[2] = v[0];
+  r[1] = r[3] = 0.0;
+  for (i = 1; i < n_cell; i++) {
+    if (v[i] < r[0]) {
+      r[0] = v[i];
+      r[1] = (float)i;
+    }
+    if (v[i] > r[2]) {
+      r[2] = v[i];
+      r[3] = (float)i;
+    }
+  }
+  return 1;
+}
+
+int f32vector_scrap_c (float *chan,
+                       float *l_chan,
+                       int n_cell,
+                       int *scrap_cache,
+                       float *to)
+{
+  int i, val;
+
+  for (i = 0; i < n_cell; i++) {
+    val = (int)l_chan[i];
+    if ((val == 0) | (scrap_cache[val] == 1)) {
+      to[i] = 0;
+    }
+    else {
+      to[i] = chan[i];
+    }
+  }
+  return 1;
 }
