@@ -28,6 +28,7 @@
 
 (define-module (cv support float)
   #:use-module (ice-9 match)
+  #:use-module (cv support libguile-cv)
 
   #:export (float-zero?
 	    float=?
@@ -36,7 +37,8 @@
 	    float>?
 	    float>=?
 	    float-round
-	    float-member))
+	    float-member
+            float->int))
 
 
 (define* (float-zero? f1 #:optional (prec 1.0e-4))
@@ -85,3 +87,10 @@
 		result) result)
 	 (when (float=? f (list-ref vals i) prec)
 	   (set! result i)))))))
+
+
+;;;
+;;; From liguile-cv
+;;;
+
+(define float->int float-to-int-c)

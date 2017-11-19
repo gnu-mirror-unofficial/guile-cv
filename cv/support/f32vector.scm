@@ -36,9 +36,10 @@
   #:use-module (cv support float)
   #:use-module (cv support libguile-cv)
 
-  #:export (f32vector-range
-            f32vector-min
+  #:export (f32vector-min
 	    f32vector-max
+            f32vector-range
+            f32vector-scrap
             f32vector-reduce
             f32vector-mean
             f32vector-std-dev
@@ -48,6 +49,7 @@
 	    f32vector-and-at-offset
 	    f32vector-or-at-offset
             f32vector-xor-at-offset
+            f32vector-reduce-at-offset
 	    f32vector-sum-at-offset
 	    f32vector-mean-at-offset
 	    f32vector=-at-offset?
@@ -61,36 +63,51 @@
             f32vector->s32vector))
 
 
-(define* (f32vector-range v #:key (prec 1.0e-4))
-  (let ((n-cell (f32vector-length v)))
-    (case n-cell
-      ((0) (error "Empty vector: " v))
-      (else
-       (do ((mini (f32vector-ref v 0))
-            (maxi (f32vector-ref v 0))
-            (p-mini 0)
-            (p-maxi 0)
-            (i 1
-               (+ i 1)))
-           ((= i n-cell)
-            (list mini p-mini maxi p-maxi))
-         (let ((val (f32vector-ref v i)))
-           (when (float<? val mini prec)
-             (set! mini val)
-             (set! p-mini i))
-           (when (float>? val maxi)
-             (set! maxi val)
-             (set! p-maxi i))))))))
+;;;
+;;; Using libguile-cv
+;;;
 
-(define* (f32vector-min v #:key (prec 1.0e-4))
-  (match (f32vector-range v #:prec prec)
-    ((mini p-mini maxi p-maxi)
-     (values mini p-mini))))
+(define* (f32vector-min v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v)))
+        (r (make-f32vector 2 0.0)))
+    (f32vector-min-c (bytevector->pointer v)
+                     n-cell
+                     (bytevector->pointer r))
+    (values (f32vector-ref r 0)
+            (float->int (f32vector-ref r 1)))))
 
-(define* (f32vector-max v #:key (prec 1.0e-4))
-  (match (f32vector-range v #:prec prec)
-    ((mini p-mini maxi p-maxi)
-     (values maxi p-maxi))))
+(define* (f32vector-max v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v)))
+        (r (make-f32vector 2 0.0)))
+    (f32vector-max-c (bytevector->pointer v)
+                     n-cell
+                     (bytevector->pointer r))
+    (values (f32vector-ref r 0)
+            (float->int (f32vector-ref r 1)))))
+
+(define* (f32vector-range v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v)))
+        (r (make-f32vector 4 0.0)))
+    (f32vector-range-c (bytevector->pointer v)
+                       n-cell
+                       (bytevector->pointer r))
+    (values (list (f32vector-ref r 0)
+                  (float->int (f32vector-ref r 1))
+                  (f32vector-ref r 2)
+                  (float->int (f32vector-ref r 3)))
+            r)))
+
+(define (f32vector-scrap channel l-channel n-cell scrap-cache to)
+  (f32vector-scrap-c (bytevector->pointer channel)
+                     (bytevector->pointer l-channel)
+                     n-cell
+                     (bytevector->pointer scrap-cache)
+                     (bytevector->pointer to)))
+
+
+;;;
+;;; Pure scheme code
+;;;
 
 (define* (f32vector-reduce v proc default #:key (n-cell #f))
   (let ((n-cell (or n-cell
@@ -193,10 +210,19 @@
                        (float->int (f32vector-ref vector i)))
                   vectors)))
 
+(define (f32vector-reduce-at-offset vectors proc default i)
+  (if (null? vectors)
+      default
+      (let ((n-vec (length vectors))
+            (result (f32vector-ref (list-ref vectors 0) i)))
+        (do ((j 1
+                (+ j 1)))
+            ((= j n-vec) result)
+          (set! result
+                (proc result (f32vector-ref (list-ref vectors j) i)))))))
+
 (define (f32vector-sum-at-offset vectors i)
-  (reduce +
-	  0.0
-          (f32vector-ref-at-offset vectors i)))
+  (f32vector-reduce-at-offset vectors + 0.0 i))
 
 (define (f32vector-mean-at-offset vectors i)
   (let ((n-vec (length vectors)))
@@ -372,3 +398,72 @@
 		      (list '*		;; from channel
 			    '*		;; to channel
 			    int)))	;; size
+
+
+;;;
+;;; In C - kept for Guile-3.0
+;;;
+
+#!
+
+;; ok for small images, but too slow otherwse so, till Guile-3.0, I have
+;; to do this in C instead which is fine anyway, because memory is
+;; allocated on the scheme side.
+
+(define* (f32vector-min v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v))))
+    (case n-cell
+      ((0)
+       (error "Empty vector: " v))
+      (else
+       (do ((mini (f32vector-ref v 0))
+            (p-mini 0)
+            (i 1
+               (+ i 1)))
+           ((= i n-cell)
+            (values mini p-mini))
+         (let ((val (f32vector-ref v i)))
+           (when (< val mini)
+             (set! mini val)
+             (set! p-mini i))))))))
+
+(define* (f32vector-max v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v))))
+    (case n-cell
+      ((0)
+       (error "Empty vector: " v))
+      (else
+       (do ((maxi (f32vector-ref v 0))
+            (p-maxi 0)
+            (i 1
+               (+ i 1)))
+           ((= i n-cell)
+            (values maxi p-maxi))
+         (let ((val (f32vector-ref v i)))
+           (when (> val maxi)
+             (set! maxi val)
+             (set! p-maxi i))))))))
+
+(define* (f32vector-range v #:key (n-cell #f))
+  (let ((n-cell (if n-cell n-cell (f32vector-length v))))
+    (case n-cell
+      ((0)
+       (error "Empty vector: " v))
+      (else
+       (do ((mini (f32vector-ref v 0))
+            (maxi (f32vector-ref v 0))
+            (p-mini 0)
+            (p-maxi 0)
+            (i 1
+               (+ i 1)))
+           ((= i n-cell)
+            (list mini p-mini maxi p-maxi))
+         (let ((val (f32vector-ref v i)))
+           (when (< val mini)
+             (set! mini val)
+             (set! p-mini i))
+           (when (> val maxi)
+             (set! maxi val)
+             (set! p-maxi i))))))))
+
+!#
