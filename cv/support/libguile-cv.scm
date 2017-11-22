@@ -36,7 +36,8 @@
             f32vector-max-c
             f32vector-range-c
             f32vector-scrap-c
-            f32vector-add-vectors-c))
+            f32vector-add-vectors-c
+            f32vector-subtract-vectors-c))
 
 
 (define float-to-int-c
@@ -88,6 +89,15 @@
 (define f32vector-add-vectors-c
   (pointer->procedure int
                       (dynamic-func "f32vector_add_vectors_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors
+
+(define f32vector-subtract-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_subtract_vectors_c"
                                     %libguile-cv)
                       (list '*		;; to
                             int		;; n-cell

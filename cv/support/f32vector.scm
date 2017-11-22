@@ -42,6 +42,7 @@
             f32vector-range
             f32vector-scrap
             f32vector-add-vectors
+            f32vector-subtract-vectors
             f32vector-reduce
             f32vector-mean
             f32vector-std-dev
@@ -132,6 +133,22 @@
                                n-cell
                                (bytevector->pointer v-ptr)
                                n-chan)
+    to)))
+
+(define (f32vector-subtract-vectors to n-cell channels)
+  (receive (maker setter!)
+      (get-v-ptr-maker-setter)
+    (let* ((n-chan (length channels))
+           (v-ptr (maker n-chan 0)))
+      (for-each (lambda (chan i)
+                  (setter! v-ptr i
+                           (pointer-address (bytevector->pointer chan))))
+          channels
+        (iota n-chan))
+      (f32vector-subtract-vectors-c (bytevector->pointer to)
+                                    n-cell
+                                    (bytevector->pointer v-ptr)
+                                    n-chan)
     to)))
 
 

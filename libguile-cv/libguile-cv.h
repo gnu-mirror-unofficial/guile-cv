@@ -41,3 +41,8 @@ int f32vector_add_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],
                              int n_vectors);
+
+int f32vector_subtract_vectors_c (float *to,
+                                  int n_cell,
+                                  float *v_ptr[],
+                                  int n_vectors);

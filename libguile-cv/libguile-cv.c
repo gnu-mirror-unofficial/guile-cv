@@ -128,3 +128,20 @@ int f32vector_add_vectors_c (float *to,
   }
   return 1;
 }
+
+int f32vector_subtract_vectors_c (float *to,
+                                  int n_cell,
+                                  float *v_ptr[],
+                                  int n_vectors)
+{
+  int i, j, result;
+
+  for (i = 0; i < n_cell; i++) {
+    result = v_ptr[0][i];
+    for (j = 1; j < n_vectors; j++) {
+      result -= v_ptr[j][i];
+    }
+    to[i] = result;
+  }
+  return 1;
+}
