@@ -33,6 +33,7 @@ libguile-cv/.deps/
 libguile-cv/.libs/
 libguile-cv/libguile-cv.la
 libguile-cv/libguile-cv.lo
+libguile-cv/libguile_cv_la-libguile-cv.lo
 *~
 *.aux
 *.cp
