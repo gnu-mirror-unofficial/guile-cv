@@ -23,7 +23,9 @@
 
 */
 
+
 int float_to_int_c (float f);
+size_t pointer_address_size_c ();
 
 int f32vector_min_c (float *v, int len, float *r);
 int f32vector_max_c (float *v, int len, float *r);
@@ -34,3 +36,8 @@ int f32vector_scrap_c (float *chan,
                        int n_cell,
                        int *scrap_cache,
                        float *to);
+
+int f32vector_add_vectors_c (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors);

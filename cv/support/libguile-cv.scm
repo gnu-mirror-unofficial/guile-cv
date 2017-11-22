@@ -31,10 +31,12 @@
   #:use-module (cv init)
 
   #:export (float-to-int-c
+            pointer-address-size-c
             f32vector-min-c
             f32vector-max-c
             f32vector-range-c
-            f32vector-scrap-c))
+            f32vector-scrap-c
+            f32vector-add-vectors-c))
 
 
 (define float-to-int-c
@@ -42,6 +44,12 @@
                       (dynamic-func "float_to_int_c"
                                     %libguile-cv)
                       (list float)))
+
+(define pointer-address-size-c
+  (pointer->procedure size_t
+                      (dynamic-func "pointer_address_size_c"
+                                    %libguile-cv)
+                      (list)))
 
 (define f32vector-min-c
   (pointer->procedure int
@@ -76,3 +84,12 @@
                             int		;; n-cell
                             '*		;; scrap-cache
                             '*)))	;; to
+
+(define f32vector-add-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_add_vectors_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors

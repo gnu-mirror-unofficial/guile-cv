@@ -23,12 +23,24 @@
 
 */
 
+#include <stddef.h>
+#include <limits.h>
+/* #include <libguile.h> */
+
+
 int float_to_int_c (float f)
 {
   int i;
 
   i = (int)f;
   return (i);
+}
+
+size_t pointer_address_size_c ()
+{
+  size_t n = sizeof(float *) * CHAR_BIT;
+
+  return n;
 }
 
 int f32vector_min_c (float *v, int n_cell, float *r)
@@ -96,6 +108,23 @@ int f32vector_scrap_c (float *chan,
     else {
       to[i] = chan[i];
     }
+  }
+  return 1;
+}
+
+int f32vector_add_vectors_c (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors)
+{
+  int i, j, sum;
+
+  for (i = 0; i < n_cell; i++) {
+    sum = 0;
+    for (j = 0; j < n_vectors; j++) {
+      sum += v_ptr[j][i];
+    }
+    to[i] = sum;
   }
   return 1;
 }
