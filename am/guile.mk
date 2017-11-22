@@ -29,8 +29,7 @@ nobase_go_DATA = $(GOBJECTS)
 AM_CFLAGS = -I. -I$(srcdir) $(WARN_CFLAGS) $(DEBUG_CFLAGS)
 
 # For overriding from the command line (e.g. --debug)
-GUILE_FLAGS =
-
+# GUILE_FLAGS =
 
 # Make sure source files are installed first, so that the mtime of
 # installed compiled files is greater than that of installed source

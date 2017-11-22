@@ -35,11 +35,18 @@ libguile_cv_SOURCES = \
 	libguile-cv.c		\
 	libguile-cv.h
 
-libguile_cv_CFLAGS = \
+libguile_cv_la_CFLAGS = \
 	$(AM_CFLAGS) $(GUILE_CFLAGS)
 
-libguile_cv_LIBADD = $(GUILE_LIBS)
+libguile_cv_la_LIBS = \
+	$(GUILE_LIBS)
 
-libguile_cv_LDFLAGS = -module
+libguile_cv_la_LDFLAGS = \
+	 $(GUILE_LDFLAGS)
+
+printenv:
+	printf '$(libguile_cv_la_CFLAGS)\n' \
+	printf '$(libguile_cv_la_LIBS)\n'   \
+	printf '$(libguile_cv_la_LDFLAGS)\n'
 
 # Makefile.am ends here
