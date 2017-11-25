@@ -390,11 +390,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-subtract-vectors to n-cell channels)))
 
 
-(define-method (im-multiply image (val <number>))
+#;(define-method (im-multiply image (val <number>))
   (im-map (lambda (p-val) (* p-val val)) image))
 
-(define-method (im-multiply-channel channel width height (val <number>))
+#;(define-method (im-multiply-channel channel width height (val <number>))
   (im-map-channel (lambda (p-val) (* p-val val)) width height channel))
+
+(define-method (im-multiply image (val <number>))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+             (map-proc (lambda (channel)
+                         (im-multiply-channel channel width height val))
+                 idata))))))
+
+(define-method (im-multiply-channel channel width height (val <number>))
+  (f32vector-multiply-value channel (* width height) val))
 
 (define (im-multiply-1 prev images)
   (if (null? images)
