@@ -55,7 +55,7 @@ int f32vector_min_c (float *v, int n_cell, float *r)
         r[1] = (float)i;
     }
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_max_c (float *v, int n_cell, float *r)
@@ -70,7 +70,7 @@ int f32vector_max_c (float *v, int n_cell, float *r)
       r[1] = (float)i;
     }
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_range_c (float *v, int n_cell, float *r)
@@ -89,7 +89,7 @@ int f32vector_range_c (float *v, int n_cell, float *r)
       r[3] = (float)i;
     }
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_scrap_c (float *chan,
@@ -109,7 +109,7 @@ int f32vector_scrap_c (float *chan,
       to[i] = chan[i];
     }
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_add_value_c (float *to,
@@ -121,7 +121,7 @@ int f32vector_add_value_c (float *to,
   for (i = 0; i < n_cell; i++) {
      to[i] += val;
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_add_vectors_c (float *to,
@@ -138,7 +138,7 @@ int f32vector_add_vectors_c (float *to,
     }
     to[i] = sum;
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_subtract_value_c (float *to,
@@ -150,7 +150,7 @@ int f32vector_subtract_value_c (float *to,
   for (i = 0; i < n_cell; i++) {
      to[i] -= val;
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_subtract_vectors_c (float *to,
@@ -167,7 +167,7 @@ int f32vector_subtract_vectors_c (float *to,
     }
     to[i] = result;
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_multiply_value_c (float *to,
@@ -179,7 +179,7 @@ int f32vector_multiply_value_c (float *to,
   for (i = 0; i < n_cell; i++) {
      to[i] *= val;
   }
-  return 1;
+  return 0;
 }
 
 int f32vector_divide_value_c (float *to,
@@ -191,5 +191,5 @@ int f32vector_divide_value_c (float *to,
   for (i = 0; i < n_cell; i++) {
      to[i] /= val;
   }
-  return 1;
+  return 0;
 }
