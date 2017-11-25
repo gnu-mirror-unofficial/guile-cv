@@ -54,3 +54,7 @@ int f32vector_subtract_vectors_c (float *to,
                                   int n_cell,
                                   float *v_ptr[],
                                   int n_vectors);
+
+int f32vector_multiply_value_c (float *to,
+                                int n_cell,
+                                float val);

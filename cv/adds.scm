@@ -340,6 +340,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define-method (im-add-channel channel width height (val <number>))
   (f32vector-add-value channel (* width height) val))
 
+
 #;(define-method (im-add . images)
   (apply im-map + images))
 

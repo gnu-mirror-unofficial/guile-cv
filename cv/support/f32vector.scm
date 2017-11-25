@@ -45,6 +45,7 @@
             f32vector-add-vectors
             f32vector-subtract-value
             f32vector-subtract-vectors
+            f32vector-multiply-value
             f32vector-reduce
             f32vector-mean
             f32vector-std-dev
@@ -164,6 +165,12 @@
                                     (bytevector->pointer v-ptr)
                                     n-chan)
     to)))
+
+(define (f32vector-multiply-value to n-cell val)
+  (f32vector-multiply-value-c (bytevector->pointer to)
+                              n-cell
+                              val)
+  to)
 
 
 ;;;
