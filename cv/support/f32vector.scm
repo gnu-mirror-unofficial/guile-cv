@@ -43,6 +43,7 @@
             f32vector-scrap
             f32vector-add-value
             f32vector-add-vectors
+            f32vector-subtract-value
             f32vector-subtract-vectors
             f32vector-reduce
             f32vector-mean
@@ -141,6 +142,12 @@
                                (bytevector->pointer v-ptr)
                                n-chan)
     to)))
+
+(define (f32vector-subtract-value to n-cell val)
+  (f32vector-subtract-value-c (bytevector->pointer to)
+                              n-cell
+                              val)
+  to)
 
 (define (f32vector-subtract-vectors to n-cell channels)
   (receive (maker setter!)

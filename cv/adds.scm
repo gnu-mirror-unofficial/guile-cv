@@ -355,11 +355,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-add-vectors to n-cell channels)))
 
 
-(define-method (im-subtract image (val <number>))
+#;(define-method (im-subtract image (val <number>))
   (im-map (lambda (p-val) (- p-val val)) image))
 
-(define-method (im-subtract-channel channel width height (val <number>))
+#;(define-method (im-subtract-channel channel width height (val <number>))
   (im-map-channel (lambda (p-val) (- p-val val)) width height channel))
+
+(define-method (im-subtract image (val <number>))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+             (map-proc (lambda (channel)
+                         (im-subtract-channel channel width height val))
+                 idata))))))
+
+(define-method (im-subtract-channel channel width height (val <number>))
+  (f32vector-subtract-value channel (* width height) val))
 
 #;(define-method (im-subtract . images)
   (apply im-map - images))

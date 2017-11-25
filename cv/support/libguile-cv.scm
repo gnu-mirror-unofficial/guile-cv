@@ -38,6 +38,7 @@
             f32vector-scrap-c
             f32vector-add-value-c
             f32vector-add-vectors-c
+            f32vector-subtract-value-c
             f32vector-subtract-vectors-c))
 
 
@@ -103,6 +104,14 @@
                             int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-subtract-value-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_subtract_value_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            float)))	;; value
 
 (define f32vector-subtract-vectors-c
   (pointer->procedure int
