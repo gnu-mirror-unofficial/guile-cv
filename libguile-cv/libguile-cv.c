@@ -112,6 +112,18 @@ int f32vector_scrap_c (float *chan,
   return 1;
 }
 
+int f32vector_add_value_c (float *to,
+                           int n_cell,
+                           float val)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+     to[i] += val;
+  }
+  return 1;
+}
+
 int f32vector_add_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],

@@ -41,6 +41,7 @@
 	    f32vector-max
             f32vector-range
             f32vector-scrap
+            f32vector-add-value
             f32vector-add-vectors
             f32vector-subtract-vectors
             f32vector-reduce
@@ -118,6 +119,12 @@
                s64vector-set!))
       (else
        (error "Unkown pointer address size:" p-size)))))
+
+(define (f32vector-add-value to n-cell val)
+  (f32vector-add-value-c (bytevector->pointer to)
+                         n-cell
+                         val)
+  to)
 
 (define (f32vector-add-vectors to n-cell channels)
   (receive (maker setter!)

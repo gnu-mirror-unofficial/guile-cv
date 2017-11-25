@@ -37,6 +37,10 @@ int f32vector_scrap_c (float *chan,
                        int *scrap_cache,
                        float *to);
 
+int f32vector_add_value_c (float *to,
+                           int n_cell,
+                           float val);
+
 int f32vector_add_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],

@@ -321,12 +321,24 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                               (zip idata-1 idata-2))))
             (error "Size missmatch.")))))))
 
-
-(define-method (im-add image (val <number>))
+#;(define-method (im-add image (val <number>))
   (im-map (lambda (p-val) (+ p-val val)) image))
 
-(define-method (im-add-channel channel width height (val <number>))
+#;(define-method (im-add-channel channel width height (val <number>))
   (im-map-channel (lambda (p-val) (+ p-val val)) width height channel))
+
+(define-method (im-add image (val <number>))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+             (map-proc (lambda (channel)
+                         (im-add-channel channel width height val))
+                 idata))))))
+
+(define-method (im-add-channel channel width height (val <number>))
+  (f32vector-add-value channel (* width height) val))
 
 #;(define-method (im-add . images)
   (apply im-map + images))
@@ -441,6 +453,16 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (else
      (error "Wrong arguments:" rest))))
 
+
+(define-method (im-map-la im-map-la-channel image (val <number>))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+             (map-proc (lambda (channel)
+                         (apply im-map-la-channel width height channel val))
+                 idata))))))
 
 (define-method (im-map-la im-map-la-channel images)
   (match images
