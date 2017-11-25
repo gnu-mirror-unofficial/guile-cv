@@ -40,7 +40,8 @@
             f32vector-add-vectors-c
             f32vector-subtract-value-c
             f32vector-subtract-vectors-c
-            f32vector-multiply-vectors-c))
+            f32vector-multiply-value-c
+            f32vector-divide-value-c))
 
 
 (define float-to-int-c
@@ -126,6 +127,14 @@
 (define f32vector-multiply-value-c
   (pointer->procedure int
                       (dynamic-func "f32vector_multiply_value_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            float)))	;; value
+
+(define f32vector-divide-value-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_divide_value_c"
                                     %libguile-cv)
                       (list '*		;; to
                             int		;; n-cell

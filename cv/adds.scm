@@ -441,12 +441,28 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
      (error "Wrong arguments:" rest))))
 
 
-(define-method (im-divide image (val <number>))
+#;(define-method (im-divide image (val <number>))
   (im-map (lambda (p-val) (/ p-val val)) image))
 
-(define-method (im-divide-channel channel width height (val <number>))
+#;(define-method (im-divide-channel channel width height (val <number>))
   (im-map-channel (lambda (p-val) (/ p-val val)) width height channel))
 
+(define-method (im-divide image (val <number>))
+  (if (= val 0.0)
+      (error "Attempt to divide by 0")
+      (match image
+        ((width height n-chan idata)
+         (list width height n-chan
+               (let ((map-proc (if (and (> n-chan 1)
+                                        (%use-par-map)) par-map map)))
+                 (map-proc (lambda (channel)
+                             (im-divide-channel channel width height val))
+                     idata)))))))
+
+(define-method (im-divide-channel channel width height (val <number>))
+  (if (= val 0.0)
+      (error "Attempt to divide by 0")
+      (f32vector-divide-value channel (* width height) val)))
 
 (define (im-divide-1 prev images)
   (if (null? images)

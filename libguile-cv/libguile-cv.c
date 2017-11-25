@@ -181,3 +181,15 @@ int f32vector_multiply_value_c (float *to,
   }
   return 1;
 }
+
+int f32vector_divide_value_c (float *to,
+                              int n_cell,
+                              float val)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+     to[i] /= val;
+  }
+  return 1;
+}
