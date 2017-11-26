@@ -23,6 +23,7 @@
 
 */
 
+#include <stdio.h>
 #include <stddef.h>
 #include <limits.h>
 /* #include <libguile.h> */
@@ -188,8 +189,14 @@ int f32vector_divide_value_c (float *to,
 {
   int i;
 
-  for (i = 0; i < n_cell; i++) {
-     to[i] /= val;
+  if (val == 0) {
+    printf ("ERROR: Attempt to divide by 0");
+    return -1;
   }
-  return 0;
+  else {
+    for (i = 0; i < n_cell; i++) {
+      to[i] /= val;
+    }
+    return 0;
+  }
 }
