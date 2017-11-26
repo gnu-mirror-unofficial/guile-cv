@@ -94,9 +94,10 @@
   (pointer->procedure int
                       (dynamic-func "f32vector_add_value_c"
                                     %libguile-cv)
-                      (list '*		;; to
+                      (list '*		;; chan
                             int		;; n-cell
-                            float)))	;; value
+                            float	;; value
+                            '*)))	;; to
 
 (define f32vector-add-vectors-c
   (pointer->procedure int
@@ -111,9 +112,10 @@
   (pointer->procedure int
                       (dynamic-func "f32vector_subtract_value_c"
                                     %libguile-cv)
-                      (list '*		;; to
+                      (list '*		;; chan
                             int		;; n-cell
-                            float)))	;; value
+                            float	;; value
+                            '*)))	;; to
 
 (define f32vector-subtract-vectors-c
   (pointer->procedure int
@@ -128,14 +130,16 @@
   (pointer->procedure int
                       (dynamic-func "f32vector_multiply_value_c"
                                     %libguile-cv)
-                      (list '*		;; to
+                      (list '*		;; chan
                             int		;; n-cell
-                            float)))	;; value
+                            float	;; value
+                            '*)))	;; to
 
 (define f32vector-divide-value-c
   (pointer->procedure int
                       (dynamic-func "f32vector_divide_value_c"
                                     %libguile-cv)
-                      (list '*		;; to
+                      (list '*		;; chan
                             int		;; n-cell
-                            float)))	;; value
+                            float	;; value
+                            '*)))	;; to

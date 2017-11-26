@@ -123,11 +123,13 @@
       (else
        (error "Unkown pointer address size:" p-size)))))
 
-(define (f32vector-add-value to n-cell val)
-  (f32vector-add-value-c (bytevector->pointer to)
-                         n-cell
-                         val)
-  to)
+(define* (f32vector-add-value channel val to #:key (n-cell #f))
+  (let ((n-cell (or n-cell (f32vector-length channel))))
+    (f32vector-add-value-c (bytevector->pointer channel)
+                           n-cell
+                           val
+                           (bytevector->pointer to))
+    to))
 
 (define (f32vector-add-vectors to n-cell channels)
   (receive (maker setter!)
@@ -145,11 +147,13 @@
                                n-chan)
     to)))
 
-(define (f32vector-subtract-value to n-cell val)
-  (f32vector-subtract-value-c (bytevector->pointer to)
-                              n-cell
-                              val)
-  to)
+(define* (f32vector-subtract-value channel val to #:key (n-cell #f))
+  (let ((n-cell (or n-cell (f32vector-length channel))))
+    (f32vector-subtract-value-c (bytevector->pointer channel)
+                                n-cell
+                                val
+                                (bytevector->pointer to))
+    to))
 
 (define (f32vector-subtract-vectors to n-cell channels)
   (receive (maker setter!)
@@ -167,19 +171,22 @@
                                     n-chan)
     to)))
 
-(define (f32vector-multiply-value to n-cell val)
-  (f32vector-multiply-value-c (bytevector->pointer to)
-                              n-cell
-                              val)
-  to)
+(define* (f32vector-multiply-value channel val to #:key (n-cell #f))
+  (let ((n-cell (or n-cell (f32vector-length channel))))
+    (f32vector-multiply-value-c (bytevector->pointer channel)
+                                n-cell
+                                val
+                                (bytevector->pointer to))
+    to))
 
-(define (f32vector-divide-value to n-cell val)
+(define* (f32vector-divide-value channel val to #:key (n-cell #f))
   (if (= val 0.0)
       (error "Attempt to divide by 0")
-      (begin
-        (f32vector-divide-value-c (bytevector->pointer to)
+      (let ((n-cell (or n-cell (f32vector-length channel))))
+        (f32vector-divide-value-c (bytevector->pointer channel)
                                   n-cell
-                                  val)
+                                  val
+                                  (bytevector->pointer to))
         to)))
 
 
