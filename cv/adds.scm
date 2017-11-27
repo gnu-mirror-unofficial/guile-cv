@@ -654,7 +654,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                             (proc (f32vector-ref c i)))))
     to))
 
-(define (im-and . images)
+
+#;(define (im-and . images)
   (match images
     ((image . rest)
      (match image
@@ -679,6 +680,42 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	    (error "Size mismatch.")))))
     ((image) image)
     (() (error "Invalid argument: " images))))
+
+(define (im-and . images)
+  (match images
+    ((i1 . rest)
+     (match i1
+       ((width height n-chan idata)
+	(if (and (apply = (apply im-collect 'width images))
+                 (apply = (apply im-collect 'height images)))
+            (let ((c-rest (apply im-collect 'gray (map im-rgb->gray rest))))
+              (match idata
+                ((c1 . rest)
+                 (let ((c-and (apply im-and-channel width height c-rest)))
+                   (list width height n-chan
+                         (let ((map-proc (if (and (> n-chan 1)
+                                                  (%use-par-map)) par-map map)))
+                           (map-proc (lambda (chan)
+                                       (im-and-channel width height chan c-and))
+                               idata)))))
+                ((c)
+                 (list width height n-chan
+                       (apply im-and-channel width height
+                              (cons c c-rest))))))
+	    (error "Size mismatch.")))))
+    ((image) image)
+    (() (error "Invalid argument: " images))))
+
+(define (im-and-channel width height . channels)
+  (match channels
+    ((c1 . rest)
+     (let ((n-cell (* width height))
+           (to (im-make-channel width height)))
+       (f32vector-and-vectors to n-cell channels)))
+    ((c1) c1)
+    (else
+     (error "Invalid argument:" channels))))
+
 
 (define (im-or . images)
   (match images

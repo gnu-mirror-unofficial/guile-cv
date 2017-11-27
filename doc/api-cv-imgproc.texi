@@ -57,6 +57,7 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-reduce}
 @item @ref{im-reduce-channel}
 @item @ref{im-and}
+@item @ref{im-and-channel}
 @item @ref{im-or}
 @item @ref{im-xor}
 @item @ref{im-complement}
@@ -443,19 +444,21 @@ $3 = 556197.0
 
 
 @anchor{im-and}
+@anchor{im-and-channel}
 @anchor{im-or}
 @anchor{im-xor}
 @deffn Procedure im-and i1 i2 i3 @dots{}
+@deffnx Procedure im-and-channel width height c1 c2 c3 @dots{}
 @deffnx Procedure im-or i1 i2 i3 @dots{}
 @deffnx Procedure im-xor i1 i2 i3 @dots{}
 
 Returns @var{image} if one argument only, otherwise, it returns a new
-image, as the result of computing the logical @code{AND}, @code{OR} or
-@code{XOR} of all images.
+image or channel, as the result of computing the logical @code{AND},
+@code{OR} or @code{XOR} of all images or channels.
 
 In the case of @code{AND}, for all positive results, the pixel values
 (of each channel) of the new image are set to the one obtained from
-@var{i1}, and @code{0.0} otherwise.
+@var{i1} or @var{c1} respectively, and @code{0.0} otherwise.
 
 In the case of @code{OR}, the pixel values (of each channel) of the new
 image are set to the one obtained from @var{i1} when it is @code{> 0.0},

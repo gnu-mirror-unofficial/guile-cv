@@ -204,3 +204,27 @@ int f32vector_divide_value_c (float *v,
     return 0;
   }
 }
+
+int f32vector_and_vectors_c (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors)
+{
+  int i, j, bool;
+
+  for (i = 0; i < n_cell; i++) {
+    bool = 1;
+    for (j = 0; j < n_vectors; j++) {
+      if (v_ptr[j][i] == 0) {
+        bool = 0;
+      }
+    }
+    if (bool == 1) {
+      to[i] = v_ptr[0][i];
+    }
+    else {
+      to[i] = 0;
+    }
+  }
+  return 0;
+}
