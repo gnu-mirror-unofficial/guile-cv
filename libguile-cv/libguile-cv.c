@@ -228,3 +228,22 @@ int f32vector_and_vectors_c (float *to,
   }
   return 0;
 }
+
+int f32vector_or_vectors_c (float *to,
+                            int n_cell,
+                            float *v_ptr[],
+                            int n_vectors)
+{
+  int i, j, val;
+
+  for (i = 0; i < n_cell; i++) {
+    val = 0;
+    for (j = 0; j < n_vectors; j++) {
+      if ((val == 0) && (v_ptr[j][i] > 0)) {
+        val = v_ptr[j][i];
+        }
+    }
+    to[i] = val;
+  }
+  return 0;
+}

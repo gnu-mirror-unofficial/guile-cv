@@ -71,3 +71,8 @@ int f32vector_and_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],
                              int n_vectors);
+
+int f32vector_or_vectors_c (float *to,
+                            int n_cell,
+                            float *v_ptr[],
+                            int n_vectors);

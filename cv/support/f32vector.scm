@@ -49,6 +49,7 @@
             f32vector-multiply-value
             f32vector-divide-value
             f32vector-and-vectors
+            f32vector-or-vectors
 
             ;; Pure scheme code
             f32vector-reduce
@@ -207,6 +208,22 @@
                                n-cell
                                (bytevector->pointer v-ptr)
                                n-chan)
+    to)))
+
+(define (f32vector-or-vectors to n-cell channels)
+  (receive (maker setter!)
+      (get-v-ptr-maker-setter)
+    (let* ((n-chan (length channels))
+           (v-ptr (maker n-chan 0)))
+      (for-each (lambda (chan i)
+                  (setter! v-ptr i
+                           (pointer-address (bytevector->pointer chan))))
+          channels
+        (iota n-chan))
+      (f32vector-or-vectors-c (bytevector->pointer to)
+                              n-cell
+                              (bytevector->pointer v-ptr)
+                              n-chan)
     to)))
 
 

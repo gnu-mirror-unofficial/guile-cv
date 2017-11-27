@@ -54,7 +54,9 @@
             im-rgba->gray
 	    im-threshold
 	    im-and
+            im-and-channel
 	    im-or
+            im-or-channel
             im-xor
 	    im-complement
             im-range
@@ -717,7 +719,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
      (error "Invalid argument:" channels))))
 
 
-(define (im-or . images)
+#;(define (im-or . images)
   (match images
     ((image . rest)
      (match image
@@ -743,6 +745,42 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	    (error "Size mismatch.")))))
     ((image) image)
     (() (error "Invalid argument: " images))))
+
+(define (im-or . images)
+  (match images
+    ((i1 . rest)
+     (match i1
+       ((width height n-chan idata)
+	(if (and (apply = (apply im-collect 'width images))
+                 (apply = (apply im-collect 'height images)))
+            (let ((c-rest (apply im-collect 'gray (map im-rgb->gray rest))))
+              (match idata
+                ((c1 . rest)
+                 (let ((c-or (apply im-or-channel width height c-rest)))
+                   (list width height n-chan
+                         (let ((map-proc (if (and (> n-chan 1)
+                                                  (%use-par-map)) par-map map)))
+                           (map-proc (lambda (chan)
+                                       (im-or-channel width height chan c-or))
+                               idata)))))
+                ((c)
+                 (list width height n-chan
+                       (apply im-or-channel width height
+                              (cons c c-rest))))))
+	    (error "Size mismatch.")))))
+    ((image) image)
+    (() (error "Invalid argument: " images))))
+
+(define (im-or-channel width height . channels)
+  (match channels
+    ((c1 . rest)
+     (let ((n-cell (* width height))
+           (to (im-make-channel width height)))
+       (f32vector-or-vectors to n-cell channels)))
+    ((c1) c1)
+    (else
+     (error "Invalid argument:" channels))))
+
 
 (define (im-xor . images)
   (match images

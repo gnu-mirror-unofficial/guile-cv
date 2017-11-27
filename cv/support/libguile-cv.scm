@@ -42,7 +42,8 @@
             f32vector-subtract-vectors-c
             f32vector-multiply-value-c
             f32vector-divide-value-c
-            f32vector-and-vectors-c))
+            f32vector-and-vectors-c
+            f32vector-or-vectors-c))
 
 
 (define float-to-int-c
@@ -148,6 +149,15 @@
 (define f32vector-and-vectors-c
   (pointer->procedure int
                       (dynamic-func "f32vector_and_vectors_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors
+
+(define f32vector-or-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_or_vectors_c"
                                     %libguile-cv)
                       (list '*		;; to
                             int		;; n-cell
