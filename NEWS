@@ -59,11 +59,60 @@ im-scrap
 
   New optional keyword, #:exclude-on-edges, for which the default is #f.
 
+im-label
+im-label-channel
+im-label-all
+im-label-all-channel
+
+  Return n-label, not n-object. The number of labels correspond to the
+  highest label value + 1: earlier version of Guile-CV, prior to version
+  1.8.0, did return the number of objects, which correspond to the
+  highest label value. This was less then optimal, since not only 0.0 is
+  a label, but other procedures, im-features for example, do consider
+  and return a feature object for the background as well.
+
+  Note that Vigra C functions return the label highest value, but the
+  vigra-label-all function starts to label using 1.0, so in this case,
+  the label highest value is also the number of label used, hence
+  im-label-all-channel has to return 'n-object' and not '(+ n-object
+  1)', fixed.  I don't like this, for me it is inconsistent, and
+  im-label-all should start to label using 0.0 as well, so I mailed the
+  Vigra folks, let's see...
+
+im-features
+
+  Consistency between im-label, im-label-all and im-features. All these
+  already named their argument 'n-label', but it actually ment 'n-object'.
+  I changed all this - and the segmentation related code as well - so it
+  is consistent everywhere in the code. And now, the n-label argument
+  value also correspond to the length of the list of features returned,
+  so much better.
+
+  Vigra C functions, at the contrary, expect 'n-object', or expressed
+  differently, expect the label highest value, which correspond to (-
+  n-label 1).  This is also consistent everywhere in the code now.
+
 **** New interfaces
 
 im-clip
 im-clip-channel
 im-reconstruct
+im-and-channel
+im-or-channel
+im-=-channel?
+
+or-l
+
+  Though undocumented still, I list it her too: we had and-l already,
+  and there are (well known among schemers) situations where you need a
+  function (not a macro)...
+
+**** Removed interfaces
+
+im-list=?
+
+  It was a bad idea to make this internal procedure public, and users
+  can call (apply im-=? ...) anyway.
 
 **** Performance improvements
 
@@ -82,6 +131,48 @@ im-fill-holes
 
   Labels are 'discrete' floats, by definition, so we can use = instead
   of float=?, which is 3 to 4 times faster.
+
+im-features
+
+  Area, left, top, right, bottom values are discrete floats, use
+  float->int, not float-round.
+
+im-min
+im-min-channel
+im-max
+im-max-channel
+im-range
+im-range-channel
+im-add
+im-add-channel
+im-subtract
+im-subtract-channel
+im-multiply (value)
+im-multiply-channel (value)
+im-divide (value)
+im-divide-channel (value)
+im-and
+im-and-channel
+im-or
+im-or-channel
+im-=?
+im-=-channel?
+
+  Till Guile-3.0 becomes available, I decided to temporarily rewrite the
+  math, linear algebra and logical 'low level' procedures in C.  Tests
+  performed on my laptop - i5-2450M CPU @ 2.50GHz × 4 and 5.7GB of mem -
+  using GRAY and RGB test images of 2718 x 1732 show gains in the range
+  of 23x to 100x faster, depending on the operation and wether images
+  involved have 1 or more channels (though in Guile-CV, unless the user
+  sets the %use-par-map parameter to #f, all multi channel operations
+  are multi threaded).
+
+  Because all memory allocation still is done in scheme, and not in C, I
+  am very confortable with this approach, as I said, till we have an AOT
+  compiler that compiles fixed size floating point and small integers
+  operations and vector loops for these that runs as fast as in C, and
+  I am prety confident that it will happen, maybe not tomorrow, but it
+  will happen.
 
 **** Bug fixes
 
