@@ -24,10 +24,29 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <limits.h>
 /* #include <libguile.h> */
 
+
+/*
+ * misc.
+ *
+*/
+
+size_t pointer_address_size_c ()
+{
+  size_t n = sizeof(float *) * CHAR_BIT;
+
+  return n;
+}
+
+
+/*
+ * floats
+ *
+*/
 
 int float_to_int_c (float f)
 {
@@ -37,12 +56,21 @@ int float_to_int_c (float f)
   return (i);
 }
 
-size_t pointer_address_size_c ()
+int float_equal_c (float f1, float f2, float prec)
 {
-  size_t n = sizeof(float *) * CHAR_BIT;
-
-  return n;
+  if ((abs (f1 - f2)) <= prec) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
+
+
+/*
+ * f32vectors
+ *
+*/
 
 int f32vector_min_c (float *v, int n_cell, float *r)
 {
@@ -244,6 +272,31 @@ int f32vector_or_vectors_c (float *to,
         }
     }
     to[i] = val;
+  }
+  return 0;
+}
+
+int f32vector_equal_vectors_c (int n_cell,
+                               float *v_ptr[],
+                               int n_vectors,
+                               float prec)
+{
+  int i, j, val;
+
+  for (i = 0; i < n_cell; i++) {
+    val =  v_ptr[0][i];
+    for (j = 1; j < n_vectors; j++) {
+      if (prec == 0) {
+        if (v_ptr[j][i] != val) {
+          return -1;
+        }
+      }
+      else {
+        if (float_equal_c (v_ptr[j][i], val, prec) == 0) {
+          return -1;
+        }
+      }
+    }
   }
   return 0;
 }

@@ -24,8 +24,27 @@
 */
 
 
-int float_to_int_c (float f);
+/*
+ * misc.
+ *
+*/
+
 size_t pointer_address_size_c ();
+
+
+/*
+ * floats
+ *
+*/
+
+int float_to_int_c (float f);
+int float_equal_c (float f1, float f2, float prec);
+
+
+/*
+ * f32vectors
+ *
+*/
 
 int f32vector_min_c (float *v, int len, float *r);
 int f32vector_max_c (float *v, int len, float *r);
@@ -76,3 +95,8 @@ int f32vector_or_vectors_c (float *to,
                             int n_cell,
                             float *v_ptr[],
                             int n_vectors);
+
+int f32vector_equal_vectors_c (int n_cell,
+                               float *v_ptr[],
+                               int n_vectors,
+                               float prec);

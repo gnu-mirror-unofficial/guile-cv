@@ -50,7 +50,7 @@
 	    im-binary?
 
 	    im-=?
-	    im-list=?
+            im-=-channel?
 
 	    im-make-channel
 	    im-make-channels
@@ -190,38 +190,53 @@
     ((width height n-chan idata)
      (= n-chan 3))))
 
-(define* (im-list=? images #:optional (prec 1.0e-4))
-  (match images
-    ((image . rest)
-     (match image
-	((width height n-chan _)
-	 (if (and (apply = (apply im-collect 'width rest))
-		  (apply = (apply im-collect 'height rest))
-		  (apply = (apply im-collect 'n-channel rest)))
-	     (catch 'exit
-	       (lambda ()
-		 (let ((n-cell (* width height)))
-		   (for-each (lambda (k)
-			       (let* ((chan-k (n-chan->symbol k))
-				      (channels (apply im-collect chan-k images)))
-				 (unless (f32vector-list=? channels #:prec prec)
-				   (throw 'exit #f))))
-		       (iota n-chan))
-		   #t))
-	       (lambda (key index)
-		 #t))
-	     #f)))) ;; size missmatch
-    ((image) #t)
-    (() #t)))
-  
 (define (im-=? . images)
   (match images
     ((prec . rest)
      (if (number? prec)
-	 (im-list=? rest prec)
-	 (im-list=? images)))
+	 (im-list=? rest #:prec prec)
+	 (im-list=? images)))))
+
+(define* (im-list=? images #:key (prec 1.0e-4))
+  (match images
+    (() #t)
     ((image) #t)
-    (() #t)))
+    ((i1 . i-rest)
+     (match i1
+       ((width height n-chan idata)
+        (if (and (apply = (apply im-collect 'width images))
+                 (apply = (apply im-collect 'height images))
+                 (apply = (apply im-collect 'n-channel images)))
+            (match idata
+              ((c)
+               (apply im-=-channel? width height
+                      (cons prec
+                            (concatenate (apply im-collect 'channels images)))))
+              ((c1 . c-rest)
+               (let ((map-proc (if (and (> n-chan 1)
+                                        (%use-par-map)) par-map map)))
+                 (and-l (map-proc (lambda (channels)
+                                    (apply im-=-channel? width height
+                                           (cons prec channels)))
+                            (zip (apply im-collect 'channels images)))))))))))
+    (else (error "Invalid argument: " images))))
+
+(define (im-=-channel? width height . channels)
+  (match channels
+    ((prec . rest)
+     (if (number? prec)
+	 (im-channel-list=? width height rest #:prec prec)
+	 (im-channel-list=? width height channels)))))
+
+(define* (im-channel-list=? width height channels #:key (prec 1.0e-4))
+  (match channels
+    (() #t)
+    ((c1) #t)
+    ((c1 . rest)
+     (= (f32vector-=-vectors? (* width height) channels #:prec prec)
+        0))
+    (else
+     (error "Invalid argument:" channels))))
 
 
 ;;;

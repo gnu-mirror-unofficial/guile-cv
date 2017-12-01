@@ -30,8 +30,14 @@
   #:use-module (system foreign)
   #:use-module (cv init)
 
-  #:export (float-to-int-c
+  #:export (;; misc.
             pointer-address-size-c
+
+            ;; floats
+            float-to-int-c
+            float-equal-c
+
+            ;; f32vectors
             f32vector-min-c
             f32vector-max-c
             f32vector-range-c
@@ -43,8 +49,24 @@
             f32vector-multiply-value-c
             f32vector-divide-value-c
             f32vector-and-vectors-c
-            f32vector-or-vectors-c))
+            f32vector-or-vectors-c
+            f32vector-equal-vectors-c))
 
+
+;;;
+;;; misc.
+;;;
+
+(define pointer-address-size-c
+  (pointer->procedure size_t
+                      (dynamic-func "pointer_address_size_c"
+                                    %libguile-cv)
+                      (list)))
+
+
+;;;
+;;; floats
+;;;
 
 (define float-to-int-c
   (pointer->procedure int
@@ -52,11 +74,18 @@
                                     %libguile-cv)
                       (list float)))
 
-(define pointer-address-size-c
-  (pointer->procedure size_t
-                      (dynamic-func "pointer_address_size_c"
+(define float-equal-c
+  (pointer->procedure int
+                      (dynamic-func "float_equal_c"
                                     %libguile-cv)
-                      (list)))
+                      (list float	;; f1
+                            float	;; f2
+                            float)))	;; precision
+
+
+;;;
+;;; f32vectors
+;;;
 
 (define f32vector-min-c
   (pointer->procedure int
@@ -163,3 +192,12 @@
                             int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-equal-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_equal_vectors_c"
+                                    %libguile-cv)
+                      (list int		;; n-cell
+                            '*		;; v-ptr[]
+                            int		;; n-vectors
+                            float)))	;; precision

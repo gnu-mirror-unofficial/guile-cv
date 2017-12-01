@@ -89,7 +89,7 @@ others, the public interface of @code{(ice-9 match)}.
 @item @ref{im-rgb?_}
 
 @item @ref{im-=?}
-@item @ref{im-list=?}
+@item @ref{im-=-channel?}
 
 @item @ref{im-ref}
 @item @ref{im-fast-ref}
@@ -179,17 +179,20 @@ instead, they only check for @var{n-channel=1} and @var{n-channel=3}.
 
 
 @anchor{im-=?}
-@anchor{im-list=?}
+@anchor{im-=-channel?}
 @deffn Procedure im-=? [precision] i1 i2 i3 @dots{}
-@deffnx Procedure im-list=? images [precision]
+@deffnx Procedure im-=-channel? [precision] c1 c2 c3 @dots{}
 
-Returns @code{#t} if @var{i1} @var{i2} @var{i3} @dots{} or @var{images}
-are of the same size, have the same number of channels that all
-respectively contain the same values.
+Returns @code{#t} if @var{i1} @var{i2} @var{i3} @dots{} or @var{c1}
+@var{c2} @var{c3} @dots{} respectively are of the same size, have the
+same number of channels that all respectively contain the same values.
 
-If the first argument for @code{im-=?} is a number, it is used as the
-precision to compare pixel values: 1.0e-4 is the default precision
-value.
+If the first argument is a number, it is used as the precision to
+compare pixel values. The default precision value is @code{1.0e-4}.
+Note that if you are certain your images or channels contain 'discrete'
+float values, you may pass @code{0.0} as the precision to be used, i
+which case values will be compared using @code{=} (instead of
+@code{float=?}, which is faster.
 @end deffn
 
 

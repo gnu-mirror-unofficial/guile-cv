@@ -375,7 +375,7 @@
   `(3 3 1 (,#f32(3.0 0.75 0.1875 12.0 3.0 0.75 48.0 12.0 3.0))))
 
 (define-method (test-im-divide (self <guile-cv-tests-cv>))
-  (assert-true (im-=? (im-divide %d1 2.0) %d2))
+  (assert-true (im-=? 0.0 (im-divide %d1 2.0) %d2))
   (assert-true (im-=? (im-divide %d1 %d4) %d5))
   (assert-true (im-=? (im-divide %d1 %d4 %d6) %d7)))
 
