@@ -300,3 +300,19 @@ int f32vector_equal_vectors_c (int n_cell,
   }
   return 0;
 }
+
+int f32vector_binary_vectors_c (int n_cell,
+                                float *v_ptr[],
+                                int n_vectors)
+{
+  int i, j, val;
+
+  for (i = 0; i < n_cell; i++) {
+    for (j = 1; j < n_vectors; j++) {
+      if ((v_ptr[j][i] != 0.0) || (v_ptr[j][i] != 255.0)) {
+          return -1;
+        }
+      }
+  }
+  return 0;
+}

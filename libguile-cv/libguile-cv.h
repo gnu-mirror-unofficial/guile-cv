@@ -100,3 +100,7 @@ int f32vector_equal_vectors_c (int n_cell,
                                float *v_ptr[],
                                int n_vectors,
                                float prec);
+
+int f32vector_binary_vectors_c (int n_cell,
+                                float *v_ptr[],
+                                int n_vectors);

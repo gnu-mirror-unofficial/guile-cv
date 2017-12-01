@@ -50,7 +50,8 @@
             f32vector-divide-value-c
             f32vector-and-vectors-c
             f32vector-or-vectors-c
-            f32vector-equal-vectors-c))
+            f32vector-equal-vectors-c
+            f32vector-binary-vectors-c))
 
 
 ;;;
@@ -201,3 +202,11 @@
                             '*		;; v-ptr[]
                             int		;; n-vectors
                             float)))	;; precision
+
+(define f32vector-binary-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_binary_vectors_c"
+                                    %libguile-cv)
+                      (list int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors

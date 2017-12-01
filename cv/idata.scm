@@ -48,7 +48,7 @@
 
   #:export (im-image?
 	    im-binary?
-
+            im-binary-channel?
 	    im-=?
             im-=-channel?
 
@@ -162,7 +162,8 @@
                 (sort (map f32vector-max idata) >)))
 !#
 
-(define (im-binary? image)
+
+#;(define (im-binary? image)
   (match image
     ((width height n-chan idata)
      (and (= n-chan 1)
@@ -180,6 +181,36 @@
                  (else
                   #f)))))))))
 
+(define (im-binary? . images)
+  (match images
+    ((image)
+     (match image
+       ((width height n-chan idata)
+        (match idata
+          ((c)
+           (im-binary-channel? width height c))
+          (else #f)))))
+    ((i1 . i-rest)
+     (and (apply = (apply im-collect 'width images))
+          (apply = (apply im-collect 'height images))
+          (apply = (cons 1 (apply im-collect 'n-channel images)))
+          (match i1
+            ((width height n-chan _)
+             (let ((map-proc (if (and (> n-chan 1)
+                                      (%use-par-map)) par-map map)))
+               (and-l (map-proc (lambda (channels)
+                                  (apply im-binary-channel? width height channels))
+                          (apply im-collect 'channels images))))))))
+    (else (error "Invalid argument: " images))))
+
+(define (im-binary-channel? width height . channels)
+  (match channels
+    ((c1 . rest)
+     (f32vector-binary-vectors? (* width height) channels))
+    (else
+     (error "Invalid argument:" channels))))
+
+
 (define-method (im-gray? (image <list>))
   (match image
     ((width height n-chan idata)
@@ -189,6 +220,7 @@
   (match image
     ((width height n-chan idata)
      (= n-chan 3))))
+
 
 (define (im-=? . images)
   (match images

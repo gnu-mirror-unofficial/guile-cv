@@ -92,6 +92,10 @@ im-features
   differently, expect the label highest value, which correspond to (-
   n-label 1).  This is also consistent everywhere in the code now.
 
+im-binary?
+
+  Now accepts more then one image.
+
 **** New interfaces
 
 im-clip
@@ -100,6 +104,7 @@ im-reconstruct
 im-and-channel
 im-or-channel
 im-=-channel?
+im-binary-channel?
 
 or-l
 
@@ -157,6 +162,8 @@ im-or
 im-or-channel
 im-=?
 im-=-channel?
+im-binary?
+im-binary-channel?
 
   Till Guile-3.0 becomes available, I decided to temporarily rewrite the
   math, linear algebra and logical 'low level' procedures in C.  Tests

@@ -84,9 +84,11 @@ others, the public interface of @code{(ice-9 match)}.
 @item @ref{im-channel}
 
 @item @ref{im-image?}
-@item @ref{im-binary?}
 @item @ref{im-gray?_}
 @item @ref{im-rgb?_}
+
+@item @ref{im-binary?}
+@item @ref{im-binary-channel?}
 
 @item @ref{im-=?}
 @item @ref{im-=-channel?}
@@ -159,29 +161,35 @@ Returns, respectively the @var{width}, the @var{height}, @var{n-channel},
 
 
 @anchor{im-image?}
-@anchor{im-binary?}
 @anchor{im-gray?_}
 @anchor{im-rgb?_}
 @deffn Procedure im-image? image
-@deffnx Procedure im-binary? image
 @deffnx Method im-gray? image
 @deffnx Method im-rgb? image
 
 Returns @code{#t} if @var{image} is respectively a Guile-CV image, a
-BINARY (black and white), a GRAY scale or an RGB image.
+GRAY scale or an RGB image.
+@end deffn
 
-Notes: (a) @code{im-image?} is a relatively @samp{expensive} operation
-and offered for debugging purposes, but it is not recommended to use
-@samp{in production}; (b) because of the former, @code{im-gray?}  and
-@code{im-rgb?} do _not_ check if @var{image} is a valid Guile-CV image,
-instead, they only check for @var{n-channel=1} and @var{n-channel=3}.
+
+@anchor{im-binary?}
+@anchor{im-binary-channel?}
+@deffn Procedure im-binary? i1 i2 i3 @dots{}
+@deffnx Procedure im-binary-channel? width height c1 c2 c3 @dots{}
+
+Returns @code{#t} if @var{i1} @var{i2} @var{i3} @dots{} or @var{c1}
+@var{c2} @var{c3} @dots{} respectively are BINARY (Black and White)
+images or channels respectively.
+
+Note that when more then one image or channel is passed, they must all
+be of the same size.
 @end deffn
 
 
 @anchor{im-=?}
 @anchor{im-=-channel?}
 @deffn Procedure im-=? [precision] i1 i2 i3 @dots{}
-@deffnx Procedure im-=-channel? [precision] c1 c2 c3 @dots{}
+@deffnx Procedure im-=-channel? width height [precision] c1 c2 c3 @dots{}
 
 Returns @code{#t} if @var{i1} @var{i2} @var{i3} @dots{} or @var{c1}
 @var{c2} @var{c3} @dots{} respectively are of the same size, have the
