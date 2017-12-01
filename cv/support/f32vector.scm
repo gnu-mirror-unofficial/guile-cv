@@ -238,10 +238,11 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-equal-vectors-c n-cell
-                                 (bytevector->pointer v-ptr)
-                                 n-chan
-                                 prec))))
+      (= (f32vector-equal-vectors-c n-cell
+                                    (bytevector->pointer v-ptr)
+                                    n-chan
+                                    prec)
+         0))))
 
 (define (f32vector-binary-vectors? n-cell channels)
   (receive (maker setter!)

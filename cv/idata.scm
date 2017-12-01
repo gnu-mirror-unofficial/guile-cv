@@ -236,21 +236,21 @@
     ((i1 . i-rest)
      (match i1
        ((width height n-chan idata)
-        (if (and (apply = (apply im-collect 'width images))
-                 (apply = (apply im-collect 'height images))
-                 (apply = (apply im-collect 'n-channel images)))
-            (match idata
-              ((c)
-               (apply im-=-channel? width height
-                      (cons prec
-                            (concatenate (apply im-collect 'channels images)))))
-              ((c1 . c-rest)
-               (let ((map-proc (if (and (> n-chan 1)
-                                        (%use-par-map)) par-map map)))
-                 (and-l (map-proc (lambda (channels)
-                                    (apply im-=-channel? width height
-                                           (cons prec channels)))
-                            (zip (apply im-collect 'channels images)))))))))))
+        (and (apply = (apply im-collect 'width images))
+             (apply = (apply im-collect 'height images))
+             (apply = (apply im-collect 'n-channel images))
+             (match idata
+               ((c)
+                (apply im-=-channel? width height
+                       (cons prec
+                             (concatenate (apply im-collect 'channels images)))))
+               ((c1 . c-rest)
+                (let ((map-proc (if (and (> n-chan 1)
+                                         (%use-par-map)) par-map map)))
+                  (and-l (map-proc (lambda (channels)
+                                     (apply im-=-channel? width height
+                                            (cons prec channels)))
+                             (zip (apply im-collect 'channels images)))))))))))
     (else (error "Invalid argument: " images))))
 
 (define (im-=-channel? width height . channels)
@@ -265,8 +265,7 @@
     (() #t)
     ((c1) #t)
     ((c1 . rest)
-     (= (f32vector-=-vectors? (* width height) channels #:prec prec)
-        0))
+     (f32vector-=-vectors? (* width height) channels #:prec prec))
     (else
      (error "Invalid argument:" channels))))
 
