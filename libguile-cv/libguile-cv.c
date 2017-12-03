@@ -141,6 +141,20 @@ int f32vector_scrap_c (float *chan,
   return 0;
 }
 
+int f32vector_rgb_to_gray_c (float *to,
+                             int n_cell,
+                             float *r,
+                             float *g,
+                             float *b)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+    to[i] = (r[i] + g[i] + b[i]) / 3;
+  }
+  return 0;
+}
+
 int f32vector_add_value_c (float *v,
                            int n_cell,
                            float val,

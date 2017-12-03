@@ -42,6 +42,7 @@
 	    f32vector-max
             f32vector-range
             f32vector-scrap
+            f32vector-rgb-to-gray
             f32vector-add-value
             f32vector-add-vectors
             f32vector-subtract-value
@@ -118,6 +119,13 @@
                      n-cell
                      (bytevector->pointer scrap-cache)
                      (bytevector->pointer to)))
+
+(define (f32vector-rgb-to-gray to n-cell r g b)
+  (f32vector-rgb-to-gray-c (bytevector->pointer to)
+                           n-cell
+                           (bytevector->pointer r)
+                           (bytevector->pointer g)
+                           (bytevector->pointer b)))
 
 (define (get-v-ptr-maker-setter)
   (let ((p-size (pointer-address-size-c)))

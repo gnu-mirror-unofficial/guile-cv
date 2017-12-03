@@ -42,6 +42,7 @@
             f32vector-max-c
             f32vector-range-c
             f32vector-scrap-c
+            f32vector-rgb-to-gray-c
             f32vector-add-value-c
             f32vector-add-vectors-c
             f32vector-subtract-value-c
@@ -122,6 +123,16 @@
                             int		;; n-cell
                             '*		;; scrap-cache
                             '*)))	;; to
+
+(define f32vector-rgb-to-gray-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_rgb_to_gray_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; r
+                            '*		;; g
+                            '*)))	;; b
 
 (define f32vector-add-value-c
   (pointer->procedure int

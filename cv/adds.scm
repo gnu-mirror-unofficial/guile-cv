@@ -92,7 +92,7 @@
 ;;; Guile-CV additional API
 ;;;
 
-(define (im-rgb->gray image)
+#;(define (im-rgb->gray image)
   (match image
     ((width height n-chan idata)
      (match idata
@@ -106,7 +106,25 @@
        (else
 	(error "Not an RGB (nor a GRAY) image."))))))
 
+(define (im-rgb->gray image)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c)
+        image)
+       ((r g b)
+        (list width height 1
+              (list (im-rgb->gray-1 width height r g b))))
+       (else
+	(error "Not an RGB (nor a GRAY) image."))))))
+
 (define (im-rgb->gray-1 width height r g b)
+  (let ((n-cell (* width height))
+        (to (im-make-channel width height)))
+    (f32vector-rgb-to-gray to n-cell r g b)
+    to))
+
+#;(define (im-rgb->gray-1 width height r g b)
   (letrec* ((rgb->gray (lambda (i)
                          (/ (+ (f32vector-ref r i)
                                (f32vector-ref g i)

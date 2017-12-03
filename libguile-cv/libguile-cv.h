@@ -56,6 +56,12 @@ int f32vector_scrap_c (float *chan,
                        int *scrap_cache,
                        float *to);
 
+int f32vector_rgb_to_gray_c (float *to,
+                             int n_cell,
+                             float *r,
+                             float *g,
+                             float *b);
+
 int f32vector_add_value_c (float *v,
                            int n_cell,
                            float val,
