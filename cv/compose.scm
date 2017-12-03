@@ -65,6 +65,7 @@
                   (else
                    images))))
     (match images
+      ((image) image)
       ((image . rest)
        (match image
          ((_ _ n-chan _)
@@ -93,7 +94,7 @@
                                   ((_ _ c-chan) c-chan)))
                            composed-channels)))))
               (error "Channel number mismatch")))))
-      ((image) image)
+
       (()
        (error "The list of images to compose can't be empty")))))
 
