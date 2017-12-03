@@ -103,6 +103,7 @@ im-clip-channel
 im-reconstruct
 im-and-channel
 im-or-channel
+im-xor-channel
 im-=-channel?
 im-binary-channel?
 
@@ -159,7 +160,9 @@ im-divide-channel (value)
 im-and
 im-and-channel
 im-or
-im-or-channel
+im-xor-channel
+im-or
+im-xor-channel
 im-=?
 im-=-channel?
 im-binary?

@@ -50,6 +50,7 @@
             f32vector-divide-value-c
             f32vector-and-vectors-c
             f32vector-or-vectors-c
+            f32vector-xor-vectors-c
             f32vector-equal-vectors-c
             f32vector-binary-vectors-c))
 
@@ -188,6 +189,15 @@
 (define f32vector-or-vectors-c
   (pointer->procedure int
                       (dynamic-func "f32vector_or_vectors_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors
+
+(define f32vector-xor-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_xor_vectors_c"
                                     %libguile-cv)
                       (list '*		;; to
                             int		;; n-cell

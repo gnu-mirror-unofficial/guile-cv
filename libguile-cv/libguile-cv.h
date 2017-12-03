@@ -96,6 +96,11 @@ int f32vector_or_vectors_c (float *to,
                             float *v_ptr[],
                             int n_vectors);
 
+int f32vector_xor_vectors_c (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors);
+
 int f32vector_equal_vectors_c (int n_cell,
                                float *v_ptr[],
                                int n_vectors,

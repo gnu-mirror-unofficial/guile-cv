@@ -61,6 +61,7 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-or}
 @item @ref{im-or-channel}
 @item @ref{im-xor}
+@item @ref{im-xor-channel}
 @item @ref{im-complement}
 @item @ref{im-scrap}
 @item @ref{im-particles}
@@ -449,11 +450,13 @@ $3 = 556197.0
 @anchor{im-or}
 @anchor{im-or-channel}
 @anchor{im-xor}
+@anchor{im-xor-channel}
 @deffn Procedure im-and i1 i2 i3 @dots{}
 @deffnx Procedure im-and-channel width height c1 c2 c3 @dots{}
 @deffnx Procedure im-or i1 i2 i3 @dots{}
 @deffnx Procedure im-or-channel width height c1 c2 c3 @dots{}
 @deffnx Procedure im-xor i1 i2 i3 @dots{}
+@deffnx Procedure im-xor-channel width height c1 c2 c3 @dots{}
 
 Returns @var{image} if one argument only, otherwise, it returns a new
 image or channel, as the result of computing the logical @code{AND},
@@ -470,12 +473,13 @@ image are set to the one obtained from the first non zero @var{ii} or
 In the case of @code{XOR}, the pixel values (of each channel) of the new
 image are set to the value obtained from successively computing
 @code{(logior (logand a (- 255 b)) (logand (- 255 a) b))} where @code{a}
-would be the previous result and @code{b} the current @code{image} pixel
-value, until all images passed in arguments have been
-processed@footnote{Note that there is no mathematically valid @code{XOR}
-operation on floating points, hence as they are @samp{accessed}, pixel
-values are converted to integer, using @code{float->int}, defined in the
-@code{(cv support libguile-cv)} module).}.
+would be the previous result and @code{b} the current @code{image} or
+@code{channel} pixel value, until all images passed in arguments have
+been processed@footnote{Note that there is no mathematically valid
+@code{XOR} operation on floating points, hence as they are
+@samp{accessed}, pixel values are converted to integer, using
+@code{float->int}, defined in the @code{(cv support libguile-cv)}
+module).}.
 
 All images must have the same @code{width}, @code{height} and
 @code{n-channel}.

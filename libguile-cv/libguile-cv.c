@@ -276,6 +276,24 @@ int f32vector_or_vectors_c (float *to,
   return 0;
 }
 
+int f32vector_xor_vectors_c (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors)
+{
+  int i, j, a, b;
+
+  for (i = 0; i < n_cell; i++) {
+    a = (int)v_ptr[0][i];
+    for (j = 1; j < n_vectors; j++) {
+      b = (int)v_ptr[j][i];
+      a = (a & (255 - b) ) | ((255 - a) & b);
+    }
+    to[i] = a;
+  }
+  return 0;
+}
+
 int f32vector_equal_vectors_c (int n_cell,
                                float *v_ptr[],
                                int n_vectors,
