@@ -42,6 +42,7 @@
 	    f32vector-max
             f32vector-range
             f32vector-scrap
+            f32vector-fill-holes
             f32vector-rgb-to-gray
             f32vector-add-value
             f32vector-add-vectors
@@ -119,6 +120,11 @@
                      n-cell
                      (bytevector->pointer scrap-cache)
                      (bytevector->pointer to)))
+
+(define (f32vector-fill-holes l-channel n-cell bg-label)
+  (f32vector-fill-holes-c (bytevector->pointer l-channel)
+                          n-cell
+                          bg-label))
 
 (define (f32vector-rgb-to-gray to n-cell r g b)
   (f32vector-rgb-to-gray-c (bytevector->pointer to)

@@ -42,6 +42,7 @@
             f32vector-max-c
             f32vector-range-c
             f32vector-scrap-c
+            f32vector-fill-holes-c
             f32vector-rgb-to-gray-c
             f32vector-add-value-c
             f32vector-add-vectors-c
@@ -123,6 +124,14 @@
                             int		;; n-cell
                             '*		;; scrap-cache
                             '*)))	;; to
+
+(define f32vector-fill-holes-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_fill_holes_c"
+                                    %libguile-cv)
+                      (list '*       ;; labeled chan
+                            int      ;; n-cell
+                            float))) ;; bg label value
 
 (define f32vector-rgb-to-gray-c
   (pointer->procedure int

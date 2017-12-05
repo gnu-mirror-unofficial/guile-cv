@@ -168,19 +168,21 @@ im-=-channel?
 im-binary?
 im-binary-channel?
 im-rgb->gray
+im-fill-holes
+im-fill-holes-channel
 
   Till Guile-3.0 becomes available, I decided to temporarily rewrite the
   math, linear algebra and logical 'low level' procedures in C.  Tests
   performed on my laptop - i5-2450M CPU @ 2.50GHz × 4 and 5.7GB of mem -
   using GRAY and RGB test images of 2718 x 1732 show gains in the range
-  of 23x to 100x faster, depending on the operation and wether images
+  of 20x to 100x faster, depending on the operation and wether images
   involved have 1 or more channels (though in Guile-CV, unless the user
   sets the %use-par-map parameter to #f, all multi channel operations
   are multi threaded).
 
   Because all memory allocation still is done in scheme, and not in C, I
   am very confortable with this approach, as I said, till we have an AOT
-  compiler that compiles fixed size floating point and small integers
+  compiler that compiles fixed size floating points and small integers
   operations and vector loops for these that runs as fast as in C, and
   I am prety confident that it will happen, maybe not tomorrow, but it
   will happen.

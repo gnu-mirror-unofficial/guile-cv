@@ -141,6 +141,59 @@ int f32vector_scrap_c (float *chan,
   return 0;
 }
 
+int f32vector_threshold_c (float *to,
+                           int n_cell,
+                           float *v_ptr[],
+                           int n_vectors,
+                           float threshold
+                           int bg)
+{
+  int i, j;
+  float sum;
+
+  for (i = 0; i < n_cell; i++) {
+    sum = 0;
+    for (j = 0; j < n_vectors; j++) {
+      sum += v_ptr[j][i];
+    }
+    sum = sum / n_vectors;
+    if (bg == 0) {
+      if (sum >= threshold) {
+        to[i] = 255.0;
+      }
+      else {
+        to[i] = 0.0;
+      }
+    }
+    else {
+      if (sum <= threshold) {
+        to[i] = 255.0;
+      }
+      else {
+        to[i] = 0.0;
+      }
+    }
+  }
+  return 0;
+}
+
+int f32vector_fill_holes_c (float *labels,
+                            int n_cell,
+                            float bg_label)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+    if (labels[i] == bg_label) {
+      labels[i] = 0.0;
+    }
+    else {
+      labels[i] = 255.0;
+    }
+  }
+  return 0;
+}
+
 int f32vector_rgb_to_gray_c (float *to,
                              int n_cell,
                              float *r,
@@ -173,7 +226,8 @@ int f32vector_add_vectors_c (float *to,
                              float *v_ptr[],
                              int n_vectors)
 {
-  int i, j, sum;
+  int i, j;
+  float sum;
 
   for (i = 0; i < n_cell; i++) {
     sum = 0;
@@ -203,7 +257,8 @@ int f32vector_subtract_vectors_c (float *to,
                                   float *v_ptr[],
                                   int n_vectors)
 {
-  int i, j, result;
+  int i, j;
+  float result;
 
   for (i = 0; i < n_cell; i++) {
     result = v_ptr[0][i];
@@ -276,7 +331,8 @@ int f32vector_or_vectors_c (float *to,
                             float *v_ptr[],
                             int n_vectors)
 {
-  int i, j, val;
+  int i, j;
+  float val;
 
   for (i = 0; i < n_cell; i++) {
     val = 0;
@@ -313,7 +369,8 @@ int f32vector_equal_vectors_c (int n_cell,
                                int n_vectors,
                                float prec)
 {
-  int i, j, val;
+  int i, j;
+  float val;
 
   for (i = 0; i < n_cell; i++) {
     val =  v_ptr[0][i];

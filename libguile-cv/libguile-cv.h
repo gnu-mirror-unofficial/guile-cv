@@ -56,6 +56,10 @@ int f32vector_scrap_c (float *chan,
                        int *scrap_cache,
                        float *to);
 
+int f32vector_fill_holes_c (float *labels,
+                            int n_cell,
+                            float bg_label);
+
 int f32vector_rgb_to_gray_c (float *to,
                              int n_cell,
                              float *r,

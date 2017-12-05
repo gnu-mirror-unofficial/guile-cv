@@ -132,6 +132,7 @@
        (else
 	(error "Not a binary image."))))))
 
+#!
 (define* (im-fill-holes-channel channel width height #:key (con 8))
   (let* ((new-w (+ width 2))
 	 (new-h (+ height 2))
@@ -149,6 +150,19 @@
 	  (f32vector-set! l-channel i 255.0)))
     (im-unpadd-channel l-channel new-w new-h 1 1 1 1
 		       #:new-w width #:new-h height)))
+!#
+
+(define* (im-fill-holes-channel channel width height #:key (con 8))
+  (let* ((new-w (+ width 2))
+	 (new-h (+ height 2))
+	 (p-channel (im-padd-channel channel width height 1 1 1 1
+				     #:new-w new-w #:new-h new-h))
+	 (l-channel (im-label-all-channel p-channel new-w new-h #:con con))
+	 (bg-label (f32vector-ref l-channel 0)))
+    (f32vector-fill-holes l-channel (* new-w new-h) bg-label)
+    (im-unpadd-channel l-channel new-w new-h 1 1 1 1
+		       #:new-w width #:new-h height)))
+
 
 #!
 ;; this is slower then the above, unexpectedly
