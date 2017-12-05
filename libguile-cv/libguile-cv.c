@@ -145,7 +145,7 @@ int f32vector_threshold_c (float *to,
                            int n_cell,
                            float *v_ptr[],
                            int n_vectors,
-                           float threshold
+                           float threshold,
                            int bg)
 {
   int i, j;

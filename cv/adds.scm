@@ -288,6 +288,22 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
            (list width height 1 (list to)))))
       (error "Invalid threshold: " threshold)))
 
+(define* (im-threshold image threshold #:key (bg 'black))
+  (if (and (>= threshold 0.0)
+	   (<= threshold 255.0))
+        (match image
+          ((width height n-chan idata)
+           (let ((to (im-make-channel width height))
+                 (n-cell (* width height)))
+             (list width height 1
+                   (list (f32vector-threshold to n-cell idata threshold
+                                              (case bg
+                                                ((black) 0)
+                                                ((white) 255)
+                                                (else
+                                                 (error "No such bg: " bg)))))))))
+      (error "Invalid threshold: " threshold)))
+
 (define (im-matrix-op image img-2 op)
   (match image
     ((width height n-chan idata)

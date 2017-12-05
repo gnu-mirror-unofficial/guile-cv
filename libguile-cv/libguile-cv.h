@@ -56,6 +56,13 @@ int f32vector_scrap_c (float *chan,
                        int *scrap_cache,
                        float *to);
 
+int f32vector_threshold_c (float *to,
+                           int n_cell,
+                           float *v_ptr[],
+                           int n_vectors,
+                           float threshold
+                           int bg);
+
 int f32vector_fill_holes_c (float *labels,
                             int n_cell,
                             float bg_label);

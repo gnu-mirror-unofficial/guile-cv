@@ -170,6 +170,7 @@ im-binary-channel?
 im-rgb->gray
 im-fill-holes
 im-fill-holes-channel
+im-threshold
 
   Till Guile-3.0 becomes available, I decided to temporarily rewrite the
   math, linear algebra and logical 'low level' procedures in C.  Tests

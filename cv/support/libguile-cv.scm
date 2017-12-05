@@ -42,6 +42,7 @@
             f32vector-max-c
             f32vector-range-c
             f32vector-scrap-c
+            f32vector-threshold-c
             f32vector-fill-holes-c
             f32vector-rgb-to-gray-c
             f32vector-add-value-c
@@ -124,6 +125,17 @@
                             int		;; n-cell
                             '*		;; scrap-cache
                             '*)))	;; to
+
+(define f32vector-threshold-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_threshold_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int		;; n-vectors
+                            float	;; threshold
+                            int)))	;; bg [0 or 255]
 
 (define f32vector-fill-holes-c
   (pointer->procedure int

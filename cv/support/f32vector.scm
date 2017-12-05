@@ -42,6 +42,7 @@
 	    f32vector-max
             f32vector-range
             f32vector-scrap
+            f32vector-threshold
             f32vector-fill-holes
             f32vector-rgb-to-gray
             f32vector-add-value
@@ -120,6 +121,24 @@
                      n-cell
                      (bytevector->pointer scrap-cache)
                      (bytevector->pointer to)))
+
+(define (f32vector-threshold to n-cell channels threshold bg)
+  (receive (maker setter!)
+      (get-v-ptr-maker-setter)
+    (let* ((n-chan (length channels))
+           (v-ptr (maker n-chan 0)))
+      (for-each (lambda (chan i)
+                  (setter! v-ptr i
+                           (pointer-address (bytevector->pointer chan))))
+          channels
+        (iota n-chan))
+      (f32vector-threshold-c (bytevector->pointer to)
+                             n-cell
+                             (bytevector->pointer v-ptr)
+                             n-chan
+                             threshold
+                             bg)
+      to)))
 
 (define (f32vector-fill-holes l-channel n-cell bg-label)
   (f32vector-fill-holes-c (bytevector->pointer l-channel)
