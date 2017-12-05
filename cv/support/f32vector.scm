@@ -56,7 +56,7 @@
             f32vector-xor-vectors
             f32vector-=-vectors?
             f32vector-binary-vectors?
-            f32vector-is-a-seed
+            f32vector-is-a-seed?
 
             ;; Pure scheme code
             f32vector-reduce
@@ -310,7 +310,7 @@
                                      n-chan)
          0))))
 
-(define (f32vector-is-a-seed i-chan n-cell s-chan)
+(define (f32vector-is-a-seed? i-chan n-cell s-chan)
   (= (f32vector-is-a-seed-c (bytevector->pointer i-chan)
                             n-cell
                             (bytevector->pointer s-chan))

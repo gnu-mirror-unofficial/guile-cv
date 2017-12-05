@@ -377,7 +377,7 @@
        #;(im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
      (match i-crop
        ((width height _ _)
-        (f32vector-is-a-seed i-chan (* width height) s-chan)))))))
+        (f32vector-is-a-seed? i-chan (* width height) s-chan)))))))
 
 (define (%is-a-seed-tmp-filename prefix left top right bottom)
   (string-append "/tmp/david/guile-cv/"
