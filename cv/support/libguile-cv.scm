@@ -55,7 +55,8 @@
             f32vector-or-vectors-c
             f32vector-xor-vectors-c
             f32vector-equal-vectors-c
-            f32vector-binary-vectors-c))
+            f32vector-binary-vectors-c
+            f32vector-is-a-seed-c))
 
 
 ;;;
@@ -252,3 +253,11 @@
                       (list int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-is-a-seed-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_is_a_seed_c"
+                                    %libguile-cv)
+                      (list '*		;; i-chan
+                            int		;; n-cell
+                            '*)))	;; s-chan

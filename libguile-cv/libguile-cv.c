@@ -407,3 +407,17 @@ int f32vector_binary_vectors_c (int n_cell,
   }
   return 0;
 }
+
+int f32vector_is_a_seed_c (float *i_chan,
+                           int n_cell,
+                           float *s_chan)
+{
+  int i, j;
+
+  for (i = 0; i < n_cell; i++) {
+    if ((i_chan[i] == 255.0) && (s_chan[i] == 255.0)) {
+      return 0;
+      }
+  }
+  return -1;
+}

@@ -332,7 +332,7 @@
                 (if (is-a-seed? i-p-clean i-left i-top seeds i-bb (list-ref rest i))
                     (set! result #t))))))))))
 
-(define (is-a-seed? i-p-clean i-left i-top seeds i-bb s-bb)
+#;(define (is-a-seed? i-p-clean i-left i-top seeds i-bb s-bb)
   (match (shared-bb i-bb s-bb)
     ((left top right bottom)
      (let* ((i-p-left (- left i-left))
@@ -358,6 +358,26 @@
           (if (and (= (f32vector-ref i-chan i) 255.0)
                    (= (f32vector-ref s-chan i) 255.0))
               (set! result #t)))))))))
+
+(define (is-a-seed? i-p-clean i-left i-top seeds i-bb s-bb)
+  (match (shared-bb i-bb s-bb)
+    ((left top right bottom)
+     (let* ((i-p-left (- left i-left))
+            (i-p-top (- top i-top))
+            (i-p-right (- right i-left))
+            (i-p-bottom (- bottom i-top))
+            (i-crop (im-crop i-p-clean i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1)))
+            (i-chan (im-channel i-crop 0))
+            (s-crop (im-crop seeds left top (+ right 1) (+ bottom 1)))
+            (s-chan (im-channel s-crop 0))
+            (result #f))
+       #;(dimfi i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1))
+       #;(im-save i-crop (%is-a-seed-tmp-filename "i-crop-" i-p-left
+                                                i-p-top i-p-right i-p-bottom))
+       #;(im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
+     (match i-crop
+       ((width height _ _)
+        (f32vector-is-a-seed i-chan (* width height) s-chan)))))))
 
 (define (%is-a-seed-tmp-filename prefix left top right bottom)
   (string-append "/tmp/david/guile-cv/"

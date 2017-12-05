@@ -126,3 +126,7 @@ int f32vector_equal_vectors_c (int n_cell,
 int f32vector_binary_vectors_c (int n_cell,
                                 float *v_ptr[],
                                 int n_vectors);
+
+int f32vector_is_a_seed_c (float *i_chan,
+                           int n_cell,
+                           float *s_chan);
