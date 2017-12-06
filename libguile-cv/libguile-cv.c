@@ -44,6 +44,50 @@ size_t pointer_address_size_c ()
 
 
 /*
+ * bounding box
+ *
+*/
+
+int point_inside_c (int left,
+                    int top,
+                    int right,
+                    int bottom,
+                    int pt_x,
+                    int pt_y)
+{
+  if ((pt_x >= left) &&
+      (pt_x <= right) &&
+      (pt_y >= top) &&
+      (pt_y <= bottom)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+int bb_intersect_c (int l_one,
+                    int t_one,
+                    int r_one,
+                    int b_one,
+                    int l_two,
+                    int t_two,
+                    int r_two,
+                    int b_two)
+{
+  if (((point_inside_c (l_one, t_one, r_one, b_one, l_two, t_two)) == 1) ||
+      ((point_inside_c (l_one, t_one, r_one, b_one, r_two, t_two)) == 1) ||
+      ((point_inside_c (l_one, t_one, r_one, b_one, l_two, b_two)) == 1) ||
+      ((point_inside_c (l_one, t_one, r_one, b_one, r_two, b_two)) == 1)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+
+/*
  * floats
  *
 */
@@ -136,6 +180,22 @@ int f32vector_scrap_c (float *chan,
     }
     else {
       to[i] = chan[i];
+    }
+  }
+  return 0;
+}
+
+int f32vector_scrap_in_place_c (float *chan,
+                                float *l_chan,
+                                int n_cell,
+                                int *scrap_cache)
+{
+  int i, val;
+
+  for (i = 0; i < n_cell; i++) {
+    val = (int)l_chan[i];
+    if ((val == 0) | (scrap_cache[val] == 1)) {
+      chan[i] = 0.0;
     }
   }
   return 0;

@@ -1039,7 +1039,12 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                                (list (match to-scrap
                                        (() p-bin-chan)
                                        (else
-                                        (let ((cache (scrap-cache to-scrap n-label)))
+                                        (f32vector-scrap-in-place p-bin-chan
+                                                                  p-label-chan
+                                                                  n-cell
+                                                                  (scrap-cache to-scrap n-label))
+                                        p-bin-chan
+                                        #;(let ((cache (scrap-cache to-scrap n-label)))
                                           (do ((i 0
                                                   (+ i 1)))
                                               ((= i n-cell) p-bin-chan)

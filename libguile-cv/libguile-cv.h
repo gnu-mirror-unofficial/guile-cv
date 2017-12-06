@@ -42,6 +42,21 @@ int float_equal_c (float f1, float f2, float prec);
 
 
 /*
+ * bounding box
+ *
+*/
+
+int bb_intersect_c (int l_one,
+                    int t_one,
+                    int r_one,
+                    int b_one,
+                    int l_two,
+                    int t_two,
+                    int r_two,
+                    int b_two);
+
+
+/*
  * f32vectors
  *
 */
@@ -55,6 +70,11 @@ int f32vector_scrap_c (float *chan,
                        int n_cell,
                        int *scrap_cache,
                        float *to);
+
+int f32vector_scrap_in_place_c (float *chan,
+                                float *l_chan,
+                                int n_cell,
+                                int *scrap_cache);
 
 int f32vector_threshold_c (float *to,
                            int n_cell,

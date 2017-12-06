@@ -172,6 +172,7 @@ im-fill-holes
 im-fill-holes-channel
 im-threshold
 im-reconstruct
+im-particle-clean
 
   Till Guile-3.0 becomes available, I decided to temporarily rewrite the
   math, linear algebra and logical 'low level' procedures in C.  Tests

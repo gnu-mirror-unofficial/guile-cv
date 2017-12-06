@@ -42,6 +42,7 @@
 	    f32vector-max
             f32vector-range
             f32vector-scrap
+            f32vector-scrap-in-place
             f32vector-threshold
             f32vector-fill-holes
             f32vector-rgb-to-gray
@@ -122,6 +123,12 @@
                      n-cell
                      (bytevector->pointer scrap-cache)
                      (bytevector->pointer to)))
+
+(define (f32vector-scrap-in-place channel l-channel n-cell scrap-cache)
+  (f32vector-scrap-in-place-c (bytevector->pointer channel)
+                              (bytevector->pointer l-channel)
+                              n-cell
+                              (bytevector->pointer scrap-cache)))
 
 (define (f32vector-threshold to n-cell channels threshold bg)
   (receive (maker setter!)

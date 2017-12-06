@@ -37,11 +37,15 @@
             float-to-int-c
             float-equal-c
 
+            ;; bounding box
+            bb-intersect-c
+
             ;; f32vectors
             f32vector-min-c
             f32vector-max-c
             f32vector-range-c
             f32vector-scrap-c
+            f32vector-scrap-in-place-c
             f32vector-threshold-c
             f32vector-fill-holes-c
             f32vector-rgb-to-gray-c
@@ -90,6 +94,17 @@
 
 
 ;;;
+;;; bouding box
+;;;
+
+(define bb-intersect-c
+  (pointer->procedure int
+                      (dynamic-func "bb_intersect_c"
+                                    %libguile-cv)
+                      (list int int int int int int int int)))
+
+
+;;;
 ;;; f32vectors
 ;;;
 
@@ -126,6 +141,15 @@
                             int		;; n-cell
                             '*		;; scrap-cache
                             '*)))	;; to
+
+(define f32vector-scrap-in-place-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_scrap_in_place_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            '*		;; l-chan
+                            int		;; n-cell
+                            '*)))	;; scrap-cache
 
 (define f32vector-threshold-c
   (pointer->procedure int
