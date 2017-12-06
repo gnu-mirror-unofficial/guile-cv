@@ -46,7 +46,7 @@
 	    %image-cache-format
             n-cell->per-core-start-end
             features-bb
-            bb-points
+            #;bb-points
             bb-point-inside?
             bb-intersect?))
 
@@ -137,7 +137,7 @@
             (list left top right bottom))))
     features))
 
-(define (bb-points bb)
+#;(define (bb-points bb)
   (match bb
     ((left top right bottom)
      (list (list left top)		;; x1 y1
@@ -145,17 +145,53 @@
            (list left bottom)		;; x3 y3
            (list right bottom)))))	;; x4 y4
 
-(define (bb-point-inside? bb pt)
+#;(define (bb-point-inside? bb pt)
   (match bb
     ((left top right bottom)
      (match pt
        ((pt-x pt-y)
-        (or (and (>= pt-x left)
-                 (<= pt-x right)
-                 (>= pt-y top)
-                 (<= pt-y bottom))))))))
+        (and (>= pt-x left)
+             (<= pt-x right)
+             (>= pt-y top)
+             (<= pt-y bottom)))))))
 
-(define (bb-intersect? b1 b2)
+(define (bb-point-inside? bb pt-x pt-y)
+  (match bb
+    ((left top right bottom)
+     (and (>= pt-x left)
+          (<= pt-x right)
+          (>= pt-y top)
+          (<= pt-y bottom)))))
+
+#;(define (bb-intersect? b1 b2)
   (or-l (map (lambda (pt)
                (bb-point-inside? b1 pt))
           (bb-points b2))))
+
+(define (bb-intersect? b1 b2)
+  (match b1
+    ((left top right bottom)
+     (letrec ((point-inside? (lambda (pt-x pt-y)
+                               (and (>= pt-x left)
+                                    (<= pt-x right)
+                                    (>= pt-y top)
+                                    (<= pt-y bottom)))))
+       (match b2
+         ((b2-left b2-top b2-right b2-bottom)
+          (or (point-inside? b2-left b2-top)
+              (point-inside? b2-right b2-top)
+              (point-inside? b2-left b2-bottom)
+              (point-inside? b2-right b2-bottom))))))))
+
+;; the following was an attempt to speed this procedure, which gets
+;; called millions of times by im-reconstruct (depending on the original
+;; image size of course), but it actually is slower. I'll keep it as an
+;; example though.
+#;(define (bb-intersect? b1 b2)
+  (match b1
+    ((b1-left b1-top b1-right b1-bottom)
+     (match b2
+       ((b2-left b2-top b2-right b2-bottom)
+        (= (bb-intersect-c b1-left b1-top b1-right b1-bottom
+                           b2-left b2-top b2-right b2-bottom)
+           1))))))
