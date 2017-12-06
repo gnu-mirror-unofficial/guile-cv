@@ -369,12 +369,7 @@
             (i-crop (im-crop i-p-clean i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1)))
             (i-chan (im-channel i-crop 0))
             (s-crop (im-crop seeds left top (+ right 1) (+ bottom 1)))
-            (s-chan (im-channel s-crop 0))
-            (result #f))
-       #;(dimfi i-p-left i-p-top (+ i-p-right 1) (+ i-p-bottom 1))
-       #;(im-save i-crop (%is-a-seed-tmp-filename "i-crop-" i-p-left
-                                                i-p-top i-p-right i-p-bottom))
-       #;(im-save s-crop (%is-a-seed-tmp-filename "s-crop-" left top right bottom))
+            (s-chan (im-channel s-crop 0)))
      (match i-crop
        ((width height _ _)
         (f32vector-is-a-seed? i-chan (* width height) s-chan)))))))
