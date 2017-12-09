@@ -113,6 +113,20 @@ or-l
   and there are (well known among schemers) situations where you need a
   function (not a macro)...
 
+im-composite->rgb
+
+  Composite images only differs to others in the sence that they can
+  have more then 3 channels, any number of channels actually, the 4th
+  _not_ being the traditional alpha channel.  Each channel holds on
+  specific information, depending on the application domaim.  It is
+  sometime necessary to visualize these though, in which case they must
+  be 'converted' to RGB images, hence this new procedure.  This is a
+  'work in progress': as it is, it will only work if the composite image
+  has 4 channels.  In this first implementation, the algorithm will
+  super impose the 4th channel to the RGB's, so one says 'white pixels
+  always win' (this because the 4th channel is (generally) associated
+  with the White 'color').
+
 **** Removed interfaces
 
 im-list=?

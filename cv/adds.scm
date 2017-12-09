@@ -75,7 +75,8 @@
             im-scrap
             im-scrap-channel
             im-particles
-            im-particle-clean))
+            im-particle-clean
+            im-composite->rgb))
 
 
 (g-export im-add
@@ -1056,6 +1057,44 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (if binary?
         p-clean
         (im-and particle p-clean))))
+
+(define (%merge-channel-color i)
+  (case (i)
+    ((3) '(255.0 255.0 255.0))	;; white
+    ((4) '(0.0 255.0 255.0))	;; cyan
+    ((5) '(255.0 0.0 255.0))	;; magenta
+    ((6) '(255.0 255.0 0.0))	;; yellow
+    (else
+     "No such merge channel color index:" i)))
+
+(define (im-composite->rgb image)
+  (match image
+    ((width height n-chan idata)
+     (match idata
+       ((c1 c2 c3 c4 . rest)
+        (let ((n-cell (* width height))
+              (r-chan (im-make-channel width height))
+              (g-chan (im-make-channel width height))
+              (b-chan (im-make-channel width height)))
+          (do ((i 0
+                  (+ i 1)))
+              ((= i n-cell)
+               (list width height 3
+                     (list r-chan g-chan b-chan)))
+            (if (= (f32vector-ref c4 i) 255.0)
+                (begin
+                  (f32vector-set! r-chan i 255.0)
+                  (f32vector-set! g-chan i 255.0)
+                  (f32vector-set! b-chan i 255.0))
+                (begin
+                  (f32vector-set! r-chan i
+                                  (f32vector-ref c1 i))
+                  (f32vector-set! g-chan i
+                                  (f32vector-ref c2 i))
+                  (f32vector-set! b-chan i
+                                  (f32vector-ref c3 i)))))))
+       (else
+        (error "Not a composite image: " image))))))
 
 
 #!
