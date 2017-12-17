@@ -31,8 +31,8 @@ AC_PREREQ(2.69)
 
 AC_INIT(
   [guile-cv],
-  [0.1.7],
-  [david at altosw dot be])
+  [0.1.8],
+  [bug-guile-cv@gnu.org])
 
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
