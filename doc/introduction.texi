@@ -197,7 +197,7 @@ make install
 
 Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
 you read and implement the recommendation made in the manual, section
-@xref{Configuring Guile's repl-print procedure}.
+@xref{Configuring Guile for Guile-CV}.
 @end indentedblock
 
 Happy @uref{@value{UGUILE-CV}, Guile-CV}!
@@ -229,7 +229,7 @@ make install
 
 Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
 you read and implement the recommendation made in the manual, section
-@xref{Configuring Guile's repl-print procedure}.
+@xref{Configuring Guile for Guile-CV}.
 @end indentedblock
 
 The above steps ensure you're using @uref{@value{UGUILE-CV}, Guile-CV}

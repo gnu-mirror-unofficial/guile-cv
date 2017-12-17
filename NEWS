@@ -47,6 +47,20 @@ Vigra C >= commit 691b189b0 Oct 25, 2017
   vigra_exportrgbimage_c and vigra_exportrgbaimage_c. A new
   vigra_clipimage_c function is available and Guile-CV uses it.
 
+**** Configuring Guile for Guile-CV
+
+I finally got my hands on how to configure Guile's raised exception
+system (special thanks to Daniel Lloren) so it does not 'blow' the repl
+upon errors anymore, while using Guile-CV (or manipulating any other big
+structures for that matters, huge lists, arrays, sfri-4 bytevectors
+...).
+
+As a consequence, the manual has been updated and now covers both
+Guile's repl-print and raised exception system configuration, either
+globally, or individually: it is highly recommended for all users, even
+those who are already using GUile-CV I mean, not just new users, to very
+carefully read and apply these two recommendations.
+
 **** Interface changes
 
 im-fill-holes
@@ -66,7 +80,7 @@ im-label-all-channel
 
   Return n-label, not n-object. The number of labels correspond to the
   highest label value + 1: earlier version of Guile-CV, prior to version
-  1.8.0, did return the number of objects, which correspond to the
+  0.1.8, did return the number of objects, which correspond to the
   highest label value. This was less then optimal, since not only 0.0 is
   a label, but other procedures, im-features for example, do consider
   and return a feature object for the background as well.

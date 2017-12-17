@@ -11,19 +11,25 @@ Guile-CV Reference Manual still is a mock-up: any help is more then
 welcome to improve this situation, thanks!
 
 
-@node Configuring Guile's repl-print procedure
-@section Configuring Guile's repl-print procedure
+@node Configuring Guile for Guile-CV
+@section Configuring Guile for Guile-CV
 
-Guile's repl-print procedure _must_ be modified before to start to use
-Guile-CV.  The default Guile's repl-print procedure calls (write val),
-which is inadequate for images, even very small images@footnote{Even for
-very small images, using write is inadequate, in a terminal, and will
-definitely kill your Emacs/Geiser session.  Not to mention it will raise
-your electricity bill :) - till you succeed to delete its process, Emacs
-will use one core at more then 100%, desperately trying to display
-hundreds of thousands of floating point values, heating your laptop (if
-you have a laptop) up to the point you'll be able to cook an egg on it,
-and get its fans crasy... You've been warned :).}.
+Guile must be modified, with respect to two @code{core} functionalities,
+before to start to use Guile-CV: (a) its @code{repl-print} procedure and
+(b) its @code{raised exception system}.
+
+@node Configuring Guile's repl-print procedure
+@subsection Configuring Guile's repl-print procedure
+
+Guile's repl-print procedure calls (write val), which is inadequate for
+images, even very small images@footnote{Even for very small images,
+using write is inadequate, in a terminal, and will definitely kill your
+Emacs/Geiser session.  Not to mention it will raise your electricity
+bill :) - till you succeed to delete its process, Emacs will use one
+core at more then 100%, desperately trying to display hundreds of
+thousands of floating point values, heating your laptop (if you have a
+laptop) up to the point you'll be able to cook an egg on it, and get its
+fans crasy... You've been warned :).}.
 
 Unfortunately, Guile does not provide a simple way for its users to
 modify its repl-print procedure, so, for now, there is no other way but
@@ -76,7 +82,140 @@ by
 @end lisp
 @end enumerate
 
-Save the file of course, and your good to play with Guile-CV.
+Save the file of course, and proceed with the seconf modification (next
+section).
+
+
+@node Configuring Guile's raised exception system
+@subsection Configuring Guile's raised exception system
+
+Guile's default raised exception system calls @code{simple-format},
+which is inadequate for images, even very small images (see the related
+footnote of the previous section, it explains how @samp{inadequate} this
+default is for images.
+
+Because Guile's module we need to patch has changed in between 2.0, 2.2
+and 2.2.3, we will guide you to manually update your local version, just
+don't be scared, be meticulous and it will be all fine. But if you think
+it is 'too much' for you, get in touch with us, and we will guide you or
+provide a 'ready to use module', depending on your version of Guile.
+
+The module we need to modify is @code{(ice-9 boot-9)}, so let's first
+figure out where it is on your system@footnote{You need write privileges
+to modify this module, contact your admin if you're not in charge of the
+system you are working on.}:
+
+@lisp
+guile
+...
+scheme@@(guile-user)> (string-append (%package-data-dir) "/" (effective-version))
+@print{}
+$2 = "/opt2/share/guile/2.2"
+@end lisp
+
+The above returned value is an example of course, just proceed with the
+value returned by your system. So, the file we need to edit, in our
+example, is here:
+
+@example
+/opt2/share/guile/2.2/ice-9/boot-9.scm
+@end example
+
+Edit the above file and:
+
+@enumerate
+@item
+Search for the line @code{(define format simple-format)} (for Guile
+2.2.3, it is the line 327), and below, add the following lines:
+
+@lisp
+;; instead of using the above, let's define a specific format binding
+;; for exception printers, to allow its user customization.
+(define exception-format simple-format)
+@end lisp
+
+@item
+In the core of the following procedure, (and only in the core of the
+following procedures), you will replace all occurences calls to
+@code{format} by calls to @code{exception-format}:
+
+@lisp
+dispatch-exception	- line 731 for Guile 2.2.3
+  1 occurrence
+
+(let ((exception-printers '()))		- line 864 for Guile 2.2.3
+  5 occurrences
+
+scm-error-printer	- line 910 for Guile 2.2.3
+  2 occurences
+
+syntax-error-printer	- line 921 for Guile 2.2.3
+  7 occurences
+
+keyword-error-printer	- line 941 for Guile 2.2.3
+  1 occurrence
+
+getaddrinfo-error-printer	- line 941 for Guile 2.2.3
+  1 occurrence
+
+false-if-exception	- line 1063 for Guile 2.2.3
+  2 occurences
+
+make-record-type	- line 1200 for Guile 2.2.3
+  1 occurence
+@end lisp
+
+Save the file of course.
+@end enumerate
+
+Now, we are ready to either individualy or globally (recommended)
+configure Guile to use @code{truncated-print} instead of
+@code{simple-format}.
+
+@itemize
+@item Globally
+
+The file we need to modify (or add) is @file{site/init.scm}, in guile's
+site directory, so let's first figure out where it is on your
+system@footnote{You need write privileges to modify this module, contact
+your admin if you're not in charge of the system you are working on.}:
+
+@lisp
+guile
+...
+scheme@@(guile-user)> (%package-data-dir)
+@print{}
+$2 = "/opt2/share/guile"
+@end lisp
+
+The above returned value is an example of course, just proceed with the
+value returned by your system. So, the file we need to edit or add, in
+our example, is:
+
+@example
+/opt2/share/guile/site/init.scm
+@end example
+
+Edit or add the above file and add the following lines:
+
+@lisp
+(use-modules (ice-9 pretty-print))
+
+(when (defined? 'exception-format)
+  (set! exception-format
+        (lambda (port fmt . args)
+          (for-each (lambda (arg)
+                      (truncated-print arg #:port port))
+              args))))
+@end lisp
+
+@item Individually
+
+Edit or add your @file{$HOME/.guile} and add same content as for
+the @samp{globally} configuration's last step described above.
+@end itemize
+
+And now you are to use GUile-CV!
 
 
 @node Images used in Guile-CV's documentation
@@ -106,7 +245,7 @@ as you need them, copy the distributed images you are interested in.
 @strong{Special note:}
 
 Before you start to use Guile-CV, make sure you read and implement the
-recommendation made in @ref{Configuring Guile's repl-print procedure}
+recommendation made in @ref{Configuring Guile for Guile-CV}
 @end indentedblock
 
 With the previous @ref{Images used in Guile-CV's documentation}
