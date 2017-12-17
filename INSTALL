@@ -19,7 +19,8 @@ warranty.
 * Guile-CV
 
 Guile-CV
-a Computer Vision functional programming library for Guile
+Image Processing and analysis in Guile
+a Computer Vision functional programming library
 
 ** Dependencies
 
@@ -99,8 +100,8 @@ Guile-CV releases are here:
 
 	http://ftp.gnu.org/gnu/guile-cv/
 
-		guile-cv-0.1.7.tar.gz
-		guile-cv-0.1.7.tar.gz.sig
+		guile-cv-0.1.8.tar.gz
+		guile-cv-0.1.8.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -109,8 +110,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.1.7.tar.gz
-	cd guile-cv-0.1.7
+	tar zxf guile-cv-0.1.8.tar.gz
+	cd guile-cv-0.1.8
 	./configure [--prefix=/your/prefix]
 	make
 	make install
