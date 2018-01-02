@@ -34,9 +34,9 @@ Guile-CV} web site to find out how to get involved.
 
 @node Guile-CV License
 @unnumberedsec The Guile-CV License
-@cindex copying
+@cindex Copying
 @cindex GPL
-@cindex license
+@cindex License
 
 Guile-CV is Free Software. Guile-CV is copyrighted, not public domain,
 and there are restrictions on its distribution or redistribution:

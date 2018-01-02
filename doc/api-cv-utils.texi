@@ -252,7 +252,7 @@ these options when working with Guile-CV.
 
 @anchor{%image-cache}
 @defvr Variable %image-cache
-@cindex User configuration
+@cindex User Configuration
 
 Specifies the location used by @ref{im-show} to save images. 
 

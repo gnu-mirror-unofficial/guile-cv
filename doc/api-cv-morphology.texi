@@ -206,6 +206,8 @@ between @code{im-delineate} called with the default @var{threshold} and
 @deffnx Procedure im-distance-map-channel channel width height @
        [#:bg 'black] [#:mode 'euclidean]
 @cindex Distance Transform
+@cindex Distance Map
+@cindex Euclidean Distance
 
 Returns a new image or channel.
 

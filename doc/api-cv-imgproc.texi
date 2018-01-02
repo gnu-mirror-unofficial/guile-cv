@@ -523,7 +523,7 @@ Note that @var{image} must be a binary image.
 @anchor{im-particles}
 @deffn Procedure im-particles image features [#:clean #t]
 @c @cindex Image split
-@cindex Image decompose
+@cindex Image Particles
 
 Returns two values, a list of images (the particles) and a list of their
 bounding boxes in the original @var{image}.
