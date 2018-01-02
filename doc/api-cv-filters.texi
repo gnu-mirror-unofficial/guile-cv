@@ -23,6 +23,8 @@ The Guile-CV procedures and methods to filter images.
 @item @ref{im-gaussian-sharp-channel}
 @item @ref{im-sharpen}
 @item @ref{im-sharpen-channel}
+@item @ref{im-median-filter}
+@item @ref{im-median-filter-channel}
 @item @ref{im-convolve}
 @item @ref{im-convolve-channel}
 @end table
@@ -34,8 +36,8 @@ The Guile-CV procedures and methods to filter images.
 @anchor{im-gaussian-blur-channel}
 @deffn Procedure im-gaussian-blur image sigma
 @deffnx Procedure im-gaussian-blur-channel channel width height sigma
-@cindex Gaussian blur
-@cindex Gaussian smooth
+@cindex Gaussian Blur
+@cindex Gaussian Smooth
 
 Returns a new image or channel.
 
@@ -51,7 +53,7 @@ distribution.
 @anchor{im-gaussian-gradient-channel}
 @deffn Procedure im-gaussian-gradient image sigma
 @deffnx Procedure im-gaussian-gradient-channel channel width height sigma
-@cindex Gaussian gradient
+@cindex Gaussian Gradient
 
 Returns a new image or channel.
 
@@ -67,7 +69,7 @@ deviation of the Gaussian distribution.
 @anchor{im-gaussian-sharp-channel}
 @deffn Procedure im-gaussian-sharp image factor scale
 @deffnx Procedure im-gaussian-sharp-channel channel width height factor scale
-@cindex Gaussian sharp
+@cindex Gaussian Sharp
 
 Returns a new image or channel.
 
@@ -100,12 +102,31 @@ and uses @code{mirror} as the @samp{out of bound strategy}.
 @end deffn
 
 
+@anchor{im-median-filter}
+@anchor{im-median-filter-channel}
+@deffn Procedure im-median-filter image w-width w-height
+@deffnx Procedure im-median-filter-channel channel width height @
+                  w-width w-height
+@cindex Median Filter
+
+Returns a new image or channel.
+
+In the new image or channel, each pixel value is the @samp{median} value
+of neighboring entries.  The pattern of neighbors is called a
+@samp{window}, the size of which is given by @code{w-width} and
+@code{w-height}.
+
+Currently, the @samp{out of bound strategy} is fixed and bound to
+@samp{zero}, though in the future, we hope to make it a parameter.
+@end deffn
+
+
 @anchor{im-convolve}
 @anchor{im-convolve-channel}
 @deffn Procedure im-convolve image kernel [#:obs 'repeat]
 @deffnx Procedure im-convolve-channel channel width height @
                   kernel k-width k-height [#:obs 'repeat]
-@cindex Image convolution
+@cindex Image Convolution
 
 Returns a new image or channel.
 

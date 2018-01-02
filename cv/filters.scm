@@ -49,6 +49,8 @@
 	    im-gaussian-sharp-channel
             im-sharpen
             im-sharpen-channel
+            im-median-filter
+            im-median-filter-channel
 	    im-convolve
             im-convolve-channel))
 
@@ -128,6 +130,23 @@
       (else
        (error "Sharpen failed.")))))
 
+(define (im-median-filter image w-width w-height)
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-median-filter-channel channel width height w-width w-height))
+		       idata))))))
+
+(define (im-median-filter-channel channel width height w-width w-height)
+  (let ((to (im-make-channel width height)))
+    (case (vigra-median-filter channel to width height w-width w-height)
+      ((0) to)
+      (else
+       (error "Median filter failed.")))))
+
 (define (convolve-obs->int obs)
   (case obs
     ((avoid) 0)
@@ -202,6 +221,14 @@
                                height
                                factor))
 
+(define (vigra-median-filter from to width height w-width w-height)
+  (vigra-median-filter-c (bytevector->pointer from)
+                         (bytevector->pointer to)
+                         width
+                         height
+                         w-width
+                         w-height))
+
 (define (vigra-convolve-channel from to width height kernel k-width k-height obs)
   (vigra-convolve-channel-c (bytevector->pointer from)
                             (bytevector->pointer kernel)
@@ -257,6 +284,17 @@
 			    int	     ;; width
 			    int	     ;; height
                             float))) ;; factor
+
+(define vigra-median-filter-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_medianfilter_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            int      ;; window width
+                            int)))   ;; window height
 
 (define vigra-convolve-channel-c
   (pointer->procedure int

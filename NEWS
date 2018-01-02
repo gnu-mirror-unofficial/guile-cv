@@ -27,7 +27,39 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
-** November xx, 2017
+** January the xxth, 2018
+
+Guile-CV version 0.1.9 is released!
+
+Here is a summary of the changes since version 0.1.8. See GNU Guile-CV's
+git summary [1] and git log [2] for a complete description:
+
+	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
+	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+
+*** Changes since 0.1.8
+
+**** Dependencies
+
+**** Configuring Guile for Guile-CV
+
+**** Interface changes
+
+**** New interfaces
+
+im-median-filter
+im-median-filter-channel
+
+**** Removed interfaces
+
+**** Performance improvements
+
+**** Bug fixes
+
+
+* Older News
+
+** December the 18th, 2017
 
 Guile-CV version 0.1.8 is released!
 
@@ -219,9 +251,6 @@ im-particle-clean
   will happen.
 
 **** Bug fixes
-
-
-* Older News
 
 ** October the 23rd, 2017
 
