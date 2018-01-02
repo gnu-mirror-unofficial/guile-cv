@@ -114,7 +114,8 @@ Returns a new image or channel.
 In the new image or channel, each pixel value is the @samp{median} value
 of neighboring entries.  The pattern of neighbors is called a
 @samp{window}, the size of which is given by @code{w-width} and
-@code{w-height}.
+@code{w-height} (see @uref{@value{UMEDIANFILTER}, Median Filter} for
+more information).
 
 Currently, the @samp{out of bound strategy} is fixed and bound to
 @samp{zero}, though in the future, we hope to make it a parameter.

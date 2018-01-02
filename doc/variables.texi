@@ -55,6 +55,7 @@
 @set UEIGENV https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
 @set USKEWNESS https://en.wikipedia.org/wiki/Skewness
 @set UKURTOSIS https://en.wikipedia.org/wiki/Kurtosis
+@set UMEDIANFILTER https://en.wikipedia.org/wiki/Median_filter
 
 @set UVL-93ieeeIP-RECONS http://www.vincent-net.com/luc/papers/93ieeeip_recons.pdf
 
