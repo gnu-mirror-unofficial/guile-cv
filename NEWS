@@ -4,7 +4,7 @@
 
 #+BEGIN_COMMENT
 
-Copyright (C) 2016 - 2017
+Copyright (C) 2016 - 2018
 Free Software Foundation, Inc.
 
 This document is part of GNU Guile-CV.
@@ -27,7 +27,7 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
-** January the xxth, 2018
+** XX the xxth, 2018
 
 Guile-CV version 0.1.9 is released!
 
@@ -40,6 +40,11 @@ git summary [1] and git log [2] for a complete description:
 *** Changes since 0.1.8
 
 **** Dependencies
+
+Vigra C} >= commit 245b4ca64 Jan 3, 2018
+
+  The vigra_medianfilter_c function takes an additional 'out-of-bound
+  strategy' argument.
 
 **** Configuring Guile for Guile-CV
 

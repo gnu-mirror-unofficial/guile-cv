@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -130,20 +130,39 @@
       (else
        (error "Sharpen failed.")))))
 
-(define (im-median-filter image w-width w-height)
+(define (median-obs->int obs)
+  (case obs
+    ((avoid) 0)
+    ;; ((clip) 1) not supported for median filters
+    ((repeat) 2)
+    ;; vigra says 'reflect, I prefer 'mirror
+    ((mirror) 3)
+    ((wrap) 4)
+    ((zero) 5)
+    (else
+     (error "Unkown out-of-bound strategy: " obs))))
+
+(define* (im-median-filter image w-width w-height #:key (obs 'repeat))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-median-filter-channel channel width height w-width w-height))
+			 (im-median-filter-channel channel width height w-width w-height
+                                                   #:obs obs))
 		       idata))))))
 
-(define (im-median-filter-channel channel width height w-width w-height)
-  (let ((to (im-make-channel width height)))
-    (case (vigra-median-filter channel to width height w-width w-height)
+(define* (im-median-filter-channel channel width height w-width w-height
+                                  #:key (obs 'repeat))
+  (let ((obs (median-obs->int obs))
+        (to (im-make-channel width height)))
+    (case (vigra-median-filter channel to width height w-width w-height obs)
       ((0) to)
+      ((1)
+       (error "Window dimensions must be odd."))
+      ((2)
+       (error "Invalid out-of-bound strategy."))
       (else
        (error "Median filter failed.")))))
 
@@ -157,7 +176,7 @@
     ((wrap) 4)
     ((zero) 5)
     (else
-     (error "Unkown out-of-bound stratgy: " obs))))
+     (error "Unkown out-of-bound strategy: " obs))))
 
 (define* (im-convolve image kernel #:key (obs 'repeat))
   (match image
@@ -221,13 +240,14 @@
                                height
                                factor))
 
-(define (vigra-median-filter from to width height w-width w-height)
+(define (vigra-median-filter from to width height w-width w-height obs)
   (vigra-median-filter-c (bytevector->pointer from)
                          (bytevector->pointer to)
                          width
                          height
                          w-width
-                         w-height))
+                         w-height
+                         obs))
 
 (define (vigra-convolve-channel from to width height kernel k-width k-height obs)
   (vigra-convolve-channel-c (bytevector->pointer from)
@@ -294,7 +314,8 @@
 			    int	     ;; width
 			    int	     ;; height
                             int      ;; window width
-                            int)))   ;; window height
+                            int      ;; window height
+                            int)))   ;; border treatment
 
 (define vigra-convolve-channel-c
   (pointer->procedure int

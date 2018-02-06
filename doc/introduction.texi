@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -119,13 +119,9 @@ essential adequate runtime optimization flags.
 @end indentedblock
 
 @item
-@uref{@value{UVIGRAC}, Vigra C} >= commit 691b189b0 Oct 25, 2017
+@uref{@value{UVIGRAC}, Vigra C} >= commit 245b4ca64 Jan 3, 2018
 
 @indentedblock
-A clipping bug has been fixed in vigra_exportgrayimage_c,
-vigra_exportrgbimage_c and vigra_exportrgbaimage_c. A new
-vigra_clipimage_c function is available and Guile-CV uses it.
-
 Vigra C - a C wrapper [to some of] the Vigra functionality - is
 currently only available by cloning its source code @uref{@value{UGIT},
 git} repository: there is no release and no versioning scheme
