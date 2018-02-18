@@ -139,8 +139,8 @@
   (let* ((in (dirname filename))
          (b-name (basename filename))
          (f-name (basename b-name ".pdf"))
-         (cmd (format #f "cd ~A;  pdftoppm -png -r 72 ~A.pdf > ~A.png"
-                      in f-name f-name))
+         (cmd (format #f "cd ~A;  pdftoppm -png -r ~A ~A.pdf > ~A.png"
+                      in res f-name f-name))
          (png-filename (string-append in "/" f-name ".png")))
     (if (zero? (system cmd))
         png-filename
