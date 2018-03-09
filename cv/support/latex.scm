@@ -129,13 +129,10 @@
         pdf-filename
 	(error "subprocess returned non-zero result code" cmd))))
 
-(define %latex-pdftoppm-cmd "pdftoppm -png -r 72 ~A.pdf > ~A.png")
-
 (define* (latex-pdftoppm filename #:key (res 72) (to "png"))
-  ;; Note that 72 is a bit arbitrary, hence optional to coversome other
-  ;; needs, but that is the appropirate value for histogram
-  ;; tablestables, both so they (still) look nice and fit within the
-  ;; width of histograms.
+  ;; Note that 72 - resolution optional keyword default value - is a bit
+  ;; arbitrary, but that is the appropriate value for histogram legends,
+  ;; so they render nicely and fit within the width of their histograms.
   (let* ((in (dirname filename))
          (b-name (basename filename))
          (f-name (basename b-name ".pdf"))

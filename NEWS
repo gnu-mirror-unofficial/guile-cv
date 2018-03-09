@@ -41,9 +41,9 @@ git summary [1] and git log [2] for a complete description:
 
 **** Dependencies
 
-Vigra C} >= commit 245b4ca64 Jan 3, 2018
+Vigra C >= commit 245b4ca64 Jan 3, 2018
 
-  The vigra_medianfilter_c function takes an additional 'out-of-bound
+  the vigra_medianfilter_c function takes an additional 'out-of-bound
   strategy' argument.
 
 **** Configuring Guile for Guile-CV
@@ -64,6 +64,12 @@ im-median-filter-channel
 
 **** Bug fixes
 
+latex-pdftoppm
+
+  in the module (cv support latex) - undocumented but quite usefull
+  procedure, to 'prepare' text to be added to images (see im-compose) -
+  the optional keyword [#:res 72] argument was actually not used in the
+  core of the procedure, fixed.
 
 * Older News
 
