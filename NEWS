@@ -27,30 +27,26 @@ Guile-CV - History of user-visible changes
 
 * Latest News
 
-** XX the xxth, 2018
+** April 2018
 
-Guile-CV version 0.1.9 is released!
+Guile-CV version 0.1.9 is released.
 
-Here is a summary of the changes since version 0.1.8. See GNU Guile-CV's
-git summary [1] and git log [2] for a complete description:
+** Changes since 0.1.8
+
+Here is a summary of visible changes since version 0.1.8. See GNU
+Guile-CV's git summary [1] and git log [2] for a complete description.
 
 	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
 	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
 
-*** Changes since 0.1.8
-
-**** Dependencies
+*** Dependencies
 
 Vigra C >= commit 245b4ca64 Jan 3, 2018
 
   the vigra_medianfilter_c function takes an additional 'out-of-bound
   strategy' argument.
 
-**** Configuring Guile for Guile-CV
-
-**** Interface changes
-
-**** New interfaces
+*** New interfaces
 
 im-median-filter
 im-median-filter-channel
@@ -58,11 +54,9 @@ im-median-filter-channel
   both procedures now accept an 'out-of-bound strategy' optional keyword
   argument, [#:obs 'repeat]. Consult the manual for other strategies.
 
-**** Removed interfaces
+*** Performance improvements
 
-**** Performance improvements
-
-**** Bug fixes
+*** Bug fixes
 
 latex-pdftoppm
 
@@ -70,6 +64,7 @@ latex-pdftoppm
   procedure, to 'prepare' text to be added to images (see im-compose) -
   the optional keyword [#:res 72] argument was actually not used in the
   core of the procedure, fixed.
+
 
 * Older News
 
