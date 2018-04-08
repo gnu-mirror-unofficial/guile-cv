@@ -59,4 +59,4 @@
 
 @set UVL-93ieeeIP-RECONS http://www.vincent-net.com/luc/papers/93ieeeip_recons.pdf
 
-@set UWIKI-MM https://en.wikipedia.org/wiki/Mathematical_morphology
+@set UMM https://en.wikipedia.org/wiki/Mathematical_morphology

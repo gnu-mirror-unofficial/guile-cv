@@ -255,7 +255,7 @@ are @samp{marked} by (any of) the connected components contained in
 Morphological reconstruction is part of a set of image operators often
 referred to as @samp{geodesic} (geodesic distance, geodesic dilation
 @dots{}). Morphological (or geodesic) operations upon digital images
-come from and use the @uref{@value{UWIKI-MM}, Mathematical morphology
+come from and use the @uref{@value{UMM}, Mathematical morphology
 (MM)} theory and technique developed for the analysis and processing of
 geometrical structures.
 
