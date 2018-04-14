@@ -52,7 +52,9 @@
             im-median-filter
             im-median-filter-channel
 	    im-convolve
-            im-convolve-channel))
+            im-convolve-channel
+            im-nl-means
+            im-nl-means-channel))
 
 
 #;(g-export )
@@ -206,6 +208,77 @@
       ((3)
        (error "Invalid out-of-bound strategy.")))))
 
+(define* (im-nl-means image #:key
+                      (policy-type 1)
+                      (sigma (if (= policy-type 0) 5.0 15.0))
+                      (mean (if (= policy-type 0) 0.95 5.0))
+                      (variance-ratio 0.5)
+                      (epsilon 1.0e-5)
+                      (spatial-sigma 2.0)
+                      (search-radius 3)
+                      (patch-radius 1)
+                      (mean-sigma 1.0)
+                      (step-size 2)
+                      (n-iteration 1))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let* ((map-proc (if (and (> n-chan 1)
+                                     (%use-par-map)) par-map map))
+                  (n-core (current-processor-count))
+                  (n-thread (if (> n-chan 1)
+                                (inexact->exact (floor (/ (- n-core 1) n-chan)))
+                                (- n-core 1))))
+             (map-proc (lambda (channel)
+                         (im-nl-means-channel channel width height
+                                              #:policy-type policy-type
+                                              #:sigma sigma
+                                              #:mean mean
+                                              #:variance-ratio variance-ratio
+                                              #:epsilon epsilon
+                                              #:spatial-sigma spatial-sigma
+                                              #:search-radius search-radius
+                                              #:patch-radius patch-radius
+                                              #:mean-sigma mean-sigma
+                                              #:step-size step-size
+                                              #:n-iteration n-iteration
+                                              #:n-thread n-thread))
+                 idata))))))
+
+(define* (im-nl-means-channel channel width height #:key
+                              (policy-type 1)
+                              (sigma (if (= policy-type 0) 5.0 15.0))
+                              (mean (if (= policy-type 0) 0.95 5.0))
+                              (variance-ratio 0.5)
+                              (epsilon 1.0e-5)
+                              (spatial-sigma 2.0)
+                              (search-radius 3)
+                              (patch-radius 1)
+                              (mean-sigma 1.0)
+                              (step-size 2)
+                              (n-iteration 1)
+                              (n-thread (- (current-processor-count) 1)))
+  (let ((to (im-make-channel width height)))
+    (case (vigra-nl-means-channel channel to width height
+                                  policy-type
+                                  sigma
+                                  mean
+                                  variance-ratio
+                                  epsilon
+                                  spatial-sigma
+                                  search-radius
+                                  patch-radius
+                                  mean-sigma
+                                  step-size
+                                  n-iteration
+                                  n-thread
+                                  #f)  ;; verbose
+      ((0) to)
+      ((1)
+       (error "Nl-means failed."))
+      ((2)
+       (error "Policy must be 0 or 1.")))))
+
 
 ;;;
 ;;; Guile vigra low level API
@@ -258,6 +331,38 @@
                             k-width
                             k-height
                             obs))
+
+(define (vigra-nl-means-channel from to width height
+                               policy-type
+                               sigma
+                               mean
+                               variance-ratio
+                               epsilon
+                               spatial-sigma
+                               search-radius
+                               patch-radius
+                               mean-sigma
+                               step-size
+                               n-iteration
+                               n-thread
+                               verbose)
+  (vigra-nl-means-channel-c (bytevector->pointer from)
+                                  (bytevector->pointer to)
+                                  width
+                                  height
+                                  policy-type
+                                  sigma
+                                  mean
+                                  variance-ratio
+                                  epsilon
+                                  spatial-sigma
+                                  search-radius
+                                  patch-radius
+                                  mean-sigma
+                                  step-size
+                                  n-iteration
+                                  n-thread
+                                  (if verbose 1 0)))
 
 
 ;;;
@@ -329,3 +434,25 @@
                             int	     ;; kernel width
 			    int      ;; kernel height
                             int)))   ;; border treatment
+
+(define vigra-nl-means-channel-c
+    (pointer->procedure int
+		      (dynamic-func "vigra_nonlocalmean_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            int	     ;; policy type
+                            float    ;; sigma
+                            float    ;; mean ratio
+                            float    ;; var ratio
+                            float    ;; epsilon
+                            float    ;; spatial sigma
+                            int      ;; search radius
+                            int      ;; patch radius
+                            float    ;; mean sigma
+                            int      ;; step size
+                            int      ;; iterations
+                            int      ;; n-thread
+                            int)))   ;; verbose (a C bool)

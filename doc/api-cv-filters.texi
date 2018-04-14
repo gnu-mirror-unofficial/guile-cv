@@ -27,6 +27,8 @@ The Guile-CV procedures and methods to filter images.
 @item @ref{im-median-filter-channel}
 @item @ref{im-convolve}
 @item @ref{im-convolve-channel}
+@item @ref{im-nl-means}
+@item @ref{im-nl-means-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -184,4 +186,62 @@ Kernel data structure, accessors, procedures and predefined kernels are
 all described in this node of the Guile-CV manual:
 @ref{Kernel Structure and Accessors}.
 
+@end deffn
+
+
+@anchor{im-nl-means}
+@anchor{im-nl-means-channel}
+@deffn Procedure im-nl-means image arg...
+@deffnx Procedure im-nl-means-channel channel width height arg...
+@cindex Non-Local Means Denoising
+
+Returns a new image or channel.
+
+The new image or new channel is the result of a @uref{@value{UNLMEANS},
+non-local means} denoising as described here@footnote{P. Coupe, P. Yger,
+S. Prima, P. Hellier, C. Kervrann, C. Barillot.  An Optimized Blockwise
+Non Local Means Denoising Filter for 3D Magnetic Resonance Images . IEEE
+Transactions on Medical Imaging, 27(4):425-441, Avril 2008.}. The
+following table lists the optional keyword arguments and their default
+values:
+
+Policy arguments:
+
+@indentedblock
+@table @option
+@item #:policy-type 1
+accepts 0 (ratio policy) or 1 (norm policy)
+@item #:sigma 15.0
+default to 5.0 if the policy-type is 0
+@item #:mean 5.0
+default to 0.95 if the policy-type is 0
+@item #:variance-ratio 0.5
+@item #:epsilon 1.0e-5
+@end table
+@end indentedblock
+
+Filter arguments:
+
+@indentedblock
+@table @option
+@item #:spatial-sigma 2.0
+@item #:search-radius 3
+@item #:patch-radius 1
+the patch-radius can be either 1 or 2
+@item #:mean-sigma 1.0
+@item #:step-size 2
+@item #:n-iteration 1
+@end table
+@end indentedblock
+
+The @code{im-nl-means-channel} procedure accepts one additional optional
+keyword argument:
+
+@indentedblock
+@table @option
+@item #:n-thread (- (current-processor-count) 1)
+@end table
+@end indentedblock
+
+FIXME need to describe the parameters
 @end deffn

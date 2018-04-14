@@ -54,6 +54,9 @@ im-median-filter-channel
   both procedures now accept an 'out-of-bound strategy' optional keyword
   argument, [#:obs 'repeat]. Consult the manual for other strategies.
 
+im-nl-means
+im-nl-means-channel
+
 *** Performance improvements
 
 *** Bug fixes
