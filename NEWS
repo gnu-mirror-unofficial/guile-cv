@@ -50,10 +50,6 @@ Vigra C >= commit 245b4ca64 Jan 3, 2018
 
 im-median-filter
 im-median-filter-channel
-
-  both procedures now accept an 'out-of-bound strategy' optional keyword
-  argument, [#:obs 'repeat]. Consult the manual for other strategies.
-
 im-nl-means
 im-nl-means-channel
 
