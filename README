@@ -18,19 +18,19 @@ warranty.
 
 * Guile-CV
 
-GNU Guile-CV [1]
-Image Processing and Analysis in Guile [2]
+[[http://www.gnu.org/software/guile-cv/][GNU Guile-CV]]
+Image Processing and Analysis in [[http://www.gnu.org/software/guile/][Guile]]
 a Computer Vision functional programming library
 
 
 Guile-CV - Image Processing and Analysis in Guile - is a Computer Vision
-functional programming library for the Guile Scheme language.
+functional programming library for the Guile [[http://schemers.org/][Scheme]] language.
 
-Based on Vigra (Vision with Generic Algorithms - a C++ image processing
-and analysis library) [3], Guile-CV comprises a direct binding to Vigra
-C (a C wrapper to most of the Vigra functionality) [4], enriched with
-pure Guile scheme algorithms, all accessible through a nice, clean and
-easy to use high level API.
+Based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vision with Generic Algorithms - a C++ image processing
+and analysis library), Guile-CV comprises a direct binding to [[https://github.com/BSeppke/vigra_c/][Vigra C]] (a
+C wrapper to most of the Vigra functionality), enriched with pure Guile
+scheme algorithms, all accessible through a nice, clean and easy to use
+high level API.
 
 Guile-CV is natively multi-threaded, and takes advantage of multiple
 cores, using high-level and fine grained application-level parallelism
@@ -50,7 +50,7 @@ as it grows.
 
 ** Savannah
 
-Guile-CV also has a Savannah project page [6].
+Guile-CV also has a [[https://savannah.gnu.org/projects/guile-cv/][Savannah]] project page.
 
 ** License
 
@@ -58,13 +58,3 @@ GNU Guile-CV is a free software, distributed under the terms of the GNU
 General Public License GPLv3 or higher. You must be aware there is no
 warranty whatsoever for GNU Guile-CV. This is described in full in the
 license.
-
-
-[1] http://www.gnu.org/software/guile-cv/
-[2] GNU Guile
-    an interpreter and compiler for the Scheme [6] programming language
-    http://www.gnu.org/software/guile/
-[3] http://ukoethe.github.io/vigra/
-[4] https://github.com/BSeppke/vigra_c/
-[5] http://schemers.org/
-[6] https://savannah.gnu.org/projects/guile-cv/
