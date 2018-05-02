@@ -34,10 +34,7 @@ Guile-CV version 0.1.9 is released.
 ** Changes since 0.1.8
 
 Here is a summary of visible changes since version 0.1.8. See GNU
-Guile-CV's git summary [1] and git log [2] for a complete description.
-
-	[1] http://git.savannah.gnu.org/cgit/guile-cv.git
-	[2] http://git.savannah.gnu.org/cgit/guile-cv.git/log/
+Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
 
 *** Dependencies
 
@@ -55,8 +52,6 @@ im-median-filter
 im-median-filter-channel
 im-nl-means
 im-nl-means-channel
-
-*** Performance improvements
 
 *** Bug fixes
 
