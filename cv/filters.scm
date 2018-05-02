@@ -211,7 +211,7 @@
 (define* (im-nl-means image #:key
                       (policy-type 1)
                       (sigma (if (= policy-type 0) 5.0 15.0))
-                      (mean (if (= policy-type 0) 0.95 5.0))
+                      (mean-ratio (if (= policy-type 0) 0.95 5.0))
                       (variance-ratio 0.5)
                       (epsilon 1.0e-5)
                       (spatial-sigma 2.0)
@@ -233,7 +233,7 @@
                          (im-nl-means-channel channel width height
                                               #:policy-type policy-type
                                               #:sigma sigma
-                                              #:mean mean
+                                              #:mean-ratio mean-ratio
                                               #:variance-ratio variance-ratio
                                               #:epsilon epsilon
                                               #:spatial-sigma spatial-sigma
@@ -248,7 +248,7 @@
 (define* (im-nl-means-channel channel width height #:key
                               (policy-type 1)
                               (sigma (if (= policy-type 0) 5.0 15.0))
-                              (mean (if (= policy-type 0) 0.95 5.0))
+                              (mean-ratio (if (= policy-type 0) 0.95 5.0))
                               (variance-ratio 0.5)
                               (epsilon 1.0e-5)
                               (spatial-sigma 2.0)
@@ -262,7 +262,7 @@
     (case (vigra-nl-means-channel channel to width height
                                   policy-type
                                   sigma
-                                  mean
+                                  mean-ratio
                                   variance-ratio
                                   epsilon
                                   spatial-sigma
@@ -335,7 +335,7 @@
 (define (vigra-nl-means-channel from to width height
                                policy-type
                                sigma
-                               mean
+                               mean-ratio
                                variance-ratio
                                epsilon
                                spatial-sigma
@@ -352,7 +352,7 @@
                                   height
                                   policy-type
                                   sigma
-                                  mean
+                                  mean-ratio
                                   variance-ratio
                                   epsilon
                                   spatial-sigma
@@ -446,7 +446,7 @@
                             int	     ;; policy type
                             float    ;; sigma
                             float    ;; mean ratio
-                            float    ;; var ratio
+                            float    ;; variance ratio
                             float    ;; epsilon
                             float    ;; spatial sigma
                             int      ;; search radius

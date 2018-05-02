@@ -213,7 +213,7 @@ Policy arguments:
 accepts 0 (ratio policy) or 1 (norm policy)
 @item #:sigma 15.0
 default to 5.0 if the policy-type is 0
-@item #:mean 5.0
+@item #:mean-ratio 5.0
 default to 0.95 if the policy-type is 0
 @item #:variance-ratio 0.5
 @item #:epsilon 1.0e-5
