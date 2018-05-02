@@ -17,12 +17,12 @@ warranty.
 #+END_COMMENT
 
 
-Guile-CV - History of user-visible changes
-==========================================
+               Guile-CV - History of user-visible changes
+               ==========================================
 
-  Please send Guile-CV bug reports to
+                  Please send Guile-CV bug reports to
 
-	 bug-guile-cv@gnu.org
+                          bug-guile-cv@gnu.org
 
 
 * Latest News
@@ -41,10 +41,13 @@ Guile-CV's git summary [1] and git log [2] for a complete description.
 
 *** Dependencies
 
-Vigra C >= commit 245b4ca64 Jan 3, 2018
+Vigra C >= commit a2ff675f4 April 15, 2018
 
-  the vigra_medianfilter_c function takes an additional 'out-of-bound
-  strategy' argument.
+  new interface vigra_nonlocalmean_c (introduced in Jan 2018), has an
+  argument that has been renamed;
+
+  the vigra_medianfilter_c function (updated in Jan 2018 as well) takes
+  an additional 'out-of-bound strategy' argument.
 
 *** New interfaces
 

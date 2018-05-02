@@ -41,12 +41,15 @@ Guile-CV needs the following software to run:
 
 	Vigra C				[c]
 
-            >= commit 691b189b0 Oct 25, 2017
 
-            A clipping bug has been fixed in vigra_exportgrayimage_c,
-            vigra_exportrgbimage_c and vigra_exportrgbaimage_c. A new
-            vigra_clipimage_c function is available and Guile-CV uses
-            it.
+		>= commit a2ff675f4 April 15, 2018
+
+		new interface vigra_nonlocalmean_c (introduced in Jan
+		2018), has an argument that has been renamed;
+
+		the vigra_medianfilter_c function (updated in Jan 2018
+		as well) takes an additional 'out-of-bound strategy'
+		argument.
 
 	  Vigra_c is a C wrapper [to some of] the Vigra
 	  functionality. It is currently only available by cloning its
