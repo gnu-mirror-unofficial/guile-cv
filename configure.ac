@@ -6,7 +6,7 @@ dnl
 
 define(GUILE_CV_CONFIGURE_COPYRIGHT,[[
 
-Copyright (C) 2016 - 2017
+Copyright (C) 2016 - 2018
 Free Software Foundation, Inc.
 
 This file is part of GNU Guile-CV.
@@ -31,7 +31,7 @@ AC_PREREQ(2.69)
 
 AC_INIT(
   [guile-cv],
-  [0.1.8],
+  [0.1.9],
   [bug-guile-cv@gnu.org])
 
 AC_CONFIG_AUX_DIR([build-aux])
