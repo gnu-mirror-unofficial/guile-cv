@@ -4,7 +4,7 @@
 
 #+BEGIN_COMMENT
 
-Copyright (C) 2016 - 2017
+Copyright (C) 2016 - 2018
 Free Software Foundation, Inc.
 
 This document is part of GNU Guile-CV.
@@ -29,8 +29,8 @@ Guile-CV needs the following software to run:
 	Autoconf	>= 2.69
 	Automake	>= 1.14
     Makeinfo	>= 6.3
-	Guile 		>= 2.0.13	[a]
-	Vigra		>= 1.11.0	[b]
+	[[http://www.gnu.org/software/guile][Guile]] 		>= 2.0.13
+	[[http://ukoethe.github.io/vigra/][Vigra]]		>= 1.11.0
 
 	  Special notes:
 	  --------------
@@ -39,8 +39,7 @@ Guile-CV needs the following software to run:
 	  ‑DCMAKE_BUILD_TYPE=RELEASE option, which triggers absolutely
 	  essential adequate runtime optimization flags.
 
-	Vigra C				[c]
-
+	[[https://github.com/BSeppke/vigra_c][Vigra C]]
 
 		>= commit a2ff675f4 April 15, 2018
 
@@ -77,25 +76,18 @@ Guile-CV needs the following software to run:
 	  LD_LIBRARY_PATH, otherwise Guile won’t find it and configure
 	  will report an error.
 
-	LaTex				[d]
+	[[http://www.latex-project.org/][LaTex]]
 
-	  Any modern latex distribution will do, we use TexLive [e].
+	  Any modern latex distribution will do, we use [[https://tug.org/texlive/][TexLive]].
 
 	  Guile-CV will check that it can find the standalone
 	  documentclass, as welll as the following packages: inputenc,
 	  fontenc, lmodern, xcolor, booktabs, siunitx, iwona.
 
-	  Iwona [f]: this is the font used to create im-histogram
+	  [[http://www.tug.dk/FontCatalogue/iwona/][Iwona]]: this is the font used to create im-histogram
 	  headers, legend indices and footers. Note that it could be
 	  that it is not part of your ’basic’ LaTex distro, on debian
 	  for example, iwona is part of the texlive-fonts-extra package.
-
-	[a] http://www.gnu.org/software/guile
-	[b] http://ukoethe.github.io/vigra/
-	[c] https://github.com/BSeppke/vigra_c
-	[d] http://www.latex-project.org/
-	[e] https://tug.org/texlive/
-	[f] http://www.tug.dk/FontCatalogue/iwona/
 
 ** Quickstart
 
@@ -124,7 +116,7 @@ proceed with the following steps:
 
 	  Before you start to use Guile-CV, make sure you read and
       implement the recommendation made in the manual, section
-      'Configuring Guile’s repl-print procedure'.
+      'Configuring Guile for Guile-CV'.
 
 Happy Guile-CV!
 
