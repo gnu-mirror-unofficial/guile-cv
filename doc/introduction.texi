@@ -233,7 +233,7 @@ bleeding edge @code{stable} version. If you wish to participate to
 developments, checkout the @code{devel} branch:
 
 @example
-git checkout --track -b devel origin/devel
+git checkout devel
 @end example
 
 Happy @code{hacking!}
