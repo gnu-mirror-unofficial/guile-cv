@@ -27,16 +27,70 @@ warranty.
 
 * Latest News
 
+** July 2018
+
+Guile-CV version 0.1.10 is released.  This is a maintenance release: (a)
+the default installation locations changed, and (b) there is a new
+configure option - see below for a complete description of these
+changes.
+
+*** Changes since 0.1.9
+
+Here is a summary of visible changes since version 0.1.9. See GNU
+Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
+
+**** Installation location changes
+
+The default and --prefix installation locations for source modules and
+compiled files has been changed, and, in the absence of the new
+configure option described below, are now:
+
+  $(datadir)/guile-cv
+  $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
+
+In the above, $(datadir) is substituted to the default /usr/local/share
+or /your/prefix/share and $(libdir) is substituted to /usr/local/lib or
+/your/prefix/lib, when/if --prefix was passed.
+
+$(GUILE_EFFECTIVE_VERSION) is substituted to the stable version number
+with which Guile-CV is being compile, for example, 2.2
+
+This change makes GNU Guile-CV compatible with the GNU Coding Standards,
+but it also implies that, unless you use the new configure option
+describe below, you will have to augment both Guile's variables
+%load-path and %load-compiled-path, respectively, with the two
+(substituted) paths described above, so that Guile finds Guile-CV's
+installed source modules and compiled files (see Guile-CV's installation
+'Notes' for more on this).
+
+**** New configure option
+
+The configure option --with-guile-site has been added, used to
+explicitly ask Foliot's source modules to be installed in the
+Guile-Gnome site directory, and the compiled files using Guile's
+site-ccache directories respectively (see Foliot's installation 'Notes'
+for more on this).
+
+It will only be honored if (and only if) it is passed as:
+
+  --with-guile-site=yes
+
+  [ in this case, there is obviously no need to augment Guile's
+  [ variables %load-path and %load-compiled-path
+
+
+* Older News
+
 ** April 2018
 
 Guile-CV version 0.1.9 is released.
 
-** Changes since 0.1.8
+*** Changes since 0.1.8
 
 Here is a summary of visible changes since version 0.1.8. See GNU
 Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
 
-*** Dependencies
+**** Dependencies
 
 Vigra C >= commit a2ff675f4 April 15, 2018
 
@@ -46,14 +100,14 @@ Vigra C >= commit a2ff675f4 April 15, 2018
   the vigra_medianfilter_c function (updated in Jan 2018 as well) takes
   an additional 'out-of-bound strategy' argument.
 
-*** New interfaces
+**** New interfaces
 
 im-median-filter
 im-median-filter-channel
 im-nl-means
 im-nl-means-channel
 
-*** Bug fixes
+**** Bug fixes
 
 latex-pdftoppm
 
@@ -61,9 +115,6 @@ latex-pdftoppm
   procedure, to 'prepare' text to be added to images (see im-compose) -
   the optional keyword [#:res 72] argument was actually not used in the
   core of the procedure, fixed.
-
-
-* Older News
 
 ** December the 18th, 2017
 
