@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -19,6 +19,10 @@
 #### along with GNU Guile-CV.  If not, see
 #### <https://www.gnu.org/licenses/gpl.html>.
 ####
+
+
+moddir=@SITEDIR@
+godir=@SITECCACHEDIR@
 
 
 GOBJECTS = $(SOURCES:%.scm=%.go)

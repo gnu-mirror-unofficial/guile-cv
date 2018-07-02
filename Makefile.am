@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -23,8 +23,6 @@
 
 include $(top_srcdir)/am/guile.mk
 
-moddir=$(GUILE_GLOBAL_SITE)
-godir=$(GUILE_SITE_CCACHE)
 
 pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA=meta/guile-cv-1.0.pc

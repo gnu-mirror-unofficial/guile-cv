@@ -122,24 +122,27 @@ Happy Guile-CV!
 
 *** Notes
 
-[1] In the above configure step, --prefix=/your/prefix is optional. The
-    default value is /usr/local.
+[1] The default and --prefix install locations for source modules and
+    compiled files (in the absence of --with-guile-site=yes) are:
 
-[2] To install Guile-CV, you must have write permissions to the
-    following directories:
+	    $(datadir)/guile-cv
+	    $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 
-		$prefix and its subdirs
-		Guile’s global site directory
-		Guile's site ccache directory
+    If you pass --with-guile-site=yes, these becomes:
 
-	  You may check the above two latest directories location using:
+	    the Guile site directory
+	    the Guile site-ccache directory
 
-		guile -c "(display (%global-site-dir)) (newline)"
-		guile -c "(display (%site-ccache-dir)) (newline)"
 
-    Guile-CV’s modules are installed in Guile’s global site directory.
-    Guile-CV’s compiled modules are installed in the Guile’s site-ccache
-    directory.
+[2] The configure step reports these locations as the content of the
+    sitedir and siteccachedir variables, respectivelly the source
+    modules and compiled files install locations.
+
+    After installation, you may consult these variables using
+    pkg-config:
+
+	    pkg-config guile-cv-1.0 --variable=sitedir
+	    pkg-config guile-cv-1.0 --variable=siteccachedir
 
 [3] Like for any other GNU Tool Chain compatible software, you may
     install the documentation locally using make install-info, make

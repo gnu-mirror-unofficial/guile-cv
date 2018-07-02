@@ -110,6 +110,32 @@ GUILE_GLOBAL_SITE_DIR
 GUILE_SITE_CCACHE_DIR
 GUILE_FLAGS
 
+
+AC_ARG_WITH(
+  [guile-site],
+  [AS_HELP_STRING(
+     [--with-guile-site],
+     [install source modules and compiled files using Guile's site and site-ccache dirs])],
+  [case "x$withval" in
+     xyes)
+     guile_site="yes";;
+     *)
+     guile_site="no";;
+   esac],
+  [guile_site="no"])
+AC_SUBST([guile_site])
+
+if test "x$guile_site" = "xyes"; then
+   SITEDIR="$GUILE_GLOBAL_SITE";
+   SITECCACHEDIR="$GUILE_SITE_CCACHE";
+else
+   SITEDIR="$datadir/guile-cv";
+   SITECCACHEDIR="$libdir/guile-cv/guile/$GUILE_EFFECTIVE_VERSION/site-ccache";
+fi
+AC_SUBST([SITEDIR])
+AC_SUBST([SITECCACHEDIR])
+
+
 PKG_CHECK_MODULES(GUILE_LIB, guile-lib-1.0 >= 0.2.5)
 
 AC_CONFIG_FILES(
@@ -122,4 +148,32 @@ AC_CONFIG_FILES([
   doc/Makefile
   test-suite/Makefile
 ])
+
 AC_OUTPUT
+
+AC_MSG_NOTICE(
+  []
+  []
+  [prefix=$prefix]
+  [exec_prefix=$exec_prefix]
+  [libdir=$libdir]
+  [datarootdir=$datarootdir]
+  [datadir=$datadir]
+  []
+  [--with-guile-site="$guile_site"]
+  []
+  [sitedir (source code): ${SITEDIR}]
+  [siteccachedir (compiled modules): ${SITECCACHEDIR}]
+  [])
+
+if test "x$guile_site" = "xno"; then
+  AC_MSG_WARN(
+    []
+    []
+    [Since --with-guile-site="no", sitedir and siteccachedir differ from]
+    [the one used by Guile itself. You have to augment both Guile's %load-path]
+    [and %load-compiled-path variables before to use Guile-CV's modules (see]
+    ['Environment Variables' and 'Load Paths' in the Guile Reference Manual).]
+    []
+    [Otherwise, consider using --with-guile-site=yes])
+fi

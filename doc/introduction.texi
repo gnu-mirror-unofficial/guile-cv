@@ -241,46 +241,53 @@ Happy @code{hacking!}
 @*
 @strong{Notes:}
 
+
 @enumerate
 @item
-In the above @code{configure} step, @code{--prefix=/your/prefix} is
-optional.  The default value is @code{/usr/local}.
-@ifhtml
-@*@*
-@end ifhtml
-
-@item
-To install Guile-CV, you must have @code{write permissions} to the
-following directories:
-
-@indentedblock
-@code{$prefix} and its subdirs@*
-Guile's global site directory@*
-Guile's site ccache directory
-@end indentedblock
-
-You may check the above two latest directories location using:
+The @code{default} and @code{--prefix} installation locations for source
+modules and compiled files (in the absence of
+@code{--with-guile-site=yes}) are:
 
 @example
-guile -c "(display (%global-site-dir)) (newline)"
-guile -c "(display (%site-ccache-dir)) (newline)"
+$(datadir)/guile-cv
+$(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 @end example
 
-Guile-CV's modules are installed in Guile's global site directory.
-Guile-CV's compiled modules are installed in the Guile's
-@code{site-ccache} directory.
+If you pass @code{--with-guile-site=yes}, these becomes:
+
+@example
+the Guile site directory
+the Guile site-ccache directory
+@end example
+
+@item
+The configure step reports these locations as the content of the
+@code{sitedir} and @code{siteccachedir} variables, respectivelly the
+source modules and compiled files install locations.
+
+After installation, you may consult these variables using pkg-config:
+
+@example
+pkg-config guile-cv-1.0 --variable=sitedir
+pkg-config guile-cv-1.0 --variable=siteccachedir
+@end example
+
+@item
+To install Guile-CV, you must have write permissions to the default or
+$prefix dir and its subdirs, as well as to both Guile's site and
+site-ccache directories if @code{--with-guile-site=yes} was passed.
 @ifhtml
 @*@*
 @end ifhtml
 
 @item
 Like for any other GNU Tool Chain compatible software, you may install
-the documentation locally using @code{make install-info}, @code{make
-install-html} and/or @code{make install-pdf}. The documentation is
-installed in @code{$prefix/share/doc/guile-cv}
+the documentation locally using @code{make install-html} [or @code{make
+install-pdf} ...].
 @ifhtml
 @*@*
 @end ifhtml
+
 
 @item
 Last but not least :), Guile-CV comes with a @code{test-suite}, which we
