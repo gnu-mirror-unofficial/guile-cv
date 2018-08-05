@@ -21,69 +21,34 @@ before to start to use Guile-CV: (a) its @code{repl-print} procedure and
 @node Configuring Guile's repl-print procedure
 @subsection Configuring Guile's repl-print procedure
 
-Guile's repl-print procedure calls (write val), which is inadequate for
-images, even very small images@footnote{Even for very small images,
-using write is inadequate, in a terminal, and will definitely kill your
-Emacs/Geiser session.  Not to mention it will raise your electricity
-bill :) - till you succeed to delete its process, Emacs will use one
-core at more then 100%, desperately trying to display hundreds of
-thousands of floating point values, heating your laptop (if you have a
-laptop) up to the point you'll be able to cook an egg on it, and get its
-fans crasy... You've been warned :).}.
+Guile's @code{repl-print} procedure calls @code{(write val)}, which is
+inadequate for images, even very small images@footnote{Even for very
+small images, using write is inadequate, in a terminal, and will
+definitely kill your Emacs/Geiser session.  Not to mention it will raise
+your electricity bill :) - till you succeed to delete its process, Emacs
+will use one core at more then 100%, desperately trying to display
+hundreds of thousands of floating point values, heating your laptop (if
+you have a laptop) up to the point you'll be able to cook an egg on it,
+and get its fans crasy... You've been warned :).}. Fortunately, Guile
+provides us both a simple mechanism to alter the default repl printer
+and the alternate repl printer procedure we need:
+@code{truncated-print}.
 
-Unfortunately, Guile does not provide a simple way for its users to
-modify its repl-print procedure, so, for now, there is no other way but
-'getting your hands dirty' here :), but no big deal either, here are the
-steps.
-
-The module we need to modify is @code{(system repl common)}, so let's
-first figure out where it is on your system@footnote{You need write
-privileges to modify this module, contact your admin if you're not in
-charge of the system you are working on.}:
-
-@lisp
-guile
-...
-scheme@@(guile-user)> (string-append (%package-data-dir) "/" (effective-version))
-@print{}
-$2 = "/opt2/share/guile/2.2"
-@end lisp
-
-The above returned value is an example of course, just proceed with the
-value returned by your system. So, the file we need to edit, in our
-example, is here:
-
-@example
-/opt2/share/guile/2.2/system/repl/common.scm
-@end example
-
-Edit the above file and:
-
-@enumerate
-@item
-Add the following module to the list of imported modules:
+To modify the default repl printer, place the following lines either in
+your @file{~/.guile} or in the file
+@file{$prefix/share/guile/site/init.scm} if you want the change to
+affect all users@footnote{You need write privileges to modify this
+module, contact your admin if you're not in charge of the system you are
+working on.}.
 
 @lisp
-#:use-module (ice-9 pretty-print)
+(use-modules (ice-9 pretty-print)
+             (system repl common))
+
+(repl-default-option-set! 'print
+                          (lambda (repl obj)
+                            (truncated-print obj) (newline)))
 @end lisp
-
-@item
-Search for the repl-print definition and, at the end of the procedure
-definition, replace:
-
-@lisp
-(write val)
-@end lisp
-
-by
-
-@lisp
-(truncated-print val)
-@end lisp
-@end enumerate
-
-Save the file of course, and proceed with the seconf modification (next
-section).
 
 
 @node Configuring Guile's raised exception system
@@ -103,12 +68,10 @@ provide a 'ready to use module', depending on your version of Guile.
 The module we need to modify is @code{(ice-9 boot-9)}, so let's first
 figure out where it is on your system@footnote{You need write privileges
 to modify this module, contact your admin if you're not in charge of the
-system you are working on.}:
+system you are working on.}, in a guile session, enter the following:
 
 @lisp
-guile
-...
-scheme@@(guile-user)> (string-append (%package-data-dir) "/" (effective-version))
+(string-append (%package-data-dir) "/" (effective-version))
 @print{}
 $2 = "/opt2/share/guile/2.2"
 @end lisp
@@ -165,42 +128,32 @@ make-record-type	- line 1200 for Guile 2.2.3
   1 occurence
 @end lisp
 
-Save the file of course.
+@item
+Let's compile it, and install the compiled version where it should (in
+the following lines, you'll need to substitute @code{/opt2} by your
+@code{$prefix} value, and the username by yours):
+
+@lisp
+cd /opt2/share/guile/2.2/ice-9
+guild compile boot-9.scm
+@print{} ;;; note: source file /opt2/share/guile/2.2/ice-9/boot-9.scm
+;;;       newer than compiled /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
+wrote `/home/david/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go'
+
+Now we move it, so all users benefit from the new compiled version:
+
+mv /home/david/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
+@end lisp
 @end enumerate
 
-Now, we are ready to either individualy or globally (recommended)
-configure Guile to use @code{truncated-print} instead of
-@code{simple-format}.
-
-@itemize
-@item Globally
-
-The file we need to modify (or add) is @file{site/init.scm}, in guile's
-site directory, so let's first figure out where it is on your
-system@footnote{You need write privileges to modify this module, contact
-your admin if you're not in charge of the system you are working on.}:
+Once the above is completed, to effectively modify the default raised
+exception printers, add the following lines to your @file{~/.guile} or
+to the file @file{$prefix/share/guile/site/init.scm} if you want the
+change to affect all users@footnote{Note that these lines assume you did perform
+the steps recommended in the previous section, which means
+@code{(use-modules (ice-9 pretty-print))} is already in there}:
 
 @lisp
-guile
-...
-scheme@@(guile-user)> (%package-data-dir)
-@print{}
-$2 = "/opt2/share/guile"
-@end lisp
-
-The above returned value is an example of course, just proceed with the
-value returned by your system. So, the file we need to edit or add, in
-our example, is:
-
-@example
-/opt2/share/guile/site/init.scm
-@end example
-
-Edit or add the above file and add the following lines:
-
-@lisp
-(use-modules (ice-9 pretty-print))
-
 (when (defined? 'exception-format)
   (set! exception-format
         (lambda (port fmt . args)
@@ -209,13 +162,7 @@ Edit or add the above file and add the following lines:
               args))))
 @end lisp
 
-@item Individually
-
-Edit or add your @file{$HOME/.guile} and add same content as for
-the @samp{globally} configuration's last step described above.
-@end itemize
-
-And now you are to use GUile-CV!
+You are now ready to use Guile-CV!
 
 
 @node Images used in Guile-CV's documentation
