@@ -28,6 +28,7 @@ pkgconfigdir=$(libdir)/pkgconfig
 pkgconfig_DATA=meta/guile-cv-1.0.pc
 
 SOURCES = \
+	cv/support/libguile-cv.scm		\
 	cv/support/modules.scm			\
 	cv/support/goops.scm			\
 	cv/support/g-export.scm			\
@@ -38,7 +39,6 @@ SOURCES = \
 	cv/support/s32vector.scm		\
 	cv/support/f32vector.scm		\
 	cv/support/f64vector.scm		\
-	cv/support/libguile-cv.scm		\
 	cv/support/latex.scm			\
 	cv/support/pi.scm			\
 	cv/support.scm				\
