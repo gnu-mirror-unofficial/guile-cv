@@ -1,7 +1,7 @@
 /*  -*- mode: C; coding: utf-8 -*-
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -339,6 +339,24 @@ int f32vector_multiply_value_c (float *v,
 
   for (i = 0; i < n_cell; i++) {
      to[i] = v[i] * val;
+  }
+  return 0;
+}
+
+int f32vector_times_vectors_c (float *to,
+                               int n_cell,
+                               float *v_ptr[],
+                               int n_vectors)
+{
+  int i, j;
+  float result;
+
+  for (i = 0; i < n_cell; i++) {
+    result = v_ptr[0][i];
+    for (j = 1; j < n_vectors; j++) {
+      result *= v_ptr[j][i];
+    }
+    to[i] = result;
   }
   return 0;
 }

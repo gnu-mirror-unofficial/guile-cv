@@ -1,7 +1,7 @@
 /*  -*- mode: C; coding: utf-8 -*-
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -117,6 +117,11 @@ int f32vector_multiply_value_c (float *v,
                                 int n_cell,
                                 float val,
                                 float *to);
+
+int f32vector_times_vectors_c (float *to,
+                               int n_cell,
+                               float *v_ptr[],
+                               int n_vectors);
 
 int f32vector_divide_value_c (float *v,
                               int n_cell,

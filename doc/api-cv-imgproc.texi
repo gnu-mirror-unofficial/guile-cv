@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -42,6 +42,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-add-channel}
 @item @ref{im-subtract}
 @item @ref{im-subtract-channel}
+@item @ref{im-times}
+@item @ref{im-times-channel}
 @item @ref{im-multiply}
 @item @ref{im-multiply-channel}
 @item @ref{im-divide}
@@ -315,6 +317,18 @@ Returns a new image or channel.
 Performs the scalar subtraction of @var{image} with @var{val} or the
 matrix subtraction of @var{i1 i2 i3} @dots{} or @var{c1 c2 c3} @dots{}
 respectively.
+@end deffn
+
+
+@anchor{im-times}
+@anchor{im-times-channel}
+@deffn Method im-times i1 i2 i3 @dots{}
+@deffnx Method im-times-channel width height c1 c2 c3 @dots{}
+
+Returns a new image or channel.
+
+Performs the element by element multiplication of @var{i1 i2 i3} @dots{}
+or @var{c1 c2 c3} @dots{} respectively.
 @end deffn
 
 

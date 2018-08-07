@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -85,6 +85,8 @@
           im-subtract-channel
           im-multiply
           im-multiply-channel
+          im-times
+          im-times-channel
           im-divide
           im-divide-channel)
 
@@ -484,6 +486,21 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
      (im-multiply-channel-1 channel width height rest))
     (else
      (error "Wrong arguments:" rest))))
+
+
+#;(define-method (im-times . images)
+  (apply im-map * images))
+
+#;(define-method (im-times-channel width height . channels)
+  (apply im-map-channel * width height channels))
+
+(define-method (im-times . images)
+  (im-map-la im-times-channel images))
+
+(define-method (im-times-channel width height . channels)
+  (let ((n-cell (* width height))
+        (to (im-make-channel width height)))
+    (f32vector-times-vectors to n-cell channels)))
 
 
 #;(define-method (im-divide image (val <number>))

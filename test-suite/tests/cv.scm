@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -340,6 +340,9 @@
 (define %axa'xa
   `(2 3 1 (,#f32(123.0 156.0 281.0 356.0 439.0 556.0))))
 
+(define %a*a
+  `(2 3 1 (,#f32(1.0 4.0 9.0 16.0 25.0 36.0))))
+
 (define-method (test-im-add (self <guile-cv-tests-cv>))
   (assert-true (im-=? (im-add %a 1.0) %b))
   (assert-true (im-=? (im-add %a %b) %a+b))
@@ -354,6 +357,9 @@
   (assert-true (im-=? (im-multiply %a 2.0) %c))
   (assert-true (im-=? (im-multiply %a %a') %axa'))
   (assert-true (im-=? (im-multiply %a %a' %a) %axa'xa)))
+
+(define-method (test-im-times (self <guile-cv-tests-cv>))
+  (assert-true (im-=? (im-times %a %a) %a*a)))
 
 (define %d1
   `(2 3 1 (,#f32(2.0 4.0 8.0 16.0 32.0 64.0))))
@@ -480,7 +486,10 @@
 
 (define %texture-test-image
   (list 4 4 1
-        (list #f32(0 0 1 1 0 0 1 1 0 2 2 2 2 2 3 3))))
+        (list #f32(0 0 1 1
+                   0 0 1 1
+                   0 2 2 2
+                   2 2 3 3))))
 
 (define  %texture-test-image-2
   (list 4 4 1

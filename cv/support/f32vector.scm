@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -51,6 +51,7 @@
             f32vector-subtract-value
             f32vector-subtract-vectors
             f32vector-multiply-value
+            f32vector-times-vectors
             f32vector-divide-value
             f32vector-and-vectors
             f32vector-or-vectors
@@ -227,6 +228,22 @@
                                 val
                                 (bytevector->pointer to))
     to))
+
+(define (f32vector-times-vectors to n-cell channels)
+  (receive (maker setter!)
+      (get-v-ptr-maker-setter)
+    (let* ((n-chan (length channels))
+           (v-ptr (maker n-chan 0)))
+      (for-each (lambda (chan i)
+                  (setter! v-ptr i
+                           (pointer-address (bytevector->pointer chan))))
+          channels
+        (iota n-chan))
+      (f32vector-times-vectors-c (bytevector->pointer to)
+                                 n-cell
+                                 (bytevector->pointer v-ptr)
+                                 n-chan)
+    to)))
 
 (define* (f32vector-divide-value channel val to #:key (n-cell #f))
   (if (= val 0.0)

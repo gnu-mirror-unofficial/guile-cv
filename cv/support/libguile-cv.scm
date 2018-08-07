@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -54,6 +54,7 @@
             f32vector-subtract-value-c
             f32vector-subtract-vectors-c
             f32vector-multiply-value-c
+            f32vector-times-vectors-c
             f32vector-divide-value-c
             f32vector-and-vectors-c
             f32vector-or-vectors-c
@@ -224,6 +225,15 @@
                             int		;; n-cell
                             float	;; value
                             '*)))	;; to
+
+(define f32vector-times-vectors-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_times_vectors_c"
+                                    %libguile-cv)
+                      (list '*		;; to
+                            int		;; n-cell
+                            '*		;; v-ptr[]
+                            int)))	;; n-vectors
 
 (define f32vector-divide-value-c
   (pointer->procedure int
