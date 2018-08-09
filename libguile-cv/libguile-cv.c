@@ -515,6 +515,18 @@ int f32vector_scale_c (float *v,
   return 0;
 }
 
+int f32vector_to_s32vector_c (float *v,
+                              int n_cell,
+                              int *to)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+    to[i] = (int)v[i];
+  }
+  return 0;
+}
+
 
 /*
  * glcm

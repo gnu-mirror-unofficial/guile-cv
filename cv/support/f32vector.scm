@@ -60,6 +60,7 @@
             f32vector-binary-vectors?
             f32vector-is-a-seed?
             f32vector-scale
+            f32vector->s32vector
 
             ;; Pure scheme code
             f32vector-reduce
@@ -81,8 +82,7 @@
 	    f32vector-index
 	    f32vector-count-distinct
             f32vector-invert
-            f32vector-matrix-multiply
-            f32vector->s32vector))
+            f32vector-matrix-multiply))
 
 
 ;;;
@@ -349,6 +349,14 @@
                        p-max
                        n-max
                        (bytevector->pointer to))
+    to))
+
+(define* (f32vector->s32vector v #:key (n-cell #f))
+  (let* ((n-cell (or n-cell (f32vector-length v)))
+	 (to (make-s32vector n-cell)))
+    (f32vector-to-s32vector-c (bytevector->pointer v)
+                              n-cell
+                              (bytevector->pointer to))
     to))
 
 
@@ -624,8 +632,9 @@
       (f32vector-set! to i
                       (expt (f32vector-ref v i) -1)))))
 
-(define (f32vector->s32vector v)
-  (let* ((n-cell (f32vector-length v))
+;; in libguile-cv
+#;(define* (f32vector->s32vector v  v #:key (n-cell #f))
+  (let* ((n-cell (or n-cell (f32vector-length v)))
 	 (to (make-s32vector n-cell)))
     (do ((i 0
 	    (+ i 1)))

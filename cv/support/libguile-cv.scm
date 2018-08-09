@@ -63,6 +63,7 @@
             f32vector-binary-vectors-c
             f32vector-is-a-seed-c
             f32vector-scale-c
+            f32vector-to-s32vector-c
             ;; glcm
             glcm-c))
 
@@ -308,6 +309,14 @@
                             float	;; o-gl
                             float	;; n-gl
                             '*)))	;; to
+
+(define f32vector-to-s32vector-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_to_s32vector_c"
+                                    %libguile-cv)
+                      (list '*    ;; chan
+                            int   ;; n-cell
+                            '*))) ;; to
 
 
 ;;;

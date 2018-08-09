@@ -162,6 +162,10 @@ int f32vector_scale_c (float *v,
                        float n_max,
                        float *to);
 
+int f32vector_to_s32vector_c (float *v,
+                              int n_cell,
+                              int *to);
+
 
 /*
  * glcm
