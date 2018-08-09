@@ -40,7 +40,8 @@
             s32vector-min
 	    s32vector-max
             s32vector-reduce
-            s32vector->f32vector))
+            s32vector->f32vector
+            glcm))
 
 
 (define (s32vector-range v)
@@ -94,3 +95,14 @@
 	((= i n-cell) to)
       (f32vector-set! to i
                       (s32vector-ref v i)))))
+
+(define (glcm chan width height g0 g45 g90 g135 n-gl dist)
+  (glcm-c (bytevector->pointer chan)
+          width
+          height
+          (bytevector->pointer g0)
+          (bytevector->pointer g45)
+          (bytevector->pointer g90)
+          (bytevector->pointer g135)
+          n-gl
+          dist))

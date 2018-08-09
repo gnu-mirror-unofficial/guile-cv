@@ -155,3 +155,25 @@ int f32vector_binary_vectors_c (int n_cell,
 int f32vector_is_a_seed_c (float *i_chan,
                            int n_cell,
                            float *s_chan);
+
+int f32vector_scale_c (float *v,
+                       int n_cell,
+                       float p_max,
+                       float n_max,
+                       float *to);
+
+
+/*
+ * glcm
+ *
+*/
+
+int glcm_c (int *chan,
+            int width,
+            int height,
+            int *g0,
+            int *g45,
+            int *g90,
+            int *g135,
+            int n_gl,
+            int dist);

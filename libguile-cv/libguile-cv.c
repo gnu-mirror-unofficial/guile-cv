@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <limits.h>
+#include <math.h>
 /* #include <libguile.h> */
 
 
@@ -498,4 +499,95 @@ int f32vector_is_a_seed_c (float *i_chan,
       }
   }
   return -1;
+}
+
+int f32vector_scale_c (float *v,
+                       int n_cell,
+                       float p_max,
+                       float n_max,
+                       float *to)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+    to[i] = round ((v[i] / p_max) * n_max);
+  }
+  return 0;
+}
+
+
+/*
+ * glcm
+ *
+*/
+
+int im_fast_channel_offset (int i,
+                            int j,
+                            int width)
+{
+  return (i * width) + j;
+}
+
+int s32_ref (int *chan,
+             int i,
+             int j,
+             int width)
+{
+  int offset;
+
+  offset = im_fast_channel_offset (i, j, width);
+  return chan[offset];
+}
+
+int s32_set (int *chan,
+             int i,
+             int j,
+             int width,
+             int val)
+{
+  int offset;
+
+  offset = im_fast_channel_offset (i, j, width);
+  chan[offset] = val;
+  return 0;
+}
+
+int glcm_c (int *chan,
+            int width,
+            int height,
+            int *g0,
+            int *g45,
+            int *g90,
+            int *g135,
+            int n_gl,
+            int dist)
+{
+  int i, j, row, col_g0, col_g45, col_g90, col_g135;
+
+  for (i = 0; i < height; i++) {
+    for (j = 0; j < width; j++) {
+      row = s32_ref (chan , i, j, width);
+      // g0
+      if (j < ( width - dist)) {
+        col_g0 = s32_ref (chan, i, j + dist, width);
+        s32_set (g0, row, col_g0, n_gl, s32_ref (g0, row, col_g0, n_gl) + 1);
+        if (i > (dist - 1)) {
+          // g45
+          col_g45 = s32_ref (chan, i - dist, j + dist, width);
+          s32_set (g45, row, col_g45, n_gl, s32_ref (g45, row, col_g45, n_gl) + 1);
+        }
+      }
+      if (i > (dist - 1)) {
+        // g90
+        col_g90 = s32_ref (chan, i - dist, j, width);
+        s32_set (g90, row, col_g90, n_gl, s32_ref (g90, row, col_g90, n_gl) + 1);
+        if (j > (dist - 1)) {
+          // g135
+          col_g135 = s32_ref (chan, i - dist, j - dist, width);
+          s32_set (g135, row, col_g135, n_gl, s32_ref (g135, row, col_g135, n_gl) + 1);
+        }
+      }
+    }
+  }
+  return 0;
 }

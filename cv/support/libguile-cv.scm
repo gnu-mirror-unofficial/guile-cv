@@ -61,7 +61,10 @@
             f32vector-xor-vectors-c
             f32vector-equal-vectors-c
             f32vector-binary-vectors-c
-            f32vector-is-a-seed-c))
+            f32vector-is-a-seed-c
+            f32vector-scale-c
+            ;; glcm
+            glcm-c))
 
 
 ;;;
@@ -295,3 +298,32 @@
                       (list '*		;; i-chan
                             int		;; n-cell
                             '*)))	;; s-chan
+
+(define f32vector-scale-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_scale_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            int		;; n-cell
+                            float	;; o-gl
+                            float	;; n-gl
+                            '*)))	;; to
+
+
+;;;
+;;; glcm
+;;;
+
+(define glcm-c
+  (pointer->procedure int
+                      (dynamic-func "glcm_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            int		;; width
+                            int		;; height
+                            '*		;; g0-chan
+                            '*		;; g45-chan
+                            '*		;; g90-chan
+                            '*		;; g135-chan
+                            int		;; n-gl
+                            int)))	;; dist
