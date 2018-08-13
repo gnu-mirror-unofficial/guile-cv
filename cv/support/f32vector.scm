@@ -341,9 +341,8 @@
                             (bytevector->pointer s-chan))
      0))
 
-(define* (f32vector-scale channel n-max to #:key (n-cell #f) (p-max #f))
-  (let ((n-cell (or n-cell (f32vector-length channel)))
-        (p-max (or p-max (f32vector-max channel))))
+(define* (f32vector-scale channel n-max to #:key (n-cell #f) (p-max 255))
+  (let ((n-cell (or n-cell (f32vector-length channel))))
     (f32vector-scale-c (bytevector->pointer channel)
                        n-cell
                        p-max
