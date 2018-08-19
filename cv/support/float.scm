@@ -28,6 +28,7 @@
 
 (define-module (cv support float)
   #:use-module (ice-9 match)
+  #:use-module (ice-9 format)
   #:use-module (cv support libguile-cv)
 
   #:export (float-zero?
@@ -38,6 +39,7 @@
 	    float>=?
 	    float-round
 	    float-member
+            floatlist-display
             float->int))
 
 
@@ -87,6 +89,18 @@
 		result) result)
 	 (when (float=? f (list-ref vals i) prec)
 	   (set! result i)))))))
+
+(define* (floatlist-display lst #:key (proc #f)
+                            (port (current-output-port)))
+  (let ((proc (if proc
+                  proc
+                  (lambda (val)
+                    (if (float>=? val 1000.0 0)
+                        (format #f "~9e" val)
+                        (format #f "~9,5,,,f" val))))))
+    (for-each (lambda (item)
+                (format port "  ~A~%" (proc item)))
+        lst)))
 
 
 ;;;
