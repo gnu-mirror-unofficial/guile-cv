@@ -29,6 +29,7 @@
 (define-module (cv support f32vector)
   #:use-module (ice-9 match)
   #:use-module (ice-9 receive)
+  #:use-module (ice-9 format)
   #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-4)
   #:use-module (system foreign)
@@ -63,6 +64,7 @@
             f32vector->s32vector
 
             ;; Pure scheme code
+            f32vector-display
             f32vector-reduce
             f32vector-mean
             f32vector-std-dev
@@ -362,6 +364,21 @@
 ;;;
 ;;; Pure scheme code
 ;;;
+
+(define* (f32vector-display v #:key (proc #f) (n-cell #f)
+                            (port (current-output-port)))
+  (let ((proc (if proc
+                  proc
+                  (lambda (val)
+                    (if (float>=? val 1000.0 0)
+                        (format #f "~9e" val)
+                        (format #f "~9,5,,,f" val)))))
+        (n-cell (or n-cell
+                    (f32vector-length v))))
+    (do ((i 0
+            (+ i 1)))
+        ((= i n-cell))
+      (format port "  ~A~%" (proc (f32vector-ref v i))))))
 
 (define* (f32vector-reduce v proc default #:key (n-cell #f))
   (let ((n-cell (or n-cell
