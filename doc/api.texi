@@ -32,6 +32,7 @@
 @include api-cv-impex.texi
 @include api-cv-imgproc.texi
 @include api-cv-features.texi
+@include api-cv-texture.texi
 @include api-cv-filters.texi
 @include api-cv-morphology.texi
 @include api-cv-segmentation.texi

@@ -82,6 +82,9 @@ It will only be honored if (and only if) it is passed as:
 
 im-times
 im-times-channel
+im-texture
+im-glcp
+im-glcm
 
 
 * Older News

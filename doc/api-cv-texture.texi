@@ -1,0 +1,144 @@
+@c -*- mode: texinfo; coding: utf-8 -*-
+@c This is part of the GNU Guile-CV Reference Manual.
+@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
+@c See the file guile-cv.texi for copying conditions.
+
+
+@node Texture
+@subsection Texture
+
+The Guile-CV procedures and methods related to image texture measures.
+
+First described here@footnote{R. M. Haralick, K. Shanmugam, and
+I. Dinstein, Textural Features of Image Classification, IEEE
+Transactions on Systems, Man and Cybernetics, vol. SMC-3, no. 6,
+Nov. 1973.}, image texture measures are still very @samp{actual}, with
+new research and practicle applications in many areas, as described in
+this (highly recommended) document@footnote{M. Hall-Beyer, GLCM Texture:
+A Tutorial v. 3.0 March 2017}.
+
+Image texture measures are @samp{descriptive statistics}, derived from
+the @samp{Gray Level Co-occurrence Matrices (GLCM)} and its associated
+set of @samp{Gray Level Co-occurrence Probability (GLCP)} matrices.
+
+Guile-CV @code{GLCM} and @code{GLCP} data structures are identical to
+the one used for Guile-CV images (@xref{Image Structure and Accessors}).
+Although they are not images @samp{per se}, they are composed of four
+square matrices (four channels), of size @code{n-gl} (the number of gray
+levels to consider), and upon which we (and users) need to run linear
+algebra procedures, already defined and available in Guile-CV.
+
+Guile-CV offers the 11th first @code{texture measures}, out of the 14th
+originally proposed by Haralick et al., which are the most commonly used
+and adopted ones.
+
+This reference manual assumes you are familiar with the concepts,
+terminology and mathematic formulas involved in the calculations of
+@code{GLCM}s, @code{GLCP}s and @code{image texture measures}. If that is
+not the case, consider carefully reading one or both of the documents
+cited above (or any other tutorial or reference material of your choice
+of course).
+
+
+@subheading Procedures
+
+@ifhtml
+@indentedblock
+@table @code
+@item @ref{im-texture}
+@item @ref{im-glcp}
+@item @ref{im-glcm}
+@end table
+@end indentedblock
+@end ifhtml
+
+
+@anchor{im-texture}
+@deffn Procedure im-texture image n-gl [#:dist 1] [#:p-max 255] @
+       [#:use-log2 #f]
+@cindex Texture
+
+Returns a list.
+
+The procedure calls @ref{im-glcp}, passing @var{image}, @var{n-gl} (the
+number of gray levels to consider), @var{dist} (the distance between the
+@samp{reference} and the @samp{neighbour} pixels) and @var{p-max} (the
+@var{image} (pixel) maximum value), then computes and returns a list of
+the 11th first texture measures proposed by Haralick et al., which are:
+
+@indentedblock
+@table @code
+@c @enumerate
+
+@item (h1) uniformity (angular second moment)
+@item (h2) contrast
+@item (h3) correlation
+@item (h4) variance (sum of squares)
+@item (h5) homogeneity (inverse difference moment)
+@item (h6) sum average
+@item (h7) sum variance
+@item (h8) sum entropy
+@item (h9) entropy
+@item (h10) difference variance
+@item (h11) difference entropy
+
+@end table
+@c @end enumerate
+@end indentedblock
+
+The @var{#:use-log2} optional keyword argument, which defaults to
+@code{#f}, is passed to the internal procedures that calculate the
+parameters @code{h8}, @code{h9} and @code{h11}. The original formulas
+proposed by Haralck and al. use @code{log}, but I have seen a couple of
+implementations using @code{log2}@footnote{Since it is used as a
+@code{factor} in all three formulas, the final result obtained using
+@code{log2} is equivalent to the result obtained using @code{log}
+multiplied by @code{1.4426950408889634}}.
+
+@strong{Note:} The @code{h10} parameter uses an intermediate result, the
+@code{difference average}, calculated using the so-called @code{Px-y}.
+For some obscure reason, I have seen some implementations systematically
+eliminating the first element of the @code{Px-y}, which holds as its
+value the sum of the elements of the main diagnal of the @code{GLCP}.
+Guile-CV computes the @code{difference average} using all elements of
+the @code{Px-y}.
+@end deffn
+
+
+@anchor{im-glcp}
+@deffn Procedure im-glcp image n-gl [#:dist 1] [#:p-max 255]
+@cindex Gray Level Co-occurence Probability
+@cindex GLCP
+
+Returns the @code{GLCP} for @var{image}.
+
+The procedure calls @ref{im-glcm}, passing @var{image}, @var{n-gl} (the
+number of gray levels to consider), @var{dist} (the distance between the
+@samp{reference} and the @samp{neighbour} pixels) and @var{p-max} (the
+@var{image} (pixel) maximum value), adds @code{GLCM'} (the transposed
+version of @code{GLCM}, so the result is symmetrical around the
+diagonal), then computes and returns the @code{GLCP}.
+
+The returned @code{GLCP} is an @samp{image} composed four channels (four
+square matrices of size @var{n-gl}), corresponding to the (symmetrical)
+Gray Level Co-occurrences expressed as propabibilities, each calculated
+at a specific @samp{angle}, respectively @code{0º}, @code{45º},
+@code{90º}, and @code{135º}.
+@end deffn
+
+
+@anchor{im-glcm}
+@deffn Procedure im-glcm image n-gl [#:dist 1] [#:p-max 255]
+@cindex Gray Level Co-occurence Matrix
+@cindex GLCM
+
+Returns the @code{GLCM} for @var{image}.
+
+The procedure scales the original @var{image} (it brings its values in
+the range @code{[0 (- n-gl 1)]}), then computes and returns the @code{GLCM}.
+
+The returned @code{GLCM} is an @samp{image} composed four channels (four
+square matrices of size @var{n-gl}), corresponding to the Gray Level
+Co-occurrences, each calculated at a specific @samp{angle}, respectively
+@code{0º}, @code{45º}, @code{90º}, and @code{135º}.
+@end deffn
