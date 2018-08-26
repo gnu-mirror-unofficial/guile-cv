@@ -48,6 +48,7 @@ guile_cv_TEXINFOS = \
   api-cv-impex.texi		\
   api-cv-imgproc.texi		\
   api-cv-features.texi		\
+  api-cv-texture.texi		\
   api-cv-filters.texi		\
   api-cv-morphology.texi	\
   api-cv-segmentation.texi	\
