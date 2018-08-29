@@ -23,7 +23,8 @@
 
 TESTS = \
 	tests/support.scm	\
-	tests/cv.scm
+	tests/cv.scm		\
+	tests/texture.scm
 
 TEST_EXTENSIONS = .scm
 
