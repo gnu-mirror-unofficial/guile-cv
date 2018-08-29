@@ -517,7 +517,8 @@
     (f32vector-scale channel n-max to #:n-cell n-cell #:p-max p-max)))
 
 (define (log2 x)
-  (/ (log x) (log 2)))
+  #;(/ (log x) (log 2))
+  (* (log x) 1.4426950408889634))
 
 
 #!
