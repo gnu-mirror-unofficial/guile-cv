@@ -55,7 +55,7 @@ of course).
 
 @anchor{im-texture}
 @deffn Procedure im-texture image n-gl [#:dist 1] [#:p-max 255] @
-       [#:use-log2 #f]
+       [#:use-log2 #f] [#:no-px-y0 #f]
 @cindex Texture
 
 Returns a list.
@@ -95,13 +95,18 @@ implementations using @code{log2}@footnote{Since it is used as a
 @code{log2} is equivalent to the result obtained using @code{log}
 multiplied by @code{1.4426950408889634}}.
 
-@strong{Note:} The @code{h10} parameter uses an intermediate result, the
-@code{difference average}, calculated using the so-called @code{Px-y}.
-For some obscure reason, I have seen some implementations systematically
-eliminating the first element of the @code{Px-y}, which holds as its
-value the sum of the elements of the main diagnal of the @code{GLCP}.
-Guile-CV computes the @code{difference average} using all elements of
-the @code{Px-y}.
+The @var{#:no-px-y0} optional keyword argument, which defaults to
+@code{#f}, is passed to the internal procedure that calculate the
+parameter @code{h10}.  For some obscure reason, and only with respect to
+this parameter, I have seen some implementations eliminating the first
+element of the so-called @code{Px-y}, an internediate @code{f32vector}
+result, which holds, as its first element, the sum of the elements of
+the main diagnal of the @code{GLCP}@footnote{Guile-CV computes the
+@code{difference average} using all elements of the @code{Px-y}, by
+default, but offers this option as a courtesy, for users who would want
+to use Guile-CV as an immediate substitute to compute image texture
+measures for a (large) image set for which they would already have
+trained a classifier. It is not recommended to use it otherwise.}.
 @end deffn
 
 
