@@ -380,8 +380,8 @@
 
 (define-method (test-im-divide (self <guile-cv-tests-cv>))
   (assert-true (im-=? 0.0 (im-divide %d1 2.0) %d2))
-  (assert-true (im-=? (im-divide %d1 %d4) %d5))
-  (assert-true (im-=? (im-divide %d1 %d4 %d6) %d7)))
+  (assert-true (im-=? (im-mdivide %d1 %d4) %d5))
+  (assert-true (im-=? (im-mdivide %d1 %d4 %d6) %d7)))
 
 (define (make-scrap-test-image)
   (let ((img (im-make 12 12 1)))

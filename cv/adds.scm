@@ -62,6 +62,8 @@
             im-range
             im-mtimes
             im-mtimes-channel
+            im-mdivide
+            im-mdivide-channel
 	    im-min
 	    im-max
             im-map
@@ -337,9 +339,9 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 (define (mtimes c1 width-1 height-1 c2 width-2)
   (f32vector-mtimes c1 width-1 height-1 c2 width-2))
 
-(define (matrix-divide c1 width-1 height-1 c2 width-2)
+(define (mdivide c1 width-1 height-1 c2 width-2)
   (f32vector-mtimes c1 width-1 height-1
-                             (f32vector-invert c2) width-2))
+                    (f32vector-invert c2) width-2))
 
 (define (im-matrix-multdiv-op img-1 img-2 op)
   ;; The product is defined only if the number of columns in img-1 is
@@ -529,35 +531,35 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
         (f32vector-divide-value channel val to #:n-cell n-cell)
         to)))
 
-(define (im-divide-1 prev images)
+(define (im-mdivide-1 prev images)
   (if (null? images)
       prev
       (match images
         ((ii . rest)
-         (im-divide-1 (im-matrix-multdiv-op prev ii matrix-divide)
-                        rest)))))
+         (im-mdivide-1 (im-matrix-multdiv-op prev ii mdivide)
+                       rest)))))
 
-(define-method (im-divide . images)
+(define (im-mdivide . images)
   (match images
     ((i1 . rest)
-     (im-divide-1 i1 rest))
+     (im-mdivide-1 i1 rest))
     (else
      (error "Wrong arguments:" images))))
 
-(define (im-divide-channel-1 channel width height rest)
+(define (im-mdivide-channel-1 channel width height rest)
   (if (null? rest)
       (values channel width height)
       (match rest
         ((channel-i width-i height-i . rest)
-         (im-divide-channel-1 (f32vector-mtimes channel width height
-                                                (f32vector-invert channel-i)
-                                                width-i)
-                                width-i height rest)))))
+         (im-mdivide-channel-1 (f32vector-mtimes channel width height
+                                                 (f32vector-invert channel-i)
+                                                 width-i)
+                               width-i height rest)))))
 
-(define-method (im-divide-channel . rest)
+(define (im-mdivide-channel . rest)
   (match rest
     ((channel width height . rest)
-     (im-divide-channel-1 channel width height rest))
+     (im-mdivide-channel-1 channel width height rest))
     (else
      (error "Wrong arguments:" rest))))
 

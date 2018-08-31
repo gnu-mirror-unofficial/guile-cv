@@ -337,8 +337,10 @@ c3} @dots{} respectively.
 
 @anchor{im-mtimes}
 @anchor{im-mtimes-channel}
+@cindex Matrix Multiplication
 @deffn Procedure im-mtimes i1 i2 i3 @dots{}
 @deffnx Procedure im-mtimes-channel width height c1 c2 c3 @dots{}
+
 
 Returns a new image or channel.
 
@@ -352,14 +354,26 @@ result.
 @anchor{im-divide}
 @anchor{im-divide-channel}
 @deffn Method im-divide image val
-@deffnx Method im-divide i1 i2 i3 @dots{}
+@c @deffnx Method im-divide i1 i2 i3 @dots{}
 @deffnx Method im-divide-channel channel width height val
-@deffnx Method im-divide-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
+@c @deffnx Method im-divide-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
 
 Returns a new image or channel.
 
-The scalar method divides each pixel of @var{image} or @var{channel} by
+Performs the scalar division of @var{image} or @var{channel} by
 @var{val}.
+
+@end deffn
+
+
+@anchor{im-mdivide}
+@anchor{im-mdivide-channel}
+@cindex Matrix Division
+@deffn Procedure im-mdivide i1 i2 i3 @dots{}
+@deffnx Procedure im-mdivide-channel width height c1 c2 c3 @dots{}
+
+
+Returns a new image or channel.
 
 Technically speaking, there is no such thing as matrix division.
 Dividing a matrix by another matrix is an undefined function.  The
