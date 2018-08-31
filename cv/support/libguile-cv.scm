@@ -53,7 +53,7 @@
             f32vector-add-vectors-c
             f32vector-subtract-value-c
             f32vector-subtract-vectors-c
-            f32vector-multiply-value-c
+            f32vector-times-value-c
             f32vector-times-vectors-c
             f32vector-divide-value-c
             f32vector-and-vectors-c
@@ -221,9 +221,9 @@
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
 
-(define f32vector-multiply-value-c
+(define f32vector-times-value-c
   (pointer->procedure int
-                      (dynamic-func "f32vector_multiply_value_c"
+                      (dynamic-func "f32vector_times_value_c"
                                     %libguile-cv)
                       (list '*		;; chan
                             int		;; n-cell

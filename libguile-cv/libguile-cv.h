@@ -113,10 +113,10 @@ int f32vector_subtract_vectors_c (float *to,
                                   float *v_ptr[],
                                   int n_vectors);
 
-int f32vector_multiply_value_c (float *v,
-                                int n_cell,
-                                float val,
-                                float *to);
+int f32vector_times_value_c (float *v,
+                             int n_cell,
+                             float val,
+                             float *to);
 
 int f32vector_times_vectors_c (float *to,
                                int n_cell,

@@ -331,10 +331,10 @@ int f32vector_subtract_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_multiply_value_c (float *v,
-                                int n_cell,
-                                float val,
-                                float *to)
+int f32vector_times_value_c (float *v,
+                             int n_cell,
+                             float val,
+                             float *to)
 {
   int i;
 

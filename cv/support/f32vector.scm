@@ -51,7 +51,7 @@
             f32vector-add-vectors
             f32vector-subtract-value
             f32vector-subtract-vectors
-            f32vector-multiply-value
+            f32vector-times-value
             f32vector-times-vectors
             f32vector-divide-value
             f32vector-and-vectors
@@ -84,7 +84,7 @@
 	    f32vector-index
 	    f32vector-count-distinct
             f32vector-invert
-            f32vector-matrix-multiply))
+            f32vector-mtimes))
 
 
 ;;;
@@ -224,12 +224,12 @@
                                     n-chan)
     to)))
 
-(define* (f32vector-multiply-value channel val to #:key (n-cell #f))
+(define* (f32vector-times-value channel val to #:key (n-cell #f))
   (let ((n-cell (or n-cell (f32vector-length channel))))
-    (f32vector-multiply-value-c (bytevector->pointer channel)
-                                n-cell
-                                val
-                                (bytevector->pointer to))
+    (f32vector-times-value-c (bytevector->pointer channel)
+                             n-cell
+                             val
+                             (bytevector->pointer to))
     to))
 
 (define (f32vector-times-vectors to n-cell channels)
@@ -602,7 +602,7 @@
 ;;; Matrix ops
 ;;;
 
-(define (f32vector-matrix-multiply v1 width-1 height-1 v2 width-2)
+(define (f32vector-mtimes v1 width-1 height-1 v2 width-2)
   ;; In math, we'd write:
   ;; 	A[n,m] and B[m,p]
   ;;	n = the number of lines of A

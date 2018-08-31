@@ -78,6 +78,19 @@ It will only be honored if (and only if) it is passed as:
   [ in this case, there is obviously no need to augment Guile's
   [ variables %load-path and %load-compiled-path
 
+**** Interface changes
+
+| New name          | Previous name                |
+|-------------------+------------------------------|
+| im-mtimes         | im-multiply         (matrix) |
+| im-mtimes-channel | im-multiply-channel          |
+| im-times          | im-multiply         (scalar) |
+| im-times-channel  | im-multiply-channel          |
+
+The former two methods, related to matrix multiplication, are now
+procedures.  The later two are methods: see the manual to see the
+different ways you may call them.
+
 **** New interfaces
 
 im-times

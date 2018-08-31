@@ -42,10 +42,10 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-add-channel}
 @item @ref{im-subtract}
 @item @ref{im-subtract-channel}
+@item @ref{im-mtimes}
+@item @ref{im-mtimes-channel}
 @item @ref{im-times}
 @item @ref{im-times-channel}
-@item @ref{im-multiply}
-@item @ref{im-multiply-channel}
 @item @ref{im-divide}
 @item @ref{im-divide-channel}
 @item @ref{im-range}
@@ -322,29 +322,30 @@ respectively.
 
 @anchor{im-times}
 @anchor{im-times-channel}
-@deffn Method im-times i1 i2 i3 @dots{}
-@deffnx Method im-times-channel width height c1 c2 c3 @dots{}
-
-Returns a new image or channel.
-
-Performs the element by element multiplication of @var{i1 i2 i3} @dots{}
-or @var{c1 c2 c3} @dots{} respectively.
-@end deffn
-
-
-@anchor{im-multiply}
-@anchor{im-multiply-channel}
-@deffn Method im-multiply image val
-@deffnx Method im-multiply i1 i2 i3 @dots{}
-@deffnx Method im-multiply-channel channel width height val
-@deffnx Method im-multiply-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
+@deffn Method im-times image val
+@deffnx Method im-times i1 i2 i3 @dots{}
+@deffnx Method im-times-channel channel width height val
+@deffnx Method im-times-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
 
 Returns a new image or channel.
 
 Performs the scalar multiplication of @var{image} with @var{val} or the
-matrix multiplication of @var{i1 i2 i3} @dots{} or @var{c1 w1 h1 c2 w2
-h2 c3 w3 h3} @dots{} recursively.  The number of lines of the next image
-must equal the number of columns of the previous intermediate result.
+lement by element multiplication of @var{i1 i2 i3} @dots{} or @var{c1 c2
+c3} @dots{} respectively.
+@end deffn
+
+
+@anchor{im-mtimes}
+@anchor{im-mtimes-channel}
+@deffn Procedure im-mtimes i1 i2 i3 @dots{}
+@deffnx Procedure im-mtimes-channel width height c1 c2 c3 @dots{}
+
+Returns a new image or channel.
+
+Performs matrix multiplication of @var{i1 i2 i3} @dots{} or @var{c1 w1
+h1 c2 w2 h2 c3 w3 h3} @dots{} recursively.  The number of lines of the
+next image must equal the number of columns of the previous intermediate
+result.
 @end deffn
 
 

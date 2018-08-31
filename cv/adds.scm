@@ -60,6 +60,8 @@
             im-xor
 	    im-complement
             im-range
+            im-mtimes
+            im-mtimes-channel
 	    im-min
 	    im-max
             im-map
@@ -83,8 +85,6 @@
           im-add-channel
           im-subtract
           im-subtract-channel
-          im-multiply
-          im-multiply-channel
           im-times
           im-times-channel
           im-divide
@@ -334,11 +334,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-set! to i (op (f32vector-ref channel i)
                              (f32vector-ref channel-2 i))))))
 
-(define (matrix-multiply c1 width-1 height-1 c2 width-2)
-  (f32vector-matrix-multiply c1 width-1 height-1 c2 width-2))
+(define (mtimes c1 width-1 height-1 c2 width-2)
+  (f32vector-mtimes c1 width-1 height-1 c2 width-2))
 
 (define (matrix-divide c1 width-1 height-1 c2 width-2)
-  (f32vector-matrix-multiply c1 width-1 height-1
+  (f32vector-mtimes c1 width-1 height-1
                              (f32vector-invert c2) width-2))
 
 (define (im-matrix-multdiv-op img-1 img-2 op)
@@ -434,59 +434,27 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-subtract-vectors to n-cell channels)))
 
 
-#;(define-method (im-multiply image (val <number>))
+#;(define-method (im-times image (val <number>))
   (im-map (lambda (p-val) (* p-val val)) image))
 
-#;(define-method (im-multiply-channel channel width height (val <number>))
+#;(define-method (im-times-channel channel width height (val <number>))
   (im-map-channel (lambda (p-val) (* p-val val)) width height channel))
 
-(define-method (im-multiply image (val <number>))
+(define-method (im-times image (val <number>))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
              (map-proc (lambda (channel)
-                         (im-multiply-channel channel width height val))
+                         (im-times-channel channel width height val))
                  idata))))))
 
-(define-method (im-multiply-channel channel width height (val <number>))
+(define-method (im-times-channel channel width height (val <number>))
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
-    (f32vector-multiply-value channel val to #:n-cell n-cell)
+    (f32vector-times-value channel val to #:n-cell n-cell)
     to))
-
-(define (im-multiply-1 prev images)
-  (if (null? images)
-      prev
-      (match images
-        ((ii . rest)
-         (im-multiply-1 (im-matrix-multdiv-op prev ii matrix-multiply)
-                        rest)))))
-
-(define-method (im-multiply . images)
-  (match images
-    ((i1 . rest)
-     (im-multiply-1 i1 rest))
-    (else
-     (error "Wrong arguments:" images))))
-
-(define (im-multiply-channel-1 channel width height rest)
-  (if (null? rest)
-      (values channel width height)
-      (match rest
-        ((channel-i width-i height-i . rest)
-         (im-multiply-channel-1 (f32vector-matrix-multiply channel width height
-                                                           channel-i width-i)
-                                width-i height rest)))))
-
-(define-method (im-multiply-channel . rest)
-  (match rest
-    ((channel width height . rest)
-     (im-multiply-channel-1 channel width height rest))
-    (else
-     (error "Wrong arguments:" rest))))
-
 
 #;(define-method (im-times . images)
   (apply im-map * images))
@@ -501,6 +469,38 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
   (let ((n-cell (* width height))
         (to (im-make-channel width height)))
     (f32vector-times-vectors to n-cell channels)))
+
+
+(define (im-mtimes-1 prev images)
+  (if (null? images)
+      prev
+      (match images
+        ((ii . rest)
+         (im-mtimes-1 (im-matrix-multdiv-op prev ii mtimes)
+                      rest)))))
+
+(define (im-mtimes . images)
+  (match images
+    ((i1 . rest)
+     (im-mtimes-1 i1 rest))
+    (else
+     (error "Wrong arguments:" images))))
+
+(define (im-mtimes-channel-1 channel width height rest)
+  (if (null? rest)
+      (values channel width height)
+      (match rest
+        ((channel-i width-i height-i . rest)
+         (im-mtimes-channel-1 (f32vector-mtimes channel width height
+                                                channel-i width-i)
+                                width-i height rest)))))
+
+(define (im-mtimes-channel . rest)
+  (match rest
+    ((channel width height . rest)
+     (im-mtimes-channel-1 channel width height rest))
+    (else
+     (error "Wrong arguments:" rest))))
 
 
 #;(define-method (im-divide image (val <number>))
@@ -549,9 +549,9 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (values channel width height)
       (match rest
         ((channel-i width-i height-i . rest)
-         (im-divide-channel-1 (f32vector-matrix-multiply channel width height
-                                                         (f32vector-invert channel-i)
-                                                         width-i)
+         (im-divide-channel-1 (f32vector-mtimes channel width height
+                                                (f32vector-invert channel-i)
+                                                width-i)
                                 width-i height rest)))))
 
 (define-method (im-divide-channel . rest)
