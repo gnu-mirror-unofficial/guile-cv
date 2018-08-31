@@ -381,6 +381,24 @@ int f32vector_divide_value_c (float *v,
   }
 }
 
+int f32vector_divide_vectors_c (float *to,
+                                int n_cell,
+                                float *v_ptr[],
+                                int n_vectors)
+{
+  int i, j;
+  float result;
+
+  for (i = 0; i < n_cell; i++) {
+    result = v_ptr[0][i];
+    for (j = 1; j < n_vectors; j++) {
+      result /= v_ptr[j][i];
+    }
+    to[i] = result;
+  }
+  return 0;
+}
+
 int f32vector_and_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],

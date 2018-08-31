@@ -472,7 +472,6 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
         (to (im-make-channel width height)))
     (f32vector-times-vectors to n-cell channels)))
 
-
 (define (im-mtimes-1 prev images)
   (if (null? images)
       prev
@@ -530,6 +529,20 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
             (n-cell (* width height)))
         (f32vector-divide-value channel val to #:n-cell n-cell)
         to)))
+
+#;(define-method (im-divide . images)
+  (apply im-map / images))
+
+#;(define-method (im-divide-channel width height . channels)
+  (apply im-map-channel / width height channels))
+
+(define-method (im-divide . images)
+  (im-map-la im-divide-channel images))
+
+(define-method (im-divide-channel width height . channels)
+  (let ((n-cell (* width height))
+        (to (im-make-channel width height)))
+    (f32vector-divide-vectors to n-cell channels)))
 
 (define (im-mdivide-1 prev images)
   (if (null? images)

@@ -330,8 +330,8 @@ respectively.
 Returns a new image or channel.
 
 Performs the scalar multiplication of @var{image} with @var{val} or the
-lement by element multiplication of @var{i1 i2 i3} @dots{} or @var{c1 c2
-c3} @dots{} respectively.
+element by element multiplication of @var{i1 i2 i3} @dots{} or @var{c1
+c2 c3} @dots{} respectively.
 @end deffn
 
 
@@ -354,15 +354,18 @@ result.
 @anchor{im-divide}
 @anchor{im-divide-channel}
 @deffn Method im-divide image val
-@c @deffnx Method im-divide i1 i2 i3 @dots{}
+@deffnx Method im-divide i1 i2 i3 @dots{}
 @deffnx Method im-divide-channel channel width height val
-@c @deffnx Method im-divide-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
+@deffnx Method im-divide-channel c1 w1 h1 c2 w2 h2 c3 w3 h3 @dots{}
 
 Returns a new image or channel.
 
-Performs the scalar division of @var{image} or @var{channel} by
-@var{val}.
+Performs the scalar division of @var{image} with @var{val} or the
+element by element division of @var{i1 i2 i3} @dots{} or @var{c1 c2 c3}
+@dots{} respectively.
 
+It is the user responsibility to insure that none of the @var{c2 c3}
+@dots{} values are not @code{zero}.
 @end deffn
 
 
@@ -377,13 +380,15 @@ Returns a new image or channel.
 
 Technically speaking, there is no such thing as matrix division.
 Dividing a matrix by another matrix is an undefined function.  The
-closest equivalent is multiplying by the inverse of another matrix.
+closest equivalent is multiplying by the inverse of the other matrix.
 
-So, the matrix divide methods performs the linear algebra matrix
-multiplication of @var{i1} or @var{c1} by the inverse of @var{i2 i3}
-@dots{} or @var{c1 c2 c3} @dots{} recursively.  The number of lines of
-the next image must equal the number of columns of the previous
-intermediate result.
+Performs the matrix multiplication of @var{i1} or @var{c1} by the
+inverse of @var{i2 i3} @dots{} or @var{c1 c2 c3} @dots{} recursively.
+The number of lines of the next image must equal the number of columns
+of the previous intermediate result.
+
+It is the user responsibility to insure that none of the @var{c2 c3}
+@dots{} values are not @code{zero}.
 @end deffn
 
 

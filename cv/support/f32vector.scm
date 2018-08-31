@@ -54,6 +54,7 @@
             f32vector-times-value
             f32vector-times-vectors
             f32vector-divide-value
+            f32vector-divide-vectors
             f32vector-and-vectors
             f32vector-or-vectors
             f32vector-xor-vectors
@@ -257,6 +258,22 @@
                                   val
                                   (bytevector->pointer to))
         to)))
+
+(define (f32vector-divide-vectors to n-cell channels)
+  (receive (maker setter!)
+      (get-v-ptr-maker-setter)
+    (let* ((n-chan (length channels))
+           (v-ptr (maker n-chan 0)))
+      (for-each (lambda (chan i)
+                  (setter! v-ptr i
+                           (pointer-address (bytevector->pointer chan))))
+          channels
+        (iota n-chan))
+      (f32vector-divide-vectors-c (bytevector->pointer to)
+                                  n-cell
+                                  (bytevector->pointer v-ptr)
+                                  n-chan)
+    to)))
 
 (define (f32vector-and-vectors to n-cell channels)
   (receive (maker setter!)

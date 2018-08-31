@@ -343,6 +343,9 @@
 (define %a*a
   `(2 3 1 (,#f32(1.0 4.0 9.0 16.0 25.0 36.0))))
 
+(define %a/a
+  `(2 3 1 (,#f32(1.0 1.0 1.0 1.0 1.0 1.0))))
+
 (define-method (test-im-add (self <guile-cv-tests-cv>))
   (assert-true (im-=? (im-add %a 1.0) %b))
   (assert-true (im-=? (im-add %a %b) %a+b))
@@ -380,6 +383,7 @@
 
 (define-method (test-im-divide (self <guile-cv-tests-cv>))
   (assert-true (im-=? 0.0 (im-divide %d1 2.0) %d2))
+  (assert-true (im-=? 0.0 (im-divide %a %a) %a/a))
   (assert-true (im-=? (im-mdivide %d1 %d4) %d5))
   (assert-true (im-=? (im-mdivide %d1 %d4 %d6) %d7)))
 

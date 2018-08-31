@@ -128,6 +128,11 @@ int f32vector_divide_value_c (float *v,
                               float val,
                               float *to);
 
+int f32vector_divide_vectors_c (float *to,
+                                int n_cell,
+                                float *v_ptr[],
+                                int n_vectors)
+
 int f32vector_and_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],

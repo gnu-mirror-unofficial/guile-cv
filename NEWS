@@ -98,8 +98,10 @@ Likewise, these were methods, they are now procedures.
 
 **** New interfaces
 
-im-times
+im-times		(element by element)
 im-times-channel
+im-divide		(element by element)
+im-divide-channel
 im-texture
 im-glcp
 im-glcm
