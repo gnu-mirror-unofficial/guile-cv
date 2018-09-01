@@ -377,7 +377,7 @@ It is the user responsibility to insure that none of the @var{c2 c3}
 Returns a new image or channel.
 
 Performs the matrix multiplication of @var{i1} or @var{c1} by the
-inverse of @var{i2 i3} @dots{} or @var{c1 c2 c3} @dots{} recursively.
+inverse of @var{i2 i3} @dots{} or @var{c2 c3} @dots{} recursively.
 The number of lines of the next image must equal the number of columns
 of the previous intermediate result@footnote{Technically speaking, there
 is no such thing as matrix division.  Dividing a matrix by another
