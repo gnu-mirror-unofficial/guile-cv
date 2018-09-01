@@ -335,12 +335,11 @@ c2 c3} @dots{} respectively.
 @end deffn
 
 
+@cindex Matrix Multiplication
 @anchor{im-mtimes}
 @anchor{im-mtimes-channel}
-@cindex Matrix Multiplication
 @deffn Procedure im-mtimes i1 i2 i3 @dots{}
 @deffnx Procedure im-mtimes-channel width height c1 c2 c3 @dots{}
-
 
 Returns a new image or channel.
 
@@ -365,30 +364,28 @@ element by element division of @var{i1 i2 i3} @dots{} or @var{c1 c2 c3}
 @dots{} respectively.
 
 It is the user responsibility to insure that none of the @var{c2 c3}
-@dots{} values are not @code{zero}.
+@dots{} values is @code{zero}.
 @end deffn
 
 
+@cindex Matrix Division
 @anchor{im-mdivide}
 @anchor{im-mdivide-channel}
-@cindex Matrix Division
 @deffn Procedure im-mdivide i1 i2 i3 @dots{}
 @deffnx Procedure im-mdivide-channel width height c1 c2 c3 @dots{}
 
-
 Returns a new image or channel.
-
-Technically speaking, there is no such thing as matrix division.
-Dividing a matrix by another matrix is an undefined function.  The
-closest equivalent is multiplying by the inverse of the other matrix.
 
 Performs the matrix multiplication of @var{i1} or @var{c1} by the
 inverse of @var{i2 i3} @dots{} or @var{c1 c2 c3} @dots{} recursively.
 The number of lines of the next image must equal the number of columns
-of the previous intermediate result.
+of the previous intermediate result@footnote{Technically speaking, there
+is no such thing as matrix division.  Dividing a matrix by another
+matrix is an undefined function.  The closest equivalent is to multiply
+the matrix by the inverse of the other matrix.}.
 
 It is the user responsibility to insure that none of the @var{c2 c3}
-@dots{} values are not @code{zero}.
+@dots{} values is @code{zero}.
 @end deffn
 
 
