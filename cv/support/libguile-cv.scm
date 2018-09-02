@@ -57,6 +57,7 @@
             f32vector-times-vectors-c
             f32vector-divide-value-c
             f32vector-divide-vectors-c
+            f32vector-invert-c
             f32vector-and-vectors-c
             f32vector-or-vectors-c
             f32vector-xor-vectors-c
@@ -257,6 +258,14 @@
                             int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-invert-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_invert_c"
+                                    %libguile-cv)
+                      (list '*		;; from
+                            int		;; n-cell
+                            '*)))	;; to
 
 (define f32vector-and-vectors-c
   (pointer->procedure int

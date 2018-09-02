@@ -399,6 +399,18 @@ int f32vector_divide_vectors_c (float *to,
   return 0;
 }
 
+int f32vector_invert_c (float *v,
+                        int n_cell,
+                        float *to)
+{
+  int i;
+
+  for (i = 0; i < n_cell; i++) {
+     to[i] = 1 / v[i];
+  }
+  return 0;
+}
+
 int f32vector_and_vectors_c (float *to,
                              int n_cell,
                              float *v_ptr[],
