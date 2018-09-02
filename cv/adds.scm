@@ -337,11 +337,18 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                              (f32vector-ref channel-2 i))))))
 
 (define (mtimes c1 width-1 height-1 c2 width-2)
-  (f32vector-mtimes c1 width-1 height-1 c2 width-2))
+  (let ((to (im-make-channel width-2 height-1)))
+    (f32vector-mtimes c1 width-1 height-1 c2 width-2 to)))
 
 (define (mdivide c1 width-1 height-1 c2 width-2)
-  (f32vector-mtimes c1 width-1 height-1
-                    (f32vector-invert c2) width-2))
+  (let* ((height-2 width-1)
+         (ic1 (im-make-channel width-2 height-2))
+         (n-cell-2 (* width-2 height-2))
+         (to (im-make-channel width-2 height-1)))
+    (f32vector-mtimes c1 width-1 height-1
+                      (f32vector-invert c2 ic1 #:n-cell n-cell-2)
+                      width-2
+                      to)))
 
 (define (im-matrix-multdiv-op img-1 img-2 op)
   ;; The product is defined only if the number of columns in img-1 is
@@ -492,9 +499,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (values channel width height)
       (match rest
         ((channel-i width-i height-i . rest)
-         (im-mtimes-channel-1 (f32vector-mtimes channel width height
-                                                channel-i width-i)
-                                width-i height rest)))))
+         (let ((to (im-make-channel width-i height)))
+           (im-mtimes-channel-1 (f32vector-mtimes channel width height
+                                                  channel-i width-i to)
+                                width-i height rest))))))
 
 (define (im-mtimes-channel . rest)
   (match rest
@@ -564,10 +572,15 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (values channel width height)
       (match rest
         ((channel-i width-i height-i . rest)
-         (im-mdivide-channel-1 (f32vector-mtimes channel width height
-                                                 (f32vector-invert channel-i)
-                                                 width-i)
-                               width-i height rest)))))
+         (let ((ici (im-make-channel width-i height-i))
+               (n-cell-i (* width-i height-i))
+               (to (im-make-channel width-i height)))
+           (im-mdivide-channel-1 (f32vector-mtimes channel width height
+                                                   (f32vector-invert channel-i ici
+                                                                     #:n-cell n-cell-i)
+                                                   width-i
+                                                   to)
+                                 width-i height rest))))))
 
 (define (im-mdivide-channel . rest)
   (match rest
@@ -951,7 +964,10 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
                        idata))))))
 
 (define (im-invert-channel channel width height)
-  (f32vector-invert channel))
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (f32vector-invert channel to #:n-cell n-cell)
+    to))
 
 (define* (im-normalize image #:key (val 255.0))
   (match image

@@ -55,6 +55,7 @@
             f32vector-times-vectors
             f32vector-divide-value
             f32vector-divide-vectors
+            f32vector-invert
             f32vector-and-vectors
             f32vector-or-vectors
             f32vector-xor-vectors
@@ -84,7 +85,6 @@
 	    f32vector-pred-at-offset?
 	    f32vector-index
 	    f32vector-count-distinct
-            f32vector-invert
             f32vector-mtimes))
 
 
@@ -274,6 +274,13 @@
                                   (bytevector->pointer v-ptr)
                                   n-chan)
     to)))
+
+(define* (f32vector-invert channel to #:key (n-cell #f))
+  (let ((n-cell (f32vector-length channel)))
+    (f32vector-invert-c  (bytevector->pointer channel)
+                         n-cell
+                         (bytevector->pointer to))
+    to))
 
 (define (f32vector-and-vectors to n-cell channels)
   (receive (maker setter!)
@@ -619,10 +626,10 @@
 ;;; Matrix ops
 ;;;
 
-(define (f32vector-mtimes v1 width-1 height-1 v2 width-2)
+(define (f32vector-mtimes v1 width-1 height-1 v2 width-2 to)
   ;; In math, we'd write:
   ;; 	A[n,m] and B[m,p]
-  ;;	n = the number of lines of A
+  ;;	n = the number of lines of Ab
   ;;	m = the number of columns of A
   ;;	    the number of lines of B
   ;;	p = the number of columns of B
@@ -639,11 +646,11 @@
          (n height-1)
          (m width-1)
          (p width-2)
-         (n-cell (* n p))
-	 (ab (make-f32vector n-cell)))
+         #;(n-cell (* n p))
+	 #;(ab (make-f32vector n-cell)))
     (do ((i 0
 	    (+ i 1)))
-	((= i n) ab)
+	((= i n) to)
       (do ((j 0
               (+ j 1)))
           ((= j p))
@@ -651,12 +658,12 @@
              (k 0
                 (+ k 1)))
             ((= k m)
-             (f32vector-set! ab (+ (* i p) j) sub))
+             (f32vector-set! to (+ (* i p) j) sub))
           (set! sub
                 (+ sub (* (f32vector-ref a (+ (* i m) k))
                           (f32vector-ref b (+ (* k p) j))))))))))
 
-(define (f32vector-invert v)
+#;(define (f32vector-invert v)
   (let* ((n-cell (f32vector-length v))
 	 (to (make-f32vector n-cell)))
     (do ((i 0
