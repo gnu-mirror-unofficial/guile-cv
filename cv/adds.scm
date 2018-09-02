@@ -342,11 +342,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (mdivide c1 width-1 height-1 c2 width-2)
   (let* ((height-2 width-1)
-         (ic1 (im-make-channel width-2 height-2))
+         (i-c2 (im-make-channel width-2 height-2))
          (n-cell-2 (* width-2 height-2))
          (to (im-make-channel width-2 height-1)))
     (f32vector-mtimes c1 width-1 height-1
-                      (f32vector-invert c2 ic1 #:n-cell n-cell-2)
+                      (f32vector-invert c2 i-c2 #:n-cell n-cell-2)
                       width-2
                       to)))
 
@@ -572,11 +572,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
       (values channel width height)
       (match rest
         ((channel-i width-i height-i . rest)
-         (let ((ici (im-make-channel width-i height-i))
+         (let ((i-ci (im-make-channel width-i height-i))
                (n-cell-i (* width-i height-i))
                (to (im-make-channel width-i height)))
            (im-mdivide-channel-1 (f32vector-mtimes channel width height
-                                                   (f32vector-invert channel-i ici
+                                                   (f32vector-invert channel-i i-ci
                                                                      #:n-cell n-cell-i)
                                                    width-i
                                                    to)
