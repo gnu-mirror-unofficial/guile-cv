@@ -31,6 +31,54 @@
 
 size_t pointer_address_size_c ();
 
+int im_fast_channel_offset (int i,
+                            int j,
+                            int width);
+
+
+/*
+ * bounding box
+ *
+*/
+
+int point_inside_c (int left,
+                    int top,
+                    int right,
+                    int bottom,
+                    int pt_x,
+                    int pt_y);
+
+int bb_intersect_c (int l_one,
+                    int t_one,
+                    int r_one,
+                    int b_one,
+                    int l_two,
+                    int t_two,
+                    int r_two,
+                    int b_two);
+
+
+/*
+ * bounding box
+ *
+*/
+
+int point_inside_c (int left,
+                    int top,
+                    int right,
+                    int bottom,
+                    int pt_x,
+                    int pt_y);
+
+int bb_intersect_c (int l_one,
+                    int t_one,
+                    int r_one,
+                    int b_one,
+                    int l_two,
+                    int t_two,
+                    int r_two,
+                    int b_two);
+
 
 /*
  * floats
@@ -42,19 +90,20 @@ int float_equal_c (float f1, float f2, float prec);
 
 
 /*
- * bounding box
+ * s32vectors
  *
 */
 
-int bb_intersect_c (int l_one,
-                    int t_one,
-                    int r_one,
-                    int b_one,
-                    int l_two,
-                    int t_two,
-                    int r_two,
-                    int b_two);
+int s32_ref (int *chan,
+             int i,
+             int j,
+             int width);
 
+int s32_set (int *chan,
+             int i,
+             int j,
+             int width,
+             int val);
 
 /*
  * f32vectors

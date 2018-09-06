@@ -43,6 +43,13 @@ size_t pointer_address_size_c ()
   return n;
 }
 
+int im_fast_channel_offset (int i,
+                            int j,
+                            int width)
+{
+  return (i * width) + j;
+}
+
 
 /*
  * bounding box
@@ -109,6 +116,36 @@ int float_equal_c (float f1, float f2, float prec)
   else {
     return 0;
   }
+}
+
+
+/*
+ * s32vectors
+ *
+*/
+
+int s32_ref (int *chan,
+             int i,
+             int j,
+             int width)
+{
+  int offset;
+
+  offset = im_fast_channel_offset (i, j, width);
+  return chan[offset];
+}
+
+int s32_set (int *chan,
+             int i,
+             int j,
+             int width,
+             int val)
+{
+  int offset;
+
+  offset = im_fast_channel_offset (i, j, width);
+  chan[offset] = val;
+  return 0;
 }
 
 
@@ -562,37 +599,6 @@ int f32vector_to_s32vector_c (float *v,
  * glcm
  *
 */
-
-int im_fast_channel_offset (int i,
-                            int j,
-                            int width)
-{
-  return (i * width) + j;
-}
-
-int s32_ref (int *chan,
-             int i,
-             int j,
-             int width)
-{
-  int offset;
-
-  offset = im_fast_channel_offset (i, j, width);
-  return chan[offset];
-}
-
-int s32_set (int *chan,
-             int i,
-             int j,
-             int width,
-             int val)
-{
-  int offset;
-
-  offset = im_fast_channel_offset (i, j, width);
-  chan[offset] = val;
-  return 0;
-}
 
 int glcm_c (int *chan,
             int width,
