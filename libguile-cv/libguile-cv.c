@@ -399,6 +399,51 @@ int f32vector_times_vectors_c (float *to,
   return 0;
 }
 
+int f32vector_mtimes_c (float *v1,
+                        int w1,
+                        int h1,
+                        float *v2,
+                        int w2,
+                        float *to)
+/*
+  In math, we'd write:
+	A[n, m] and B[m, p]
+	n = the number of lines of Ab
+	m = the number of columns of A
+	    the number of lines of B
+	p = the number of columns of B
+  In guile-cv, an image is represented as a list
+	(width height n-chan idata)
+  So:
+	n = h1
+	m = w1
+	p = w2
+  Here is a 'naive' implementation, till we bind a fast linear algebra
+  library, gsl or cblas, but this is a rabbit hole task!
+*/
+{
+  int i, j, k, n, m, p;
+  float sub, *a, *b;
+
+  a = v1;
+  b = v2;
+
+  n = h1;
+  m = w1;
+  p = w2;
+
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < p; j++) {
+      sub = 0.0;
+      for (k = 0; k < m; k++) {
+        sub = sub + a[((i * m) + k)] * b[((k * p) + j)];
+      }
+      to[((i * p) + j)] = sub;
+    }
+  }
+  return 0;
+}
+
 int f32vector_divide_value_c (float *v,
                               int n_cell,
                               float val,

@@ -172,6 +172,13 @@ int f32vector_times_vectors_c (float *to,
                                float *v_ptr[],
                                int n_vectors);
 
+int f32vector_mtimes_c (float *v1,
+                        int w1,
+                        int h1,
+                        float *v2,
+                        int w2,
+                        float *to);
+
 int f32vector_divide_value_c (float *v,
                               int n_cell,
                               float val,

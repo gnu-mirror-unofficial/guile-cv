@@ -55,6 +55,7 @@
             f32vector-subtract-vectors-c
             f32vector-times-value-c
             f32vector-times-vectors-c
+            f32vector-mtimes-c
             f32vector-divide-value-c
             f32vector-divide-vectors-c
             f32vector-invert-c
@@ -240,6 +241,17 @@
                             int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-mtimes-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_mtimes_c"
+                                    %libguile-cv)
+                      (list '*		;; v1
+                            int		;; width-1
+                            int		;; height1
+                            '*		;; v2
+                            int		;; width-2
+                            '*)))	;; to
 
 (define f32vector-divide-value-c
   (pointer->procedure int

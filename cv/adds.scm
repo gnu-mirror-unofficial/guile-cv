@@ -338,7 +338,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 
 (define (mtimes c1 width-1 height-1 c2 width-2)
   (let ((to (im-make-channel width-2 height-1)))
-    (f32vector-mtimes c1 width-1 height-1 c2 width-2 to)))
+    (f32vector-mtimes c1 width-1 height-1 c2 width-2 to)
+    to))
 
 (define (mdivide c1 width-1 height-1 c2 width-2)
   (let* ((height-2 width-1)
@@ -348,7 +349,8 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
     (f32vector-mtimes c1 width-1 height-1
                       (f32vector-invert c2 i-c2 #:n-cell n-cell-2)
                       width-2
-                      to)))
+                      to)
+    to))
 
 (define (im-matrix-multdiv-op img-1 img-2 op)
   ;; The product is defined only if the number of columns in img-1 is

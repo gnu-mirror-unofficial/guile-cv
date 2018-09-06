@@ -53,6 +53,7 @@
             f32vector-subtract-vectors
             f32vector-times-value
             f32vector-times-vectors
+            f32vector-mtimes
             f32vector-divide-value
             f32vector-divide-vectors
             f32vector-invert
@@ -84,8 +85,7 @@
 	    f32vector=?
 	    f32vector-pred-at-offset?
 	    f32vector-index
-	    f32vector-count-distinct
-            f32vector-mtimes))
+	    f32vector-count-distinct))
 
 
 ;;;
@@ -248,6 +248,15 @@
                                  (bytevector->pointer v-ptr)
                                  n-chan)
     to)))
+
+(define (f32vector-mtimes v1 width-1 height-1 v2 width-2 to)
+  (f32vector-mtimes-c (bytevector->pointer v1)
+                      width-1
+                      height-1
+                      (bytevector->pointer v2)
+                      width-2
+                      (bytevector->pointer to))
+  to)
 
 (define* (f32vector-divide-value channel val to #:key (n-cell #f))
   (if (= val 0.0)
@@ -626,9 +635,9 @@
 ;;; Matrix ops
 ;;;
 
-(define (f32vector-mtimes v1 width-1 height-1 v2 width-2 to)
+#;(define (f32vector-mtimes v1 width-1 height-1 v2 width-2 to)
   ;; In math, we'd write:
-  ;; 	A[n,m] and B[m,p]
+  ;; 	A[n, m] and B[m, p]
   ;;	n = the number of lines of Ab
   ;;	m = the number of columns of A
   ;;	    the number of lines of B

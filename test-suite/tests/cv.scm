@@ -356,9 +356,11 @@
   (assert-true (im-=? (im-subtract %a %b) %a-b))
   (assert-true (im-=? (im-subtract %a %b %c) %a-b-c)))
 
-(define-method (test-im-mtimes (self <guile-cv-tests-cv>))
+(define-method (test-im-times (self <guile-cv-tests-cv>))
   (assert-true (im-=? (im-times %a 2.0) %c))
-  (assert-true (im-=? (im-times %a %a) %a*a))
+  (assert-true (im-=? (im-times %a %a) %a*a)))
+
+(define-method (test-im-mtimes (self <guile-cv-tests-cv>))
   (assert-true (im-=? (im-mtimes %a %a') %axa'))
   (assert-true (im-=? (im-mtimes %a %a' %a) %axa'xa)))
 
@@ -383,7 +385,9 @@
 
 (define-method (test-im-divide (self <guile-cv-tests-cv>))
   (assert-true (im-=? 0.0 (im-divide %d1 2.0) %d2))
-  (assert-true (im-=? 0.0 (im-divide %a %a) %a/a))
+  (assert-true (im-=? 0.0 (im-divide %a %a) %a/a)))
+
+(define-method (test-im-mdivide (self <guile-cv-tests-cv>))
   (assert-true (im-=? (im-mdivide %d1 %d4) %d5))
   (assert-true (im-=? (im-mdivide %d1 %d4 %d6) %d7)))
 
