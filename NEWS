@@ -27,12 +27,15 @@ warranty.
 
 * Latest News
 
-** July 2018
+** September 2018
 
-Guile-CV version 0.1.10 is released.  This is a maintenance release: (a)
-the default installation locations changed, and (b) there is a new
-configure option - see below for a complete description of these
-changes.
+Guile-CV version 0.2.0 is released.
+
+This is a 'milestone' release, which introduces image texture measures.
+In addition (a) the default installation locations have changed; (b)
+there is a new configure option; (c) some new insterfaces; (d) matrix
+multiplication performances have been greatly improved; (d) a few
+interface (name) have changed.
 
 *** Changes since 0.1.9
 
@@ -41,8 +44,8 @@ Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[
 
 **** Installation location changes
 
-The default and --prefix installation locations for source modules and
-compiled files has been changed, and, in the absence of the new
+The default and --prefix installation locations for the source modules
+and the compiled files have changed, and, in the absence of the new
 configure option described below, are now:
 
   $(datadir)/guile-cv
@@ -105,6 +108,31 @@ im-divide-channel
 im-texture
 im-glcp
 im-glcm
+
+**** Performance improvements
+
+im-mtimes
+im-mtimes-channel
+im-mdivide
+im-mdivide-channel
+im-invert
+im-invert-channel
+
+  These matrix operations (actually, their corresponding f32vector-*
+  core functionality) have been moved to libguile-cv. Note that all
+  memory allocation - except for some per-function local variables -
+  still is being performed in scheme.
+
+  This move makes a small black and white 515 x 515 image matrix
+  multiplication by itself (for the sake of timing things) execute in
+  0.228 sec instead of 29.51 sec - that is 134x faster.
+
+  In image processing 'real world', this would be a tiny image, being
+  134x faster for these linear algebra procedures makes a huge
+  difference. Until Guile offers 32 bits floating point and integer
+  calculus performances equal to or faster of those we get using
+  libguile-cv, and since memory allocation is done in scheme, I am
+  confortable with this approach.
 
 
 * Older News
