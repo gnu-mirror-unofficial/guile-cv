@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2017 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -61,3 +61,6 @@
 
 @set UMM https://en.wikipedia.org/wiki/Mathematical_morphology
 @set UNLMEANS https://en.wikipedia.org/wiki/Non-local_means
+
+@set UGUILE-ENV-VARS https://www.gnu.org/software/guile/manual/guile.html#Environment-Variables
+@set UGUILE-LOAD-PATH https://www.gnu.org/software/guile/manual/guile.html#Load-Paths

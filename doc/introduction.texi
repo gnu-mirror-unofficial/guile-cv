@@ -183,7 +183,7 @@ proceed with the following steps:
 cd <download-path>
 tar zxf guile-cv-@value{VERSION}.tar.gz
 cd guile-cv-@value{VERSION}
-./configure [--prefix=/your/prefix]
+./configure [--prefix=/your/prefix] [--with-guile-site=yes]
 make
 make install
 @end example
@@ -215,7 +215,7 @@ So, to grab, compile and install from the source, open a terminal and:
 git clone git://git.savannah.gnu.org/guile-cv.git
 cd guile-cv
 ./autogen.sh
-./configure [--prefix=/your/prefix]
+./configure [--prefix=/your/prefix] [--with-guile-site=yes]
 make
 make install
 @end example
@@ -253,37 +253,72 @@ $(datadir)/guile-cv
 $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 @end example
 
-If you pass @code{--with-guile-site=yes}, these becomes:
+If you pass @code{--with-guile-site=yes}, these locations become the
+Guile site and site-ccache directories, respectively.
 
-@example
-the Guile site directory
-the Guile site-ccache directory
-@end example
-
-@item
 The configure step reports these locations as the content of the
 @code{sitedir} and @code{siteccachedir} variables, respectivelly the
-source modules and compiled files install locations.
-
-After installation, you may consult these variables using pkg-config:
+source modules and compiled files install locations. After installation,
+you may consult these variables using pkg-config:
 
 @example
 pkg-config guile-cv-1.0 --variable=sitedir
 pkg-config guile-cv-1.0 --variable=siteccachedir
 @end example
 
+You will need - unless you have used @code{--with-guile-site=yes}, or
+unless these locations are already 'known' by Guile - to define or
+augment your @code{GUILE_LOAD_PATH} and @code{GUILE_COMPILED_PATH}
+environment variables with these locations, respectively (or
+@code{%load-path} and @code{%load-compiled-path} at run time if you
+prefer@footnote{In this case, you may as well decide to either alter
+your @file{$HOME/.guile} personal file, or, if you are working in a
+mult-user environmet, you may also opt for a global configuration. In
+this case, the file must be named @file{init.scm} and placed it here
+(evaluate the following expression in a terminal): @code{guile -c
+"(display (%global-site-dir))(newline)"}.}  (See
+@uref{@value{UGUILE-ENV-VARS}, Environment Variables} and
+@uref{@value{UGUILE-LOAD-PATH}, Load Path} in the Guile Reference
+Manual).
+
+@item
+Guile-CV also installs its @code{libguile-cv.*} library files, in
+@code{$(libdir)}. The configure step reports its location as the content
+of the @code{libdir} variable, which depends on on the content of the
+@code{prefix} and @code{exec_prefix} variables (also reported). After
+nstallation, you may consult these variables using pkg-config:
+
+@example
+pkg-config guile-cv-1.0 --variable=prefix
+pkg-config guile-cv-1.0 --variable=exec_prefix
+pkg-config guile-cv-1.0 --variable=libdir
+@end example
+
+You will need - unless the @code{$(libdir)} location is already 'known'
+by your system - to either define or augment your
+@code{$LD_LIBRARY_PATH} environment variable, or alter the
+@file{/etc/ld.so.conf} (or add a file in @file{/etc/ld.so.conf.d}) and
+run (as root) @code{ldconfig}, so that Guile-CV finds its
+@code{libguile-cv.*} library files@footnote{Contact your administrator
+if you opt for the second solution but don't have @code{write}
+priviledges on your system.}.
+@c @ifhtml
+@c @*@*
+@c @end ifhtml
+
 @item
 To install Guile-CV, you must have write permissions to the default or
-$prefix dir and its subdirs, as well as to both Guile's site and
-site-ccache directories if @code{--with-guile-site=yes} was passed.
+@code{$(prefix)} directory and its subdirs, as well as to both Guile's
+site and site-ccache directories if @code{--with-guile-site=yes} was
+passed.
 @ifhtml
 @*@*
 @end ifhtml
 
 @item
 Like for any other GNU Tool Chain compatible software, you may install
-the documentation locally using @code{make install-html} [or @code{make
-install-pdf} ...].
+the documentation locally using @code{make install-info}, @code{make
+install-html} and/or @code{make install-pdf}.
 @ifhtml
 @*@*
 @end ifhtml

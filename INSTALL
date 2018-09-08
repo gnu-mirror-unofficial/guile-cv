@@ -95,8 +95,8 @@ Guile-CV releases are here:
 
 	http://ftp.gnu.org/gnu/guile-cv/
 
-		guile-cv-0.1.10.tar.gz
-		guile-cv-0.1.10.tar.gz.sig
+		guile-cv-0.2.0.tar.gz
+		guile-cv-0.2.0.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -105,8 +105,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.1.10.tar.gz
-	cd guile-cv-0.1.10
+	tar zxf guile-cv-0.2.0.tar.gz
+	cd guile-cv-0.2.0
 	./configure [--prefix=/your/prefix]
 	make
 	make install
@@ -128,30 +128,66 @@ Happy Guile-CV!
 	    $(datadir)/guile-cv
 	    $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 
-    If you pass --with-guile-site=yes, these becomes:
+    If you pass --with-guile-site=yes, these locations become the Guile
+    site and site-ccache directories, respectively.
 
-	    the Guile site directory
-	    the Guile site-ccache directory
-
-
-[2] The configure step reports these locations as the content of the
+    The configure step reports these locations as the content of the
     sitedir and siteccachedir variables, respectivelly the source
-    modules and compiled files install locations.
-
-    After installation, you may consult these variables using
-    pkg-config:
+    modules and compiled files install locations.  After installation,
+    you may consult these variables using pkg-config:
 
 	    pkg-config guile-cv-1.0 --variable=sitedir
 	    pkg-config guile-cv-1.0 --variable=siteccachedir
 
-[3] Like for any other GNU Tool Chain compatible software, you may
-    install the documentation locally using make install-info, make
-    install-html and/or make install-pdf.
+    You will need - unless you have used --with-guile-site=yes, or
+    unless these locations are already ’known’ by Guile - to define or
+    augment your GUILE_LOAD_PATH and GUILE_COMPILED_PATH environment
+    variables with these locations, respectively (or %load-path and
+    %load-compiled-path at run time if you prefer (See Environment
+    Variables and Load Path in the Guile Reference Manual) [fn:1]
 
-[4] Last but not least :), Guile-CV comes with a test-suite, which we
+[2] Guile-CV also installs its libguile-cv.* library files, in
+    $(libdir). The configure step reports its location as the content of
+    the libdir variable, which depends on on the content of the prefix
+    and exec_prefix variables (also reported). After nstallation, you
+    may consult these variables using pkg-config:
+
+	    pkg-config guile-cv-1.0 --variable=prefix
+      pkg-config guile-cv-1.0 --variable=exec_prefix
+      pkg-config guile-cv-1.0 --variable=libdir
+
+    You will need - unless the $(libdir) location is already ’known’ by
+    your system - to either define or augment your $LD_LIBRARY_PATH
+    environment variable, or alter the /etc/ld.so.conf (or add a file in
+    /etc/ld.so.conf.d) and run (as root) ldconfig, so that Guile-CV
+    finds its libguile-cv.* library files [fn:2].
+
+[3] To install Guile-CV, you must have write permissions to the default
+    or $(prefix) directory and its subdirs, as well as to both Guile’s
+    site and site-ccache directories if --with-guile-site=yes was
+    passed.
+
+[4] Like for any other GNU Tool Chain compatible software, you may
+    install the documentation locally using make install-info, make
+    install-info, make install-html and/or make install-pdf.
+
+[5] Last but not least :), Guile-CV comes with a test-suite, which we
     recommend you to run (especially before Reporting Bugs):
 
 		make check
+
+Footnotes:
+
+[fn:1] In this case, you may as well decide to either alter your
+       $HOME/.guile personal file, or, if you are working in a mult-user
+       environmet, you may also opt for a global configuration. In this
+       case, the file must be named init.scm and placed it here
+       (evaluate the following expression in a terminal):
+
+         guile -c "(display (%global-site-dir))(newline)"
+
+[fn:2] Contact your administrator if you opt for the second solution but
+       don’t have write priviledges on your system.
 
 
 * Other configure scripts options
