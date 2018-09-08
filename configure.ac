@@ -31,7 +31,7 @@ AC_PREREQ(2.69)
 
 AC_INIT(
   [guile-cv],
-  [0.1.9],
+  [0.2.0],
   [bug-guile-cv@gnu.org])
 
 AC_CONFIG_AUX_DIR([build-aux])
