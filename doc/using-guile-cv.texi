@@ -142,20 +142,24 @@ cd /opt2/share/guile/2.2/ice-9
 guild compile boot-9.scm
 @print{} ;;; note: source file /opt2/share/guile/2.2/ice-9/boot-9.scm
 ;;;       newer than compiled /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
-wrote `/home/david/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go'
+wrote `$HOME/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go'
 
 Now we move it, so all users benefit from the new compiled version:
 
-mv /home/david/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
+mv $HOME/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
 @end lisp
 @end enumerate
 
-Once the above is completed, to effectively modify the default raised
-exception printers, add the following lines to your @file{~/.guile} or
-to the file @file{$prefix/share/guile/site/init.scm} if you want the
-change to affect all users@footnote{Note that these lines assume you did perform
-the steps recommended in the previous section, which means
-@code{(use-modules (ice-9 pretty-print))} is already in there}:
+Now, once the above is completed, you need to add the following lines
+(see below) to your @file{$HOME/.guile} or, if you are working in a
+multi-user environmet, to the file named @file{init.scm} in the
+so-called Guile global site directory (the previous subsection lists the
+terminal command you need to run to see where that directory is on your
+system).
+
+Note that the following proposed modification assumes you did perform
+the steps recommended in the previous subsection, which means that
+@code{(use-modules (ice-9 pretty-print)) is already in there}:
 
 @lisp
 (when (defined? 'exception-format)
