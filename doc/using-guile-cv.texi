@@ -34,12 +34,16 @@ provides us both a simple mechanism to alter the default repl printer
 and the alternate repl printer procedure we need:
 @code{truncated-print}.
 
-To modify the default repl printer, place the following lines either in
-your @file{~/.guile} or in the file
-@file{$prefix/share/guile/site/init.scm} if you want the change to
-affect all users@footnote{You need write privileges to modify this
-module, contact your admin if you're not in charge of the system you are
-working on.}.
+To modify the default repl printer, you have to modify your
+@file{$HOME/.guile} or, if you are working in a multi-user environmet,
+you may choose to add (or modify if it exists) the file named
+@file{init.scm} in the so-called Guile global site
+directory@footnote{You need write privileges to add or modify this file,
+contact your system administrator if you're not in charge of the system
+you are working on.}, here (evaluate the following expression in a
+terminal): @code{guile -c "(display (%global-site-dir))(newline)"}.
+
+Which ever solution you choose, add the following lines:
 
 @lisp
 (use-modules (ice-9 pretty-print)
