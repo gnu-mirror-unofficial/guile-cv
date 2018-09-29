@@ -30,6 +30,7 @@ Guile-CV needs the following software to run:
 	Automake	>= 1.14
     Makeinfo	>= 6.3
 	[[http://www.gnu.org/software/guile][Guile]] 		>= 2.0.13
+	[[http://www.nongnu.org/guile-lib/][Guile-Lib]]	>= 0.2.5
 	[[http://ukoethe.github.io/vigra/][Vigra]]		>= 1.11.0
 
 	  Special notes:
@@ -91,9 +92,7 @@ Guile-CV needs the following software to run:
 
 ** Quickstart
 
-Guile-CV releases are here:
-
-	http://ftp.gnu.org/gnu/guile-cv/
+Guile-CV releases are [[http://ftp.gnu.org/gnu/guile-cv/][here]].  The latest tarballs are:
 
 		guile-cv-0.2.0.tar.gz
 		guile-cv-0.2.0.tar.gz.sig
@@ -107,7 +106,7 @@ proceed with the following steps:
 	cd <download-path>
 	tar zxf guile-cv-0.2.0.tar.gz
 	cd guile-cv-0.2.0
-	./configure [--prefix=/your/prefix]
+	./configure [--prefix=/your/prefix] [--with-guile-site=yes]
 	make
 	make install
 
@@ -179,10 +178,10 @@ Happy Guile-CV!
 Footnotes:
 
 [fn:1] In this case, you may as well decide to either alter your
-       $HOME/.guile personal file, or, if you are working in a mult-user
-       environmet, you may also opt for a global configuration. In this
-       case, the file must be named init.scm and placed it here
-       (evaluate the following expression in a terminal):
+       $HOME/.guile personal file, or, if you are working in a
+       multi-user environmet, you may also opt for a global
+       configuration. In this case, the file must be named init.scm and
+       placed it here (evaluate the following expression in a terminal):
 
          guile -c "(display (%global-site-dir))(newline)"
 
