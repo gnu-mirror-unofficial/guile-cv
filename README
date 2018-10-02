@@ -26,11 +26,10 @@ a Computer Vision functional programming library
 Guile-CV - Image Processing and Analysis in Guile - is a Computer Vision
 functional programming library for the Guile [[http://schemers.org/][Scheme]] language.
 
-Based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vision with Generic Algorithms - a C++ image processing
-and analysis library), Guile-CV comprises a direct binding to [[https://github.com/BSeppke/vigra_c/][Vigra C]] (a
-C wrapper to most of the Vigra functionality), enriched with pure Guile
-scheme algorithms, all accessible through a nice, clean and easy to use
-high level API.
+Guile-CV is based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vigra (Vision with Generic Algorithms),
+enhanced with additional algorithms (Image Textures, Delineate,
+Reconstruction and many more), all accessible through a nice, clean and
+easy to use high level API.
 
 Guile-CV is natively multi-threaded, and takes advantage of multiple
 cores, using high-level and fine grained application-level parallelism

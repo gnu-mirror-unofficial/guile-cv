@@ -56,7 +56,7 @@ of course).
 @anchor{im-texture}
 @deffn Procedure im-texture image n-gl [#:dist 1] [#:p-max 255] @
        [#:use-log2 #f] [#:no-px-y0 #f]
-@cindex Texture
+@cindex Image Textures
 
 Returns a list.
 

@@ -33,12 +33,11 @@ a Computer Vision functional programming library
 programming library for the @uref{@value{UGUILE}, Guile} Scheme
 language.
 
-Based on @uref{@value{UVIGRA}, Vigra} (Vision with Generic Algorithms -
-a C++ image processing and analysis library), @uref{@value{UGUILE-CV},
-Guile-CV} comprises a direct binding to @uref{@value{UVIGRAC}, Vigra C}
-(a C wrapper to most of the Vigra functionality), @code{enriched} with
-pure Guile scheme algorithms, all accessible through a @code{nice},
-@code{clean} and @code{easy to use} high level @code{API}.
+@uref{@value{UGUILE-CV}, Guile-CV} is based on @uref{@value{UVIGRA},
+Vigra} (Vision with Generic Algorithms), enhanced with additional
+algorithms (Image Textures, Delineate, Reconstruction and many more),
+all accessible through a @code{nice}, @code{clean} and @code{easy to
+use} high level @code{API}.
 
 @uref{@value{UGUILE-CV}, Guile-CV} is natively @code{multi-threaded},
 and takes advantage of @code{multiple cores}, using high-level and fine
