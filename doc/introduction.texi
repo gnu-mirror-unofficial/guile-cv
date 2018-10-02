@@ -35,9 +35,9 @@ language.
 
 @uref{@value{UGUILE-CV}, Guile-CV} is based on @uref{@value{UVIGRA},
 Vigra} (Vision with Generic Algorithms), enhanced with additional
-algorithms (Image Textures, Delineate, Reconstruction and many more),
-all accessible through a @code{nice}, @code{clean} and @code{easy to
-use} high level @code{API}.
+algorithms (@code{Image Textures}, @code{Delineate},
+@code{Reconstruction} and many more), all accessible through a
+@code{nice}, @code{clean} and @code{easy to use} high level @code{API}.
 
 @uref{@value{UGUILE-CV}, Guile-CV} is natively @code{multi-threaded},
 and takes advantage of @code{multiple cores}, using high-level and fine
