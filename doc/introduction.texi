@@ -110,7 +110,7 @@ Makeinfo >= 6.3
 @uref{@value{UVIGRA}, Vigra} >= 1.11.0
 
 @indentedblock
-@strong{Special notes:}
+@strong{Note:}
 
 If you manually install @uref{@value{UVIGRA}, Vigra}, make sure you pass
 the cmake ‑DCMAKE_BUILD_TYPE=RELEASE option, which triggers absolutely
