@@ -27,6 +27,26 @@ warranty.
 
 * Latest News
 
+** October 2018
+
+Guile-CV version 0.2.1 is released.
+
+This is a maintenance release, which introduces new interfaces.  In
+addition (a) ...
+
+*** Changes since 0.2.0
+
+Here is a summary of visible changes since version 0.2.0. See GNU
+Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
+
+**** New interfaces
+
+im-crack-edge
+im-crack-edge-channel
+
+
+* Older News
+
 ** September 2018
 
 Guile-CV version 0.2.0 is released.
@@ -133,9 +153,6 @@ im-invert-channel
   calculus performances equal to or faster of those we get using
   libguile-cv, and since memory allocation is done in scheme, I am
   confortable with this approach.
-
-
-* Older News
 
 ** April 2018
 

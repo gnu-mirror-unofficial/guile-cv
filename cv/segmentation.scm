@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2018
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -46,10 +46,10 @@
 	    im-label-channel
 	    im-label-all
 	    im-label-all-channel
-	    #;im-watershed
-	    #;im-watershed-channel
             im-canny
-            im-canny-channel))
+            im-canny-channel
+            im-crack-edge
+            im-crack-edge-channel))
 
 
 #;(g-export )
@@ -117,24 +117,6 @@
                #;(+ n-object 1)
                n-object)))))
 
-#;(define (im-watershed image)
-  (match image
-    ((width height n-chan idata)
-     (list width height n-chan
-           (let ((map-proc (if (and (> n-chan 1)
-                                    (%use-par-map)) par-map map)))
-             (map-proc (lambda (channel)
-                         (im-watershed-channel channel width height))
-                       idata))))))
-
-#;(define (im-watershed-channel channel width height)
-  (let ((to (im-make-channel width height)))
-    (case (vigra-watershed channel to width height)
-      ((-1)
-       (error "Watershed failed."))
-      (else
-to))))
-
 (define* (im-canny image
                    #:key (sigma 1.0) (threshold 0.0) (marker 255.0))
   (match image
@@ -156,6 +138,23 @@ to))))
       ((0) to)
       (else
        (error "Canny failed.")))))
+
+(define* (im-crack-edge image #:key (marker 255.0))
+  (match image
+    ((width height n-chan idata)
+     (list (- (* 2 width) 1) (- (* 2 height) 1) n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-crack-edge-channel channel width height #:marker marker))
+                 idata))))))
+
+(define* (im-crack-edge-channel channel width height #:key (marker 255.0))
+  (let ((to (im-make-channel (- (* 2 width) 1) (- (* 2 height) 1))))
+    (case (vigra-crack-edge-channel channel to width height marker)
+      ((0) to)
+      (else
+       (error "Crack edge.")))))
 
 
 ;;;
@@ -189,12 +188,6 @@ to))))
 		       (else
 			(error "No such connectivity: " con)))))
 
-#;(define (vigra-watershed from to width height)
-  (vigra-watershed-c (bytevector->pointer from)
-		     (bytevector->pointer to)
-		     width
-		     height))
-
 (define (vigra-canny-edge-channel from to width height sigma threshold marker)
   (vigra-canny-edge-channel-c (bytevector->pointer from)
                               (bytevector->pointer to)
@@ -203,6 +196,13 @@ to))))
                               sigma
                               threshold
                               marker))
+
+(define (vigra-crack-edge-channel from to width height marker)
+  (vigra-region-image-to-crack-edge-image-c (bytevector->pointer from)
+                                            (bytevector->pointer to)
+                                            width
+                                            height
+                                            marker))
 
 
 ;;;
@@ -230,15 +230,6 @@ to))))
 			    int	     ;; height
 			    int)))   ;; 8-con?
 
-#;(define vigra-watershed-c
-  (pointer->procedure int
-		      (dynamic-func "vigra_watersheds_c"
-				    %libvigra-c)
-		      (list '*	     ;; from channel
-			    '*	     ;; to channel
-			    int	     ;; width
-			    int)))   ;; height
-
 (define vigra-canny-edge-channel-c
   (pointer->procedure int
 		      (dynamic-func "vigra_cannyedgeimage_c"
@@ -250,3 +241,13 @@ to))))
                             float    ;; scale
                             float    ;; gradient-threshold
 			    float))) ;; edge-marker
+
+(define vigra-region-image-to-crack-edge-image-c
+  (pointer->procedure int
+		      (dynamic-func "vigra_regionimagetocrackedgeimage_c"
+				    %libvigra-c)
+		      (list '*	     ;; from channel
+			    '*	     ;; to channel
+			    int	     ;; width
+			    int	     ;; height
+                            float))) ;; marker

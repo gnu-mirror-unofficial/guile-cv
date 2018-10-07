@@ -24,6 +24,7 @@
 TESTS = \
 	tests/support.scm	\
 	tests/cv.scm		\
+	tests/segmentation.scm	\
 	tests/texture.scm
 
 TEST_EXTENSIONS = .scm

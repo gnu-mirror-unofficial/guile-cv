@@ -22,6 +22,8 @@ The Guile-CV procedures and methods related to segmentation.
 @c @item @ref{im-watershed-channel}
 @item @ref{im-canny}
 @item @ref{im-canny-channel}
+@item @ref{im-crack-edge}
+@item @ref{im-crack-edge-channel}
 @end table
 @end indentedblock
 @end ifhtml
@@ -136,4 +138,28 @@ do not set one of the pixels of one edge to 255.0, all markers values
 would be normalized to 255.0, there by loosing the original marker
 value.}.
 @end ifnottex
+@end deffn
+
+
+@anchor{im-crack-edge}
+@anchor{im-crack-edge-channel}
+@deffn Procedure im-crack-edge image [#:marker 255.0]
+@deffnx Procedure im-crack-edge-channel channel width height [#:marker 255.0]
+@cindex Crack Edge Image
+
+Returns a new image or channel.
+
+Crack edges are marked @samp{between} the (different) pixels of
+@var{image}.  In order to accommodate the cracks, the resulting image or
+channel size must be (* (- width 1) 2) and (* (- height 1) 2)
+respectively.
+
+@ifnottex
+@image{images/pp-17-label-all-marked,,,pp-17-label-all-marked,png}
+
+To illutrate, here above is the result of @code{(im-crack-edge img
+#:marker 127)}, with @code{img} being the 6 labels image displayed
+earlier.
+@end ifnottex
+
 @end deffn

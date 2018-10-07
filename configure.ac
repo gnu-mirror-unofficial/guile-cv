@@ -73,8 +73,8 @@ VIGRA_LIB([1.11.0])
 VIGRA_C_LIB
 VIGRA_C_FUNCTION([vigra_labelimagewithbackground_c])
 VIGRA_C_FUNCTION([vigra_labelimage_c])
-#VIGRA_C_FUNCTION([vigra_watersheds_c])
 VIGRA_C_FUNCTION([vigra_cannyedgeimage_c])
+VIGRA_C_FUNCTION([vigra_regionimagetocrackedgeimage_c])
 VIGRA_C_FUNCTION([vigra_gaussiansmoothing_c])
 VIGRA_C_FUNCTION([vigra_gaussiangradientmagnitude_c])
 VIGRA_C_FUNCTION([vigra_gaussiansharpening_c])
@@ -103,13 +103,13 @@ VIGRA_C_FUNCTION([vigra_clipimage_c])
 VIGRA_C_FUNCTION([vigra_extractfeatures_gray_c])
 VIGRA_C_FUNCTION([vigra_extractfeatures_rgb_c])
 
+
 GUILE_PKG([3.0 2.2 2.0])
 GUILE_PROGS([2.0.13])
 GUILE_SITE_DIR
 GUILE_GLOBAL_SITE_DIR
 GUILE_SITE_CCACHE_DIR
 GUILE_FLAGS
-
 
 AC_ARG_WITH(
   [guile-site],
@@ -136,11 +136,15 @@ AC_SUBST([SITEDIR])
 AC_SUBST([SITECCACHEDIR])
 
 
-PKG_CHECK_MODULES(GUILE_LIB, guile-lib-1.0 >= 0.2.5)
+PKG_CHECK_MODULES(
+  [GUILE_LIB],
+  [guile-lib-1.0 >= 0.2.5])
+
 
 AC_CONFIG_FILES(
   [pre-inst-env],
   [chmod +x pre-inst-env])
+
 AC_CONFIG_FILES([
   meta/guile-cv-1.0.pc
   Makefile
