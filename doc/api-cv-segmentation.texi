@@ -154,12 +154,63 @@ Crack edges are marked @samp{between} the (different) pixels of
 channel size must be (* (- width 1) 2) and (* (- height 1) 2)
 respectively.
 
+Crack pixels are first inserted, then all crack pixels whose non-crack
+neighbors have different values are crack edges and marked using
+@var{marker}, while all other pixels (crack and non-crack) become region
+pixels.  Here is a simple example, with two regions, @verb{|a|} and
+@verb{|b|}, and using @verb{|*|} as the crack edge marker:
+
+
+@indentedblock
+@multitable @columnfractions .3 .3 .3
+@headitem Original @tab Inserted Cracks @tab Final Result
+
+@item
+@ @ @ @ @ @ @ @ @ @verb{|a b b|} @*
+@ @ @ @ @ @ @ @ @ @verb{|a a b|} @*
+@ @ @ @ @ @ @ @ @ @verb{|a a a|}
+@tab
+@ @ @ @ @ @verb{|a . b . b|}  @*
+@ @ @ @ @ @verb{|. . . . .|}  @*
+@ @ @ @ @ @verb{|a . a . b|}  @*
+@ @ @ @ @ @verb{|. . . . .|}  @*
+@ @ @ @ @ @verb{|a . a . a|}
+@tab
+@ @ @ @ @ @ @verb{|a * b b b|}  @*
+@ @ @ @ @ @ @verb{|a * * * b|}  @*
+@ @ @ @ @ @ @verb{|a a a * b|}  @*
+@ @ @ @ @ @ @verb{|a a a * *|}  @*
+@ @ @ @ @ @ @verb{|a a a a a|}
+@end multitable
+@end indentedblock
+
+
 @ifnottex
 @image{images/pp-17-label-all-marked,,,pp-17-label-all-marked,png}
 
-To illutrate, here above is the result of @code{(im-crack-edge img
-#:marker 127)}, with @code{img} being the 6 labels image displayed
-earlier.
+Here above is the result of @code{(im-crack-edge img #:marker 127)},
+with @code{img} being the 6 labels image displayed earlier.
 @end ifnottex
+
+Crack Edge Images have the following properties:
+
+@itemize @bullet
+@item
+Crack Edge Images have odd width and height.
+@item
+Crack pixels have at least one odd coordinate.
+@item
+Only crack pixels may be marked as crack edge pixels.
+@item
+Crack pixels with two odd coordinates must be marked as edge pixels
+whenever any of their neighboring crack pixels was marked.
+@end itemize
+
+As a consequence of the last two properties, both edges and regions are
+4-connected. Thus, 4-connectivity and 8-connectivity yield identical
+connected components in Crack Edge Images (the so called
+well-composedness).  This ensures that Crack Edge Images have nice
+topological properties@footnote{See L. J. Latecki: Well-Composed Sets,
+Academic Press, 2000}.
 
 @end deffn
