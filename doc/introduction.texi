@@ -188,7 +188,7 @@ make install
 @end example
 
 @indentedblock
-@strong{Special notes:}
+@strong{Special note:}
 
 Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
 you read and implement the recommendation made in the manual, section
@@ -220,7 +220,7 @@ make install
 @end example
 
 @indentedblock
-@strong{Special notes:}
+@strong{Special note:}
 
 Before you start to use @uref{@value{UGUILE-CV}, Guile-CV}, make sure
 you read and implement the recommendation made in the manual, section
