@@ -207,10 +207,10 @@
 
 (define* (im-delineate-channel channel width height
                                #:key (threshold  10) (radius 2))
-  (let* ((channel-min (im-disc-erode-channel channel width height radius))
-         (channel-max (im-disc-dilate-channel channel width height radius))
-         (to (im-make-channel width height))
-         (n-cell (* width height)))
+  (let ((channel-min (im-disc-erode-channel channel width height radius))
+        (channel-max (im-disc-dilate-channel channel width height radius))
+        (to (im-make-channel width height))
+        (n-cell (* width height)))
     (do ((i 0
 	    (+ i 1)))
 	((= i n-cell) to)
