@@ -44,6 +44,23 @@ Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[
 im-crack-edge
 im-crack-edge-channel
 
+**** Performance improvements
+
+im-delineate
+im-delineate-channel
+
+  The f32vector-delineate core functionality has been moved to
+  libguile-cv. Note that all memory allocation - except for some local
+  variables - still is being performed in scheme.
+
+  This move makes im-delineate work almost twice as fast. Because all
+  memory allocation still is done in scheme, and not in C, I am very
+  confortable with this approach. When Guile has an AOT compiler that
+  compiles fixed size floating points and small integers operations and
+  vector loops for these that runs as fast as in C, and I am prety
+  confident that it will happen, maybe not tomorrow, but it will happen,
+  we will revert these and use Guile Scheme again.
+
 
 * Older News
 

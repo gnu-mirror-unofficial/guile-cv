@@ -65,6 +65,7 @@
             f32vector-is-a-seed?
             f32vector-scale
             f32vector->s32vector
+            f32vector-delineate
 
             ;; Pure scheme code
             f32vector-display
@@ -391,6 +392,17 @@
     (f32vector-to-s32vector-c (bytevector->pointer v)
                               n-cell
                               (bytevector->pointer to))
+    to))
+
+(define* (f32vector-delineate chan chan-min chan-max to
+                              #:key (n-cell #f) (threshold 10))
+  (let ((n-cell (or n-cell (f32vector-length chan))))
+    (f32vector-delineate-c (bytevector->pointer chan)
+                           (bytevector->pointer chan-min)
+                           (bytevector->pointer chan-max)
+                           n-cell
+                           threshold
+                           (bytevector->pointer to))
     to))
 
 

@@ -205,7 +205,7 @@
                                                #:radius radius))
 		       idata))))))
 
-(define* (im-delineate-channel channel width height
+#;(define* (im-delineate-channel channel width height
                                #:key (threshold  10) (radius 2))
   (let ((channel-min (im-disc-erode-channel channel width height radius))
         (channel-max (im-disc-dilate-channel channel width height radius))
@@ -227,6 +227,17 @@
                                    (- maxi ori))
                                 mini
                                 maxi)))))))
+
+(define* (im-delineate-channel channel width height
+                               #:key (threshold  10) (radius 2))
+  (let ((to (im-make-channel width height)))
+    (f32vector-delineate channel
+                         (im-disc-erode-channel channel width height radius)
+                         (im-disc-dilate-channel channel width height radius)
+                         to
+                         #:n-cell (* width height)
+                         #:threshold threshold)
+    to))
 
 (define* (im-distance-map image
                           #:key (bg 'black) (mode 'euclidian))

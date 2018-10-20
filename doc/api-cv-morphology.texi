@@ -167,6 +167,8 @@ procedure fill the holes of all and every objects in the image.
 
 Returns a new image or channel.
 
+Both @var{threshold} and @var{radius} must be exact integers.
+
 Also known as @samp{Edge Enhancement}, this procedure performs the
 delineation of @var{image}, obtained by applying the following pseudo
 code algorithm:

@@ -639,6 +639,36 @@ int f32vector_to_s32vector_c (float *v,
   return 0;
 }
 
+int f32vector_delineate_c (float *v,
+                           float *v_min,
+                           float *v_max,
+                           int n_cell,
+                           int threshold,
+                           float *to)
+{
+  int i;
+  float ori, mini, maxi, diff;
+
+  for (i = 0; i < n_cell; i++) {
+    ori = v[i];
+    mini = v_min[i];
+    maxi = v_max[i];
+    diff = maxi - mini;
+    if (diff < threshold) {
+      to[i] = ori;
+    }
+    else {
+      if ((ori - mini) < (maxi - ori)) {
+        to[i] = mini;
+      }
+      else {
+        to[i] = maxi;
+      }
+    }
+  }
+  return 0;
+}
+
 
 /*
  * glcm

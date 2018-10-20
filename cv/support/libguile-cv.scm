@@ -67,6 +67,7 @@
             f32vector-is-a-seed-c
             f32vector-scale-c
             f32vector-to-s32vector-c
+            f32vector-delineate-c
             ;; glcm
             glcm-c))
 
@@ -348,6 +349,17 @@
                       (list '*    ;; chan
                             int   ;; n-cell
                             '*))) ;; to
+
+(define f32vector-delineate-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_delineate_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            '*		;; chan-min
+                            '*		;; chan-max
+                            int		;; n-cell
+                            int		;; threshold
+                            '*)))	;; to
 
 
 ;;;

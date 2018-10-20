@@ -231,6 +231,13 @@ int f32vector_to_s32vector_c (float *v,
                               int n_cell,
                               int *to);
 
+int f32vector_delineate_c (float *v,
+                           float *v_min,
+                           float *v_max,
+                           int n_cell,
+                           int threshold,
+                           float *to);
+
 
 /*
  * glcm
