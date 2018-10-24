@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -24,6 +24,7 @@
 TESTS = \
 	tests/support.scm	\
 	tests/cv.scm		\
+	tests/imgproc.scm	\
 	tests/segmentation.scm	\
 	tests/texture.scm
 

@@ -100,6 +100,7 @@ VIGRA_C_FUNCTION([vigra_reflectimage_c])
 VIGRA_C_FUNCTION([vigra_subimage_c])
 VIGRA_C_FUNCTION([vigra_paddimage_c])
 VIGRA_C_FUNCTION([vigra_clipimage_c])
+VIGRA_C_FUNCTION([vigra_localminima_c])
 VIGRA_C_FUNCTION([vigra_extractfeatures_gray_c])
 VIGRA_C_FUNCTION([vigra_extractfeatures_rgb_c])
 

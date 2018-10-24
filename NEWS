@@ -43,6 +43,8 @@ Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[
 
 im-crack-edge
 im-crack-edge-channel
+im-local-minima
+im-local-minima-channel
 
 **** Performance improvements
 

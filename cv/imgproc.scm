@@ -58,7 +58,9 @@
 	    im-unpadd
 	    im-unpadd-channel
             im-clip
-            im-clip-channel))
+            im-clip-channel
+            im-local-minima
+            im-local-minima-channel))
 
 
 #;(g-export )
@@ -283,6 +285,24 @@
       (else
         (error "Clip failed.")))))
 
+(define* (im-local-minima image #:key (con 8))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-local-minima-channel channel width height #:con con))
+	       idata))))))
+
+(define* (im-local-minima-channel channel width height #:key (con 8))
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (case (vigra-local-minima channel to width height con)
+      ((0) to)
+      (else
+        (error "Local minima failed.")))))
+
 
 ;;;
 ;;; Guile vigra low level API
@@ -339,6 +359,17 @@
 			height
 			lower
 			upper))
+
+(define (vigra-local-minima from to width height con)
+  (vigra-local-minima-c (bytevector->pointer from)
+                        (bytevector->pointer to)
+                        width
+                        height
+                        (case con
+                          ((8) 1)
+                          ((4) 0)
+                          (else
+                           (error "No such connectivity: " con)))))
 
 
 ;;;
@@ -414,3 +445,13 @@
 			    int		;; from height
 			    float	;; lower
 			    float)))	;; upper
+
+(define vigra-local-minima-c
+    (pointer->procedure int
+		      (dynamic-func "vigra_localminima_c"
+				    %libvigra-c)
+		      (list '*		;; from channel
+			    '*		;; to channel
+			    int		;; from width
+			    int		;; from height
+                            int)))      ;; 8-con?

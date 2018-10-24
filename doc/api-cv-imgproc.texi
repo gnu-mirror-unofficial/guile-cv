@@ -37,6 +37,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-rgba->rgb}
 @item @ref{im-rgba->gray}
 @item @ref{im-rgb->gray}
+@item @ref{im-local-minima}
+@item @ref{im-local-minima-channel}
 @item @ref{im-threshold}
 @item @ref{im-add}
 @item @ref{im-add-channel}
@@ -272,6 +274,25 @@ R = (((1 - Source.A) * BG.R) + (Source.A * Source.R)) * 255.0
 G = (((1 - Source.A) * BG.G) + (Source.A * Source.G)) * 255.0
 B = (((1 - Source.A) * BG.B) + (Source.A * Source.B)) * 255.0
 @end lisp
+@end deffn
+
+
+@anchor{im-local-minima}
+@anchor{im-local-minima-channel}
+@deffn Procedure im-local-minima image [#:con 8]
+@deffnx Procedure im-local-minima-channel channel width height [#:con 8]
+
+Returns a new image or channel.
+
+Finds the local minima in @var{image} or @var{channel}. Local minima are
+defined as @samp{points} that are not on the borders, and whose values
+are lower then the values of all direct neighbors.  In the result image
+or channel, these points are marked using @code{1} (all other pixels
+values being @code{0}).
+
+By default, the algorithm uses 8-connectivity to define a neighborhood,
+which can be changed passing the optional keyword argument @var{#:con},
+which can be either 4 or 8.
 @end deffn
 
 
