@@ -39,6 +39,8 @@ The Guile-CV procedures and methods to process images.
 @item @ref{im-rgb->gray}
 @item @ref{im-local-minima}
 @item @ref{im-local-minima-channel}
+@item @ref{im-local-maxima}
+@item @ref{im-local-maxima-channel}
 @item @ref{im-threshold}
 @item @ref{im-add}
 @item @ref{im-add-channel}
@@ -278,17 +280,22 @@ B = (((1 - Source.A) * BG.B) + (Source.A * Source.B)) * 255.0
 
 
 @anchor{im-local-minima}
+@anchor{im-local-maxima}
 @anchor{im-local-minima-channel}
+@anchor{im-local-maxima-channel}
 @deffn Procedure im-local-minima image [#:con 8]
+@deffnx Procedure im-local-maxima image [#:con 8]
 @deffnx Procedure im-local-minima-channel channel width height [#:con 8]
+@deffnx Procedure im-local-maxima-channel channel width height [#:con 8]
 
 Returns a new image or channel.
 
-Finds the local minima in @var{image} or @var{channel}. Local minima are
-defined as @samp{points} that are not on the borders, and whose values
-are lower then the values of all direct neighbors.  In the result image
-or channel, these points are marked using @code{1} (all other pixels
-values being @code{0}).
+Finds the local minima or maxima in @var{image} or @var{channel}. Local
+minima or maxima are defined as @samp{points} that are not on the
+borders, and whose values are lower or higher, respectively, then the
+values of all direct neighbors.  In the result image or channel, these
+points are marked using @code{1} (all other pixels values being
+@code{0}).
 
 By default, the algorithm uses 8-connectivity to define a neighborhood,
 which can be changed passing the optional keyword argument @var{#:con},

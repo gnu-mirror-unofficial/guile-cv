@@ -35,13 +35,20 @@
   #:use-module (cv))
 
 
+(define %i-dir
+  (getenv "TEST_IMAGES_PATH"))
+
+(define %i-pp-17-bf
+  (im-load (string-append %i-dir "/pp-17-bf.png")))
+
+
 (define-class <guile-cv-tests-imgproc> (<test-case>))
 
 (define-method (test-im-local-minima (self <guile-cv-tests-imgproc>))
-  (let* ((i-dir (getenv "TEST_IMAGES_PATH"))
-	 (i-file (string-append i-dir "/pp-17-bf.png"))
-         (img (im-load i-file)))
-    (assert (im-local-minima img))))
+  (assert (im-local-minima %i-pp-17-bf)))
+
+(define-method (test-im-local-maxima (self <guile-cv-tests-imgproc>))
+  (assert (im-local-maxima %i-pp-17-bf)))
 
 
 (exit-with-summary (run-all-defined-test-cases))

@@ -45,6 +45,8 @@ im-crack-edge
 im-crack-edge-channel
 im-local-minima
 im-local-minima-channel
+im-local-maxima
+im-local-maxima-channel
 
 **** Performance improvements
 

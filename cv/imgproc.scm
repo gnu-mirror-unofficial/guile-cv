@@ -60,7 +60,9 @@
             im-clip
             im-clip-channel
             im-local-minima
-            im-local-minima-channel))
+            im-local-minima-channel
+            im-local-maxima
+            im-local-maxima-channel))
 
 
 #;(g-export )
@@ -303,6 +305,24 @@
       (else
         (error "Local minima failed.")))))
 
+(define* (im-local-maxima image #:key (con 8))
+  (match image
+    ((width height n-chan idata)
+     (list width height n-chan
+           (let ((map-proc (if (and (> n-chan 1)
+                                    (%use-par-map)) par-map map)))
+	     (map-proc (lambda (channel)
+			 (im-local-maxima-channel channel width height #:con con))
+	       idata))))))
+
+(define* (im-local-maxima-channel channel width height #:key (con 8))
+  (let ((to (im-make-channel width height))
+        (n-cell (* width height)))
+    (case (vigra-local-maxima channel to width height con)
+      ((0) to)
+      (else
+        (error "Local maxima failed.")))))
+
 
 ;;;
 ;;; Guile vigra low level API
@@ -362,6 +382,17 @@
 
 (define (vigra-local-minima from to width height con)
   (vigra-local-minima-c (bytevector->pointer from)
+                        (bytevector->pointer to)
+                        width
+                        height
+                        (case con
+                          ((8) 1)
+                          ((4) 0)
+                          (else
+                           (error "No such connectivity: " con)))))
+
+(define (vigra-local-maxima from to width height con)
+  (vigra-local-maxima-c (bytevector->pointer from)
                         (bytevector->pointer to)
                         width
                         height
@@ -449,6 +480,16 @@
 (define vigra-local-minima-c
     (pointer->procedure int
 		      (dynamic-func "vigra_localminima_c"
+				    %libvigra-c)
+		      (list '*		;; from channel
+			    '*		;; to channel
+			    int		;; from width
+			    int		;; from height
+                            int)))      ;; 8-con?
+
+(define vigra-local-maxima-c
+    (pointer->procedure int
+		      (dynamic-func "vigra_localmaxima_c"
 				    %libvigra-c)
 		      (list '*		;; from channel
 			    '*		;; to channel
