@@ -42,14 +42,14 @@ Guile-CV needs the following software to run:
 
 	[[https://github.com/BSeppke/vigra_c][Vigra C]]
 
-		>= commit a2ff675f4 April 15, 2018
+		>= commit 0af647d08 - Oct 28, 2018
 
-		new interface vigra_nonlocalmean_c (introduced in Jan
-		2018), has an argument that has been renamed;
-
-		the vigra_medianfilter_c function (updated in Jan 2018
-		as well) takes an additional 'out-of-bound strategy'
-		argument.
+		The local minima and maxima interfaces have been
+		improved, and now support the full set of options
+		provided by Vigra, to our request (thank you Benjamin!).
+		In addition there has been a few bugs fixed, including
+		one we detected while working on Guile-CV local minima
+		bindigs.
 
 	  Vigra_c is a C wrapper [to some of] the Vigra
 	  functionality. It is currently only available by cloning its

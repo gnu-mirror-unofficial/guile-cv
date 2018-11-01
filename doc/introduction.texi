@@ -118,7 +118,8 @@ essential adequate runtime optimization flags.
 @end indentedblock
 
 @item
-@uref{@value{UVIGRAC}, Vigra C} >= commit 245b4ca64 Jan 3, 2018
+@uref{@value{UVIGRAC}, Vigra C} >= commit 0af647d08 - Oct 28, 2018
+
 
 @indentedblock
 Vigra C - a C wrapper [to some of] the Vigra functionality - is

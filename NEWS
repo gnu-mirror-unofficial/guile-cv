@@ -39,6 +39,16 @@ addition (a) ...
 Here is a summary of visible changes since version 0.2.0. See GNU
 Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
 
+**** Dependencies
+
+Vigra C >= commit 0af647d08 - Oct 28, 2018
+
+  The local minima and maxima interfaces have been improved, and now
+  support the full set of options provided by Vigra, to our request
+  (thank you Benjamin!).  In addition there has been a few bugs fixed,
+  including one we detected while working on Guile-CV local minima
+  bindigs.
+
 **** New interfaces
 
 im-crack-edge
