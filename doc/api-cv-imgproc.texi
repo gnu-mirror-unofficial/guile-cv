@@ -283,23 +283,49 @@ B = (((1 - Source.A) * BG.B) + (Source.A * Source.B)) * 255.0
 @anchor{im-local-maxima}
 @anchor{im-local-minima-channel}
 @anchor{im-local-maxima-channel}
-@deffn Procedure im-local-minima image [#:con 8]
-@deffnx Procedure im-local-maxima image [#:con 8]
-@deffnx Procedure im-local-minima-channel channel width height [#:con 8]
-@deffnx Procedure im-local-maxima-channel channel width height [#:con 8]
+@deffn Procedure im-local-minima image [#:threshold 255.0]
+@deffnx Procedure im-local-maxima image [#:threshold 0.0]
+@deffnx Procedure im-local-minima-channel channel width height [#:threshold 255.0]
+@deffnx Procedure im-local-maxima-channel channel width height [#:threshold 0.0]
+
+@indentedblock
+All local mnima and maxima related procedures also accept the following
+additional optional keyword arguments: [#:con 8] [#:marker 1.0]
+[#:borders? #f] [#:plateaus?  #f] [#:epsilon 1.0e-4]
+@end indentedblock
 
 Returns a new image or channel.
 
 Finds the local minima or maxima in @var{image} or @var{channel}. Local
 minima or maxima are defined as @samp{points} that are not on the
-borders, and whose values are lower or higher, respectively, then the
-values of all direct neighbors.  In the result image or channel, these
-points are marked using @code{1} (all other pixels values being
-@code{0}).
+borders (unless @code{#:borders?} is @code{#t}), and whose values are
+lower or higher, respectively, then the values of all direct neighbors.
+In the result image or channel, these points are marked using the
+@var{#:marker} value (all other pixels values will be set to @code{0}).
 
 By default, the algorithm uses 8-connectivity to define a neighborhood,
 which can be changed passing the optional keyword argument @var{#:con},
 which can be either 4 or 8.
+
+The @var{#:threshold} optional keyword argument can be used to discard
+minima and maxima whose (original pixel) value is not below or above the
+threshold, respectively.
+
+The @var{#:plateaus?} optional keyword argument can be used to allow
+regions of @samp{constant} (original pixel) value whose neighbors are
+all higher (minima) or lower (maxima) than the value of the region. Tow
+pixel values are considered part of the same region (representing the
+same @samp{constant} value) if the absolute value of their difference is
+@code{<=} to @var{#:epsilon}.
+
+@strong{Notes}:
+@itemize
+@item If you want to know how many minima or maxima
+were found, use @ref{im-reduce} upon the result;
+
+@item If you are interested by the original minima or maxima pixel
+values, Use @ref{im-times} between the original image and the result.
+@end itemize
 @end deffn
 
 
@@ -562,7 +588,7 @@ value is @code{(- 255.0 pixel-value)}.
 
 @anchor{im-scrap}
 @deffn Procedure im-scrap image size [#:pred <] [#:con 8] [#:bg 'black] @
-                 [exclude-on-edges #f]
+                 [#:exclude-on-edges #f]
 
 Returns a new image.
 

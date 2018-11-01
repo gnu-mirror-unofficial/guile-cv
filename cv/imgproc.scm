@@ -287,38 +287,77 @@
       (else
         (error "Clip failed.")))))
 
-(define* (im-local-minima image #:key (con 8))
+(define* (im-local-minima image
+                          #:key (con 8)
+                          (marker 1.0)
+                          (threshold 255.0)
+                          (borders? #f)
+                          (plateaus? #f)
+                          (epsilon 1.0e-4))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-local-minima-channel channel width height #:con con))
+			 (im-local-minima-channel channel width height
+                                                  #:con con
+                                                  #:marker marker
+                                                  #:threshold threshold
+                                                  #:borders? borders?
+                                                  #:plateaus? plateaus?
+                                                  #:epsilon epsilon))
 	       idata))))))
 
-(define* (im-local-minima-channel channel width height #:key (con 8))
+(define* (im-local-minima-channel channel width height
+                                  #:key (con 8)
+                                  (marker 1.0)
+                                  (threshold 255.0)
+                                  (borders? #f)
+                                  (plateaus? #f)
+                                  (epsilon 1.0e-4))
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
-    (case (vigra-local-minima channel to width height con)
+    (case (vigra-local-minima channel to width height con marker threshold
+                              borders? plateaus? epsilon)
       ((0) to)
       (else
         (error "Local minima failed.")))))
 
-(define* (im-local-maxima image #:key (con 8))
+(define* (im-local-maxima image
+                          #:key (con 8)
+                          (marker 1.0)
+                          (threshold 0.0)
+                          (borders? #f)
+                          (plateaus? #f)
+                          (epsilon 1.0e-4))
   (match image
     ((width height n-chan idata)
      (list width height n-chan
            (let ((map-proc (if (and (> n-chan 1)
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
-			 (im-local-maxima-channel channel width height #:con con))
+			 (im-local-maxima-channel channel width height
+                                                  #:con con
+                                                  #:marker marker
+                                                  #:threshold threshold
+                                                  #:borders? borders?
+                                                  #:plateaus? plateaus?
+                                                  #:epsilon epsilon))
+
 	       idata))))))
 
-(define* (im-local-maxima-channel channel width height #:key (con 8))
+(define* (im-local-maxima-channel channel width height
+                                  #:key (con 8)
+                                  (marker 1.0)
+                                  (threshold 0.0)
+                                  (borders? #f)
+                                  (plateaus? #f)
+                                  (epsilon 1.0e-4))
   (let ((to (im-make-channel width height))
         (n-cell (* width height)))
-    (case (vigra-local-maxima channel to width height con)
+    (case (vigra-local-maxima channel to width height con marker threshold
+                              borders? plateaus? epsilon)
       ((0) to)
       (else
         (error "Local maxima failed.")))))
@@ -380,7 +419,8 @@
 			lower
 			upper))
 
-(define (vigra-local-minima from to width height con)
+(define (vigra-local-minima from to width height con marker threshold
+                            borders? plateaus? epsilon)
   (vigra-local-minima-c (bytevector->pointer from)
                         (bytevector->pointer to)
                         width
@@ -389,9 +429,15 @@
                           ((8) 1)
                           ((4) 0)
                           (else
-                           (error "No such connectivity: " con)))))
+                           (error "No such connectivity: " con)))
+                        marker
+                        threshold
+                        (if borders? 1 0)
+                        (if plateaus? 1 0)
+                        epsilon))
 
-(define (vigra-local-maxima from to width height con)
+(define (vigra-local-maxima from to width height con marker threshold
+                            borders? plateaus? epsilon)
   (vigra-local-maxima-c (bytevector->pointer from)
                         (bytevector->pointer to)
                         width
@@ -400,7 +446,12 @@
                           ((8) 1)
                           ((4) 0)
                           (else
-                           (error "No such connectivity: " con)))))
+                           (error "No such connectivity: " con)))
+                        marker
+                        threshold
+                        (if borders? 1 0)
+                        (if plateaus? 1 0)
+                        epsilon))
 
 
 ;;;
@@ -485,7 +536,12 @@
 			    '*		;; to channel
 			    int		;; from width
 			    int		;; from height
-                            int)))      ;; 8-con?
+                            int		;; 8-con?
+                            float	;; marker
+                            float	;; threshold
+                            int		;; borders?
+                            int		;; plateaus?
+                            float)))	;; epsilon
 
 (define vigra-local-maxima-c
     (pointer->procedure int
@@ -495,4 +551,9 @@
 			    '*		;; to channel
 			    int		;; from width
 			    int		;; from height
-                            int)))      ;; 8-con?
+                            int		;; 8-con?
+                            float	;; marker
+                            float	;; threshold
+                            int		;; borders?
+                            int		;; plateaus?
+                            float)))	;; epsilon
