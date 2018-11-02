@@ -59,28 +59,6 @@ int bb_intersect_c (int l_one,
 
 
 /*
- * bounding box
- *
-*/
-
-int point_inside_c (int left,
-                    int top,
-                    int right,
-                    int bottom,
-                    int pt_x,
-                    int pt_y);
-
-int bb_intersect_c (int l_one,
-                    int t_one,
-                    int r_one,
-                    int b_one,
-                    int l_two,
-                    int t_two,
-                    int r_two,
-                    int b_two);
-
-
-/*
  * floats
  *
 */
