@@ -283,10 +283,12 @@ B = (((1 - Source.A) * BG.B) + (Source.A * Source.B)) * 255.0
 @anchor{im-local-maxima}
 @anchor{im-local-minima-channel}
 @anchor{im-local-maxima-channel}
-@deffn Procedure im-local-minima image [#:threshold 255.0]
-@deffnx Procedure im-local-maxima image [#:threshold 0.0]
-@deffnx Procedure im-local-minima-channel channel width height [#:threshold 255.0]
-@deffnx Procedure im-local-maxima-channel channel width height [#:threshold 0.0]
+@deffn Procedure im-local-minima image [#:threshold +float-max+]
+@deffnx Procedure im-local-maxima image [#:threshold (- +float-max+)]
+@deffnx Procedure im-local-minima-channel channel width height @
+                                          [#:threshold +float-max+]
+@deffnx Procedure im-local-maxima-channel channel width height @
+                                          [#:threshold (- +float-max+)]
 
 @indentedblock
 All local mnima and maxima related procedures also accept the following
@@ -309,7 +311,9 @@ which can be either 4 or 8.
 
 The @var{#:threshold} optional keyword argument can be used to discard
 minima and maxima whose (original pixel) value is not below or above the
-threshold, respectively.
+threshold, respectively. Both default values depend on
+@code{+float-max+}, which is defined (and so is @code{+float-min+})
+using the corresponding limit value as given by the C float.h header.
 
 The @var{#:plateaus?} optional keyword argument can be used to allow
 regions of @samp{constant} (original pixel) value whose neighbors are
