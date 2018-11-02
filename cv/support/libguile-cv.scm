@@ -33,12 +33,12 @@
   #:export (;; misc.
             pointer-address-size-c
 
+            ;; bounding box
+            bb-intersect-c
+
             ;; floats
             float-to-int-c
             float-equal-c
-
-            ;; bounding box
-            bb-intersect-c
 
             ;; f32vectors
             f32vector-min-c
@@ -68,6 +68,7 @@
             f32vector-scale-c
             f32vector-to-s32vector-c
             f32vector-delineate-c
+
             ;; glcm
             glcm-c))
 
@@ -81,6 +82,17 @@
                       (dynamic-func "pointer_address_size_c"
                                     %libguile-cv)
                       (list)))
+
+
+;;;
+;;; bouding box
+;;;
+
+(define bb-intersect-c
+  (pointer->procedure int
+                      (dynamic-func "bb_intersect_c"
+                                    %libguile-cv)
+                      (list int int int int int int int int)))
 
 
 ;;;
@@ -100,17 +112,6 @@
                       (list float	;; f1
                             float	;; f2
                             float)))	;; precision
-
-
-;;;
-;;; bouding box
-;;;
-
-(define bb-intersect-c
-  (pointer->procedure int
-                      (dynamic-func "bb_intersect_c"
-                                    %libguile-cv)
-                      (list int int int int int int int int)))
 
 
 ;;;
