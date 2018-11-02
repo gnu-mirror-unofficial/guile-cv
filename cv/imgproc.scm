@@ -290,7 +290,7 @@
 (define* (im-local-minima image
                           #:key (con 8)
                           (marker 1.0)
-                          (threshold 255.0)
+                          (threshold +float-max+)
                           (borders? #f)
                           (plateaus? #f)
                           (epsilon 1.0e-4))
@@ -312,7 +312,7 @@
 (define* (im-local-minima-channel channel width height
                                   #:key (con 8)
                                   (marker 1.0)
-                                  (threshold 255.0)
+                                  (threshold +float-max+)
                                   (borders? #f)
                                   (plateaus? #f)
                                   (epsilon 1.0e-4))
@@ -327,7 +327,7 @@
 (define* (im-local-maxima image
                           #:key (con 8)
                           (marker 1.0)
-                          (threshold 0.0)
+                          (threshold (- +float-max+))
                           (borders? #f)
                           (plateaus? #f)
                           (epsilon 1.0e-4))
@@ -350,7 +350,7 @@
 (define* (im-local-maxima-channel channel width height
                                   #:key (con 8)
                                   (marker 1.0)
-                                  (threshold 0.0)
+                                  (threshold (- +float-max+))
                                   (borders? #f)
                                   (plateaus? #f)
                                   (epsilon 1.0e-4))
