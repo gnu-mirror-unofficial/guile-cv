@@ -33,6 +33,10 @@
   #:export (;; misc.
             pointer-address-size-c
 
+            ;; limits
+            float-min-c
+            float-max-c
+
             ;; bounding box
             bb-intersect-c
 
@@ -80,6 +84,23 @@
 (define pointer-address-size-c
   (pointer->procedure size_t
                       (dynamic-func "pointer_address_size_c"
+                                    %libguile-cv)
+                      (list)))
+
+
+;;;
+;;; limits
+;;;
+
+(define float-min-c
+  (pointer->procedure float
+                      (dynamic-func "float_min_c"
+                                    %libguile-cv)
+                      (list)))
+
+(define float-max-c
+  (pointer->procedure float
+                      (dynamic-func "float_max_c"
                                     %libguile-cv)
                       (list)))
 

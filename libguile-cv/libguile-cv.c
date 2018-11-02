@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <limits.h>
+#include <float.h>
 #include <math.h>
 /* #include <libguile.h> */
 
@@ -48,6 +49,22 @@ int im_fast_channel_offset (int i,
                             int width)
 {
   return (i * width) + j;
+}
+
+
+/*
+ * limits
+ *
+*/
+
+float float_min_c ()
+{
+  return (FLT_MIN);
+}
+
+float float_max_c ()
+{
+  return (FLT_MAX);
 }
 
 

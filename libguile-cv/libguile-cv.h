@@ -35,6 +35,14 @@ int im_fast_channel_offset (int i,
                             int j,
                             int width);
 
+/*
+ * limits
+ *
+*/
+
+float float_min_c ();
+float float_max_c ();
+
 
 /*
  * bounding box

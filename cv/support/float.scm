@@ -40,6 +40,9 @@
 	    float-round
 	    float-member
             floatlist-display
+            ;; from libguile-cv
+            +float-min+
+            +float-max+
             float->int))
 
 
@@ -106,5 +109,8 @@
 ;;;
 ;;; From liguile-cv
 ;;;
+
+(define +float-min+ (float-min-c))
+(define +float-max+ (float-max-c))
 
 (define float->int float-to-int-c)
