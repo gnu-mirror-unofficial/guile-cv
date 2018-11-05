@@ -37,9 +37,9 @@ constructs available in Guile, based on its support to POSIX threads.
 
 ** Latest News
 
-September 2018
+November 2018
 
-GNU Guile-CV version 0.2.0 is released.
+GNU Guile-CV version 0.2.1 is released.
 
 Visit the NEWS file or see the [[http://git.savannah.gnu.org/cgit/guile-cv.git/tree/NEWS][News]] page for the list of visible changes
 since the last release, as well as older news.

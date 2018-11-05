@@ -122,6 +122,11 @@ essential adequate runtime optimization flags.
 
 
 @indentedblock
+The local minima and maxima interfaces have been improved, and now
+support the full set of options provided by Vigra, to our request (thank
+you Benjamin!).  In addition there has been a few bugs fixed, including
+one we detected while working on Guile-CV local minima bindigs.
+
 Vigra C - a C wrapper [to some of] the Vigra functionality - is
 currently only available by cloning its source code @uref{@value{UGIT},
 git} repository: there is no release and no versioning scheme
