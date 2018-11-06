@@ -22,10 +22,6 @@ warranty.
 Image Processing and Analysis in [[http://www.gnu.org/software/guile/][Guile]]
 a Computer Vision functional programming library
 
-
-Guile-CV - Image Processing and Analysis in Guile - is a Computer Vision
-functional programming library for the Guile [[http://schemers.org/][Scheme]] language.
-
 Guile-CV is based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vigra (Vision with Generic Algorithms),
 enhanced with additional algorithms (Image Textures, Delineate,
 Reconstruction and many more), all accessible through a nice, clean and
