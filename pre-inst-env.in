@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2018
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -54,9 +54,9 @@ export GUILE_LOAD_PATH
 
 if [ x"$GUILE_LOAD_COMPILED_PATH" = x ]
 then
-    GUILE_LOAD_COMPILED_PATH=$abs_top_srcdir
+    GUILE_LOAD_COMPILED_PATH=$abs_top_builddir:$abs_top_srcdir
 else
-    GUILE_LOAD_COMPILED_PATH=$abs_top_srcdir:$GUILE_LOAD_COMPILED_PATH
+    GUILE_LOAD_COMPILED_PATH=$abs_top_builddir:$abs_top_srcdir:$GUILE_LOAD_COMPILED_PATH
 fi
 ## echo $GUILE_LOAD_COMPILED_PATH
 export GUILE_LOAD_COMPILED_PATH
@@ -68,9 +68,9 @@ export GUILE_LOAD_COMPILED_PATH
 
 if [ x"$LD_LIBRARY_PATH" = x ]
 then
-    LD_LIBRARY_PATH=$abs_top_srcdir/libguile-cv
+    LD_LIBRARY_PATH=$abs_top_builddir/libguile-cv:$abs_top_srcdir/libguile-cv
 else
-    LD_LIBRARY_PATH=$abs_top_srcdir/libguile-cv:$LD_LIBRARY_PATH
+    LD_LIBRARY_PATH=$abs_top_builddir/libguile-cv:$abs_top_srcdir/libguile-cv:$LD_LIBRARY_PATH
 fi
 
 ## echo $LD_LIBRARY_PATH
