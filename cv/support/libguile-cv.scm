@@ -66,6 +66,7 @@
             f32vector-and-vectors-c
             f32vector-or-vectors-c
             f32vector-xor-vectors-c
+            f32vector-transpose-c
             f32vector-equal-vectors-c
             f32vector-binary-vectors-c
             f32vector-is-a-seed-c
@@ -328,6 +329,15 @@
                             int		;; n-cell
                             '*		;; v-ptr[]
                             int)))	;; n-vectors
+
+(define f32vector-transpose-c
+  (pointer->procedure int
+                      (dynamic-func "f32vector_transpose_c"
+                                    %libguile-cv)
+                      (list '*		;; chan
+                            int		;; width
+                            int		;; height
+                            '*)))	;; to
 
 (define f32vector-equal-vectors-c
   (pointer->procedure int

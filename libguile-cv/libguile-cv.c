@@ -572,6 +572,23 @@ int f32vector_xor_vectors_c (float *to,
   return 0;
 }
 
+int f32vector_transpose_c (float *chan,
+                           int width,
+                           int height,
+                           float *to)
+{
+  int i, j, d, o;
+
+  for (i = 0; i < height; i++) {
+    for (j = 0; j < width; j++) {
+      d = im_fast_channel_offset (j, i, height);
+      o = im_fast_channel_offset (i, j, width);
+      to[d] = chan[o];
+    }
+  }
+  return 0;
+}
+
 int f32vector_equal_vectors_c (int n_cell,
                                float *v_ptr[],
                                int n_vectors,

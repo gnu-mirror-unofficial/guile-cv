@@ -942,7 +942,7 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 			 (im-transpose-channel channel width height))
 	       idata))))))
 
-(define (im-transpose-channel channel width height)
+#;(define (im-transpose-channel channel width height)
   (let ((t-width height)
         (to (im-make-channel height width)))
     (do ((i 0
@@ -953,6 +953,11 @@ Target.B = ((1 - Source.A) * BGColor.B) + (Source.A * Source.B)
 	  ((= j width))
         (im-fast-channel-set! to j i t-width
                               (im-fast-channel-ref channel i j width))))
+    to))
+
+(define (im-transpose-channel channel width height)
+  (let ((to (im-make-channel height width)))
+    (f32vector-transpose channel width height to)
     to))
 
 (define (im-invert image)

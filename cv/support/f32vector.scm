@@ -60,6 +60,7 @@
             f32vector-and-vectors
             f32vector-or-vectors
             f32vector-xor-vectors
+            f32vector-transpose
             f32vector-=-vectors?
             f32vector-binary-vectors?
             f32vector-is-a-seed?
@@ -339,6 +340,14 @@
                                (bytevector->pointer v-ptr)
                                n-chan)
       to)))
+
+(define (f32vector-transpose channel width height to)
+  (let ((n-cell (f32vector-length channel)))
+    (f32vector-transpose-c (bytevector->pointer channel)
+                           width
+                           height
+                           (bytevector->pointer to))
+    to))
 
 (define* (f32vector-=-vectors? n-cell channels #:key (prec 1.0e-4))
   (receive (maker setter!)
