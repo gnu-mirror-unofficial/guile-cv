@@ -1,7 +1,7 @@
 /*  -*- mode: C; coding: utf-8 -*-
 
 ####
-#### Copyright (C) 2016 - 2018
+#### Copyright (C) 2016 - 2019
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -37,7 +37,7 @@
  *
 */
 
-size_t pointer_address_size_c ()
+size_t pointer_address_size ()
 {
   size_t n = sizeof(float *) * CHAR_BIT;
 
@@ -57,12 +57,12 @@ int im_fast_channel_offset (int i,
  *
 */
 
-float float_min_c ()
+float float_min ()
 {
   return (FLT_MIN);
 }
 
-float float_max_c ()
+float float_max ()
 {
   return (FLT_MAX);
 }
@@ -73,12 +73,12 @@ float float_max_c ()
  *
 */
 
-int point_inside_c (int left,
-                    int top,
-                    int right,
-                    int bottom,
-                    int pt_x,
-                    int pt_y)
+int point_inside (int left,
+                  int top,
+                  int right,
+                  int bottom,
+                  int pt_x,
+                  int pt_y)
 {
   if ((pt_x >= left) &&
       (pt_x <= right) &&
@@ -91,19 +91,19 @@ int point_inside_c (int left,
   }
 }
 
-int bb_intersect_c (int l_one,
-                    int t_one,
-                    int r_one,
-                    int b_one,
-                    int l_two,
-                    int t_two,
-                    int r_two,
-                    int b_two)
+int bb_intersect (int l_one,
+                  int t_one,
+                  int r_one,
+                  int b_one,
+                  int l_two,
+                  int t_two,
+                  int r_two,
+                  int b_two)
 {
-  if (((point_inside_c (l_one, t_one, r_one, b_one, l_two, t_two)) == 1) ||
-      ((point_inside_c (l_one, t_one, r_one, b_one, r_two, t_two)) == 1) ||
-      ((point_inside_c (l_one, t_one, r_one, b_one, l_two, b_two)) == 1) ||
-      ((point_inside_c (l_one, t_one, r_one, b_one, r_two, b_two)) == 1)) {
+  if (((point_inside (l_one, t_one, r_one, b_one, l_two, t_two)) == 1) ||
+      ((point_inside (l_one, t_one, r_one, b_one, r_two, t_two)) == 1) ||
+      ((point_inside (l_one, t_one, r_one, b_one, l_two, b_two)) == 1) ||
+      ((point_inside (l_one, t_one, r_one, b_one, r_two, b_two)) == 1)) {
     return 1;
   }
   else {
@@ -117,7 +117,7 @@ int bb_intersect_c (int l_one,
  *
 */
 
-int float_to_int_c (float f)
+int float_to_int (float f)
 {
   int i;
 
@@ -125,7 +125,7 @@ int float_to_int_c (float f)
   return (i);
 }
 
-int float_equal_c (float f1, float f2, float prec)
+int float_equal (float f1, float f2, float prec)
 {
   if ((abs (f1 - f2)) <= prec) {
     return 1;
@@ -171,7 +171,7 @@ int s32_set (int *chan,
  *
 */
 
-int f32vector_min_c (float *v, int n_cell, float *r)
+int f32vector_min (float *v, int n_cell, float *r)
 {
   int i;
 
@@ -186,7 +186,7 @@ int f32vector_min_c (float *v, int n_cell, float *r)
   return 0;
 }
 
-int f32vector_max_c (float *v, int n_cell, float *r)
+int f32vector_max (float *v, int n_cell, float *r)
 {
   int i;
 
@@ -201,7 +201,7 @@ int f32vector_max_c (float *v, int n_cell, float *r)
   return 0;
 }
 
-int f32vector_range_c (float *v, int n_cell, float *r)
+int f32vector_range (float *v, int n_cell, float *r)
 {
   int i;
 
@@ -220,11 +220,11 @@ int f32vector_range_c (float *v, int n_cell, float *r)
   return 0;
 }
 
-int f32vector_scrap_c (float *chan,
-                       float *l_chan,
-                       int n_cell,
-                       int *scrap_cache,
-                       float *to)
+int f32vector_scrap (float *chan,
+                     float *l_chan,
+                     int n_cell,
+                     int *scrap_cache,
+                     float *to)
 {
   int i, val;
 
@@ -240,10 +240,10 @@ int f32vector_scrap_c (float *chan,
   return 0;
 }
 
-int f32vector_scrap_in_place_c (float *chan,
-                                float *l_chan,
-                                int n_cell,
-                                int *scrap_cache)
+int f32vector_scrap_in_place (float *chan,
+                              float *l_chan,
+                              int n_cell,
+                              int *scrap_cache)
 {
   int i, val;
 
@@ -256,12 +256,12 @@ int f32vector_scrap_in_place_c (float *chan,
   return 0;
 }
 
-int f32vector_threshold_c (float *to,
-                           int n_cell,
-                           float *v_ptr[],
-                           int n_vectors,
-                           float threshold,
-                           int bg)
+int f32vector_threshold (float *to,
+                         int n_cell,
+                         float *v_ptr[],
+                         int n_vectors,
+                         float threshold,
+                         int bg)
 {
   int i, j;
   float sum;
@@ -292,9 +292,9 @@ int f32vector_threshold_c (float *to,
   return 0;
 }
 
-int f32vector_fill_holes_c (float *labels,
-                            int n_cell,
-                            float bg_label)
+int f32vector_fill_holes (float *labels,
+                          int n_cell,
+                          float bg_label)
 {
   int i;
 
@@ -309,11 +309,11 @@ int f32vector_fill_holes_c (float *labels,
   return 0;
 }
 
-int f32vector_rgb_to_gray_c (float *to,
-                             int n_cell,
-                             float *r,
-                             float *g,
-                             float *b)
+int f32vector_rgb_to_gray (float *to,
+                           int n_cell,
+                           float *r,
+                           float *g,
+                           float *b)
 {
   int i;
 
@@ -323,10 +323,10 @@ int f32vector_rgb_to_gray_c (float *to,
   return 0;
 }
 
-int f32vector_add_value_c (float *v,
-                           int n_cell,
-                           float val,
-                           float *to)
+int f32vector_add_value (float *v,
+                         int n_cell,
+                         float val,
+                         float *to)
 {
   int i;
 
@@ -336,10 +336,10 @@ int f32vector_add_value_c (float *v,
   return 0;
 }
 
-int f32vector_add_vectors_c (float *to,
-                             int n_cell,
-                             float *v_ptr[],
-                             int n_vectors)
+int f32vector_add_vectors (float *to,
+                           int n_cell,
+                           float *v_ptr[],
+                           int n_vectors)
 {
   int i, j;
   float sum;
@@ -354,10 +354,10 @@ int f32vector_add_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_subtract_value_c (float *v,
-                                int n_cell,
-                                float val,
-                                float *to)
+int f32vector_subtract_value (float *v,
+                              int n_cell,
+                              float val,
+                              float *to)
 {
   int i;
 
@@ -367,10 +367,10 @@ int f32vector_subtract_value_c (float *v,
   return 0;
 }
 
-int f32vector_subtract_vectors_c (float *to,
-                                  int n_cell,
-                                  float *v_ptr[],
-                                  int n_vectors)
+int f32vector_subtract_vectors (float *to,
+                                int n_cell,
+                                float *v_ptr[],
+                                int n_vectors)
 {
   int i, j;
   float result;
@@ -385,10 +385,10 @@ int f32vector_subtract_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_times_value_c (float *v,
-                             int n_cell,
-                             float val,
-                             float *to)
+int f32vector_times_value (float *v,
+                           int n_cell,
+                           float val,
+                           float *to)
 {
   int i;
 
@@ -398,10 +398,10 @@ int f32vector_times_value_c (float *v,
   return 0;
 }
 
-int f32vector_times_vectors_c (float *to,
-                               int n_cell,
-                               float *v_ptr[],
-                               int n_vectors)
+int f32vector_times_vectors (float *to,
+                             int n_cell,
+                             float *v_ptr[],
+                             int n_vectors)
 {
   int i, j;
   float result;
@@ -416,12 +416,12 @@ int f32vector_times_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_mtimes_c (float *v1,
-                        int w1,
-                        int h1,
-                        float *v2,
-                        int w2,
-                        float *to)
+int f32vector_mtimes (float *v1,
+                      int w1,
+                      int h1,
+                      float *v2,
+                      int w2,
+                      float *to)
 /*
   In math, we'd write:
 	A[n, m] and B[m, p]
@@ -461,10 +461,10 @@ int f32vector_mtimes_c (float *v1,
   return 0;
 }
 
-int f32vector_divide_value_c (float *v,
-                              int n_cell,
-                              float val,
-                              float *to)
+int f32vector_divide_value (float *v,
+                            int n_cell,
+                            float val,
+                            float *to)
 {
   int i;
 
@@ -480,10 +480,10 @@ int f32vector_divide_value_c (float *v,
   }
 }
 
-int f32vector_divide_vectors_c (float *to,
-                                int n_cell,
-                                float *v_ptr[],
-                                int n_vectors)
+int f32vector_divide_vectors (float *to,
+                              int n_cell,
+                              float *v_ptr[],
+                              int n_vectors)
 {
   int i, j;
   float result;
@@ -498,9 +498,9 @@ int f32vector_divide_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_invert_c (float *v,
-                        int n_cell,
-                        float *to)
+int f32vector_invert (float *v,
+                      int n_cell,
+                      float *to)
 {
   int i;
 
@@ -510,10 +510,10 @@ int f32vector_invert_c (float *v,
   return 0;
 }
 
-int f32vector_and_vectors_c (float *to,
-                             int n_cell,
-                             float *v_ptr[],
-                             int n_vectors)
+int f32vector_and_vectors (float *to,
+                           int n_cell,
+                           float *v_ptr[],
+                           int n_vectors)
 {
   int i, j, bool;
 
@@ -534,10 +534,10 @@ int f32vector_and_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_or_vectors_c (float *to,
-                            int n_cell,
-                            float *v_ptr[],
-                            int n_vectors)
+int f32vector_or_vectors (float *to,
+                          int n_cell,
+                          float *v_ptr[],
+                          int n_vectors)
 {
   int i, j;
   float val;
@@ -554,10 +554,10 @@ int f32vector_or_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_xor_vectors_c (float *to,
-                             int n_cell,
-                             float *v_ptr[],
-                             int n_vectors)
+int f32vector_xor_vectors (float *to,
+                           int n_cell,
+                           float *v_ptr[],
+                           int n_vectors)
 {
   int i, j, a, b;
 
@@ -572,10 +572,10 @@ int f32vector_xor_vectors_c (float *to,
   return 0;
 }
 
-int f32vector_transpose_c (float *chan,
-                           int width,
-                           int height,
-                           float *to)
+int f32vector_transpose (float *chan,
+                         int width,
+                         int height,
+                         float *to)
 {
   int i, j, d, o;
 
@@ -589,10 +589,10 @@ int f32vector_transpose_c (float *chan,
   return 0;
 }
 
-int f32vector_equal_vectors_c (int n_cell,
-                               float *v_ptr[],
-                               int n_vectors,
-                               float prec)
+int f32vector_equal_vectors (int n_cell,
+                             float *v_ptr[],
+                             int n_vectors,
+                             float prec)
 {
   int i, j;
   float val;
@@ -606,7 +606,7 @@ int f32vector_equal_vectors_c (int n_cell,
         }
       }
       else {
-        if (float_equal_c (v_ptr[j][i], val, prec) == 0) {
+        if (float_equal (v_ptr[j][i], val, prec) == 0) {
           return -1;
         }
       }
@@ -615,9 +615,9 @@ int f32vector_equal_vectors_c (int n_cell,
   return 0;
 }
 
-int f32vector_binary_vectors_c (int n_cell,
-                                float *v_ptr[],
-                                int n_vectors)
+int f32vector_binary_vectors (int n_cell,
+                              float *v_ptr[],
+                              int n_vectors)
 {
   int i, j;
 
@@ -633,9 +633,9 @@ int f32vector_binary_vectors_c (int n_cell,
   return 0;
 }
 
-int f32vector_is_a_seed_c (float *i_chan,
-                           int n_cell,
-                           float *s_chan)
+int f32vector_is_a_seed (float *i_chan,
+                         int n_cell,
+                         float *s_chan)
 {
   int i, j;
 
@@ -647,11 +647,11 @@ int f32vector_is_a_seed_c (float *i_chan,
   return -1;
 }
 
-int f32vector_scale_c (float *v,
-                       int n_cell,
-                       float p_max,
-                       float n_max,
-                       float *to)
+int f32vector_scale (float *v,
+                     int n_cell,
+                     float p_max,
+                     float n_max,
+                     float *to)
 {
   int i;
 
@@ -661,9 +661,9 @@ int f32vector_scale_c (float *v,
   return 0;
 }
 
-int f32vector_to_s32vector_c (float *v,
-                              int n_cell,
-                              int *to)
+int f32vector_to_s32vector (float *v,
+                            int n_cell,
+                            int *to)
 {
   int i;
 
@@ -673,12 +673,12 @@ int f32vector_to_s32vector_c (float *v,
   return 0;
 }
 
-int f32vector_delineate_c (float *v,
-                           float *v_min,
-                           float *v_max,
-                           int n_cell,
-                           int threshold,
-                           float *to)
+int f32vector_delineate (float *v,
+                         float *v_min,
+                         float *v_max,
+                         int n_cell,
+                         int threshold,
+                         float *to)
 {
   int i;
   float ori, mini, maxi, diff;

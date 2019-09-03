@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2018
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -97,27 +97,27 @@
 (define* (f32vector-min v #:key (n-cell #f))
   (let ((n-cell (if n-cell n-cell (f32vector-length v)))
         (r (make-f32vector 2 0.0)))
-    (f32vector-min-c (bytevector->pointer v)
-                     n-cell
-                     (bytevector->pointer r))
+    (f32vector_min (bytevector->pointer v)
+                   n-cell
+                   (bytevector->pointer r))
     (values (f32vector-ref r 0)
             (float->int (f32vector-ref r 1)))))
 
 (define* (f32vector-max v #:key (n-cell #f))
   (let ((n-cell (if n-cell n-cell (f32vector-length v)))
         (r (make-f32vector 2 0.0)))
-    (f32vector-max-c (bytevector->pointer v)
-                     n-cell
-                     (bytevector->pointer r))
+    (f32vector_max (bytevector->pointer v)
+                   n-cell
+                   (bytevector->pointer r))
     (values (f32vector-ref r 0)
             (float->int (f32vector-ref r 1)))))
 
 (define* (f32vector-range v #:key (n-cell #f))
   (let ((n-cell (if n-cell n-cell (f32vector-length v)))
         (r (make-f32vector 4 0.0)))
-    (f32vector-range-c (bytevector->pointer v)
-                       n-cell
-                       (bytevector->pointer r))
+    (f32vector_range (bytevector->pointer v)
+                     n-cell
+                     (bytevector->pointer r))
     (values (list (f32vector-ref r 0)
                   (float->int (f32vector-ref r 1))
                   (f32vector-ref r 2)
@@ -125,17 +125,17 @@
             r)))
 
 (define (f32vector-scrap channel l-channel n-cell scrap-cache to)
-  (f32vector-scrap-c (bytevector->pointer channel)
-                     (bytevector->pointer l-channel)
-                     n-cell
-                     (bytevector->pointer scrap-cache)
-                     (bytevector->pointer to)))
+  (f32vector_scrap (bytevector->pointer channel)
+                   (bytevector->pointer l-channel)
+                   n-cell
+                   (bytevector->pointer scrap-cache)
+                   (bytevector->pointer to)))
 
 (define (f32vector-scrap-in-place channel l-channel n-cell scrap-cache)
-  (f32vector-scrap-in-place-c (bytevector->pointer channel)
-                              (bytevector->pointer l-channel)
-                              n-cell
-                              (bytevector->pointer scrap-cache)))
+  (f32vector_scrap_in_place (bytevector->pointer channel)
+                            (bytevector->pointer l-channel)
+                            n-cell
+                            (bytevector->pointer scrap-cache)))
 
 (define (f32vector-threshold to n-cell channels threshold bg)
   (receive (maker setter!)
@@ -147,28 +147,28 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-threshold-c (bytevector->pointer to)
-                             n-cell
-                             (bytevector->pointer v-ptr)
-                             n-chan
-                             threshold
-                             bg)
+      (f32vector_threshold (bytevector->pointer to)
+                           n-cell
+                           (bytevector->pointer v-ptr)
+                           n-chan
+                           threshold
+                           bg)
       to)))
 
 (define (f32vector-fill-holes l-channel n-cell bg-label)
-  (f32vector-fill-holes-c (bytevector->pointer l-channel)
-                          n-cell
-                          bg-label))
+  (f32vector_fill_holes (bytevector->pointer l-channel)
+                        n-cell
+                        bg-label))
 
 (define (f32vector-rgb-to-gray to n-cell r g b)
-  (f32vector-rgb-to-gray-c (bytevector->pointer to)
-                           n-cell
-                           (bytevector->pointer r)
-                           (bytevector->pointer g)
-                           (bytevector->pointer b)))
+  (f32vector_rgb_to_gray (bytevector->pointer to)
+                         n-cell
+                         (bytevector->pointer r)
+                         (bytevector->pointer g)
+                         (bytevector->pointer b)))
 
 (define (get-v-ptr-maker-setter)
-  (let ((p-size (pointer-address-size-c)))
+  (let ((p-size (pointer_address_size)))
     (case p-size
       ((32)
        (values make-s32vector
@@ -181,10 +181,10 @@
 
 (define* (f32vector-add-value channel val to #:key (n-cell #f))
   (let ((n-cell (or n-cell (f32vector-length channel))))
-    (f32vector-add-value-c (bytevector->pointer channel)
-                           n-cell
-                           val
-                           (bytevector->pointer to))
+    (f32vector_add_value (bytevector->pointer channel)
+                         n-cell
+                         val
+                         (bytevector->pointer to))
     to))
 
 (define (f32vector-add-vectors to n-cell channels)
@@ -197,18 +197,18 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-add-vectors-c (bytevector->pointer to)
-                               n-cell
-                               (bytevector->pointer v-ptr)
-                               n-chan)
-    to)))
+      (f32vector_add_vectors (bytevector->pointer to)
+                             n-cell
+                             (bytevector->pointer v-ptr)
+                             n-chan)
+      to)))
 
 (define* (f32vector-subtract-value channel val to #:key (n-cell #f))
   (let ((n-cell (or n-cell (f32vector-length channel))))
-    (f32vector-subtract-value-c (bytevector->pointer channel)
-                                n-cell
-                                val
-                                (bytevector->pointer to))
+    (f32vector_subtract_value (bytevector->pointer channel)
+                              n-cell
+                              val
+                              (bytevector->pointer to))
     to))
 
 (define (f32vector-subtract-vectors to n-cell channels)
@@ -221,18 +221,18 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-subtract-vectors-c (bytevector->pointer to)
-                                    n-cell
-                                    (bytevector->pointer v-ptr)
-                                    n-chan)
-    to)))
+      (f32vector_subtract_vectors (bytevector->pointer to)
+                                  n-cell
+                                  (bytevector->pointer v-ptr)
+                                  n-chan)
+      to)))
 
 (define* (f32vector-times-value channel val to #:key (n-cell #f))
   (let ((n-cell (or n-cell (f32vector-length channel))))
-    (f32vector-times-value-c (bytevector->pointer channel)
-                             n-cell
-                             val
-                             (bytevector->pointer to))
+    (f32vector_times_value (bytevector->pointer channel)
+                           n-cell
+                           val
+                           (bytevector->pointer to))
     to))
 
 (define (f32vector-times-vectors to n-cell channels)
@@ -245,29 +245,29 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-times-vectors-c (bytevector->pointer to)
-                                 n-cell
-                                 (bytevector->pointer v-ptr)
-                                 n-chan)
-    to)))
+      (f32vector_times_vectors (bytevector->pointer to)
+                               n-cell
+                               (bytevector->pointer v-ptr)
+                               n-chan)
+      to)))
 
 (define (f32vector-mtimes v1 width-1 height-1 v2 width-2 to)
-  (f32vector-mtimes-c (bytevector->pointer v1)
-                      width-1
-                      height-1
-                      (bytevector->pointer v2)
-                      width-2
-                      (bytevector->pointer to))
+  (f32vector_mtimes (bytevector->pointer v1)
+                    width-1
+                    height-1
+                    (bytevector->pointer v2)
+                    width-2
+                    (bytevector->pointer to))
   to)
 
 (define* (f32vector-divide-value channel val to #:key (n-cell #f))
   (if (= val 0.0)
       (error "Attempt to divide by 0")
       (let ((n-cell (or n-cell (f32vector-length channel))))
-        (f32vector-divide-value-c (bytevector->pointer channel)
-                                  n-cell
-                                  val
-                                  (bytevector->pointer to))
+        (f32vector_divide_value (bytevector->pointer channel)
+                                n-cell
+                                val
+                                (bytevector->pointer to))
         to)))
 
 (define (f32vector-divide-vectors to n-cell channels)
@@ -280,17 +280,17 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-divide-vectors-c (bytevector->pointer to)
-                                  n-cell
-                                  (bytevector->pointer v-ptr)
-                                  n-chan)
-    to)))
+      (f32vector_divide_vectors (bytevector->pointer to)
+                                n-cell
+                                (bytevector->pointer v-ptr)
+                                n-chan)
+      to)))
 
 (define* (f32vector-invert channel to #:key (n-cell #f))
   (let ((n-cell (f32vector-length channel)))
-    (f32vector-invert-c  (bytevector->pointer channel)
-                         n-cell
-                         (bytevector->pointer to))
+    (f32vector_invert  (bytevector->pointer channel)
+                       n-cell
+                       (bytevector->pointer to))
     to))
 
 (define (f32vector-and-vectors to n-cell channels)
@@ -303,10 +303,10 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-and-vectors-c (bytevector->pointer to)
-                               n-cell
-                               (bytevector->pointer v-ptr)
-                               n-chan)
+      (f32vector_and_vectors (bytevector->pointer to)
+                             n-cell
+                             (bytevector->pointer v-ptr)
+                             n-chan)
       to)))
 
 (define (f32vector-or-vectors to n-cell channels)
@@ -319,10 +319,10 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-or-vectors-c (bytevector->pointer to)
-                              n-cell
-                              (bytevector->pointer v-ptr)
-                              n-chan)
+      (f32vector_or_vectors (bytevector->pointer to)
+                            n-cell
+                            (bytevector->pointer v-ptr)
+                            n-chan)
       to)))
 
 (define (f32vector-xor-vectors to n-cell channels)
@@ -335,18 +335,18 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (f32vector-xor-vectors-c (bytevector->pointer to)
-                               n-cell
-                               (bytevector->pointer v-ptr)
-                               n-chan)
+      (f32vector_xor_vectors (bytevector->pointer to)
+                             n-cell
+                             (bytevector->pointer v-ptr)
+                             n-chan)
       to)))
 
 (define (f32vector-transpose channel width height to)
   (let ((n-cell (f32vector-length channel)))
-    (f32vector-transpose-c (bytevector->pointer channel)
-                           width
-                           height
-                           (bytevector->pointer to))
+    (f32vector_transpose (bytevector->pointer channel)
+                         width
+                         height
+                         (bytevector->pointer to))
     to))
 
 (define* (f32vector-=-vectors? n-cell channels #:key (prec 1.0e-4))
@@ -359,10 +359,10 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (= (f32vector-equal-vectors-c n-cell
-                                    (bytevector->pointer v-ptr)
-                                    n-chan
-                                    prec)
+      (= (f32vector_equal_vectors n-cell
+                                  (bytevector->pointer v-ptr)
+                                  n-chan
+                                  prec)
          0))))
 
 (define (f32vector-binary-vectors? n-cell channels)
@@ -375,43 +375,43 @@
                            (pointer-address (bytevector->pointer chan))))
           channels
         (iota n-chan))
-      (= (f32vector-binary-vectors-c n-cell
-                                     (bytevector->pointer v-ptr)
-                                     n-chan)
+      (= (f32vector_binary_vectors n-cell
+                                   (bytevector->pointer v-ptr)
+                                   n-chan)
          0))))
 
 (define (f32vector-is-a-seed? i-chan n-cell s-chan)
-  (= (f32vector-is-a-seed-c (bytevector->pointer i-chan)
-                            n-cell
-                            (bytevector->pointer s-chan))
+  (= (f32vector_is_a_seed (bytevector->pointer i-chan)
+                          n-cell
+                          (bytevector->pointer s-chan))
      0))
 
 (define* (f32vector-scale channel n-max to #:key (n-cell #f) (p-max 255))
   (let ((n-cell (or n-cell (f32vector-length channel))))
-    (f32vector-scale-c (bytevector->pointer channel)
-                       n-cell
-                       p-max
-                       n-max
-                       (bytevector->pointer to))
+    (f32vector_scale (bytevector->pointer channel)
+                     n-cell
+                     p-max
+                     n-max
+                     (bytevector->pointer to))
     to))
 
 (define* (f32vector->s32vector v #:key (n-cell #f))
   (let* ((n-cell (or n-cell (f32vector-length v)))
 	 (to (make-s32vector n-cell)))
-    (f32vector-to-s32vector-c (bytevector->pointer v)
-                              n-cell
-                              (bytevector->pointer to))
+    (f32vector_to_s32vector (bytevector->pointer v)
+                            n-cell
+                            (bytevector->pointer to))
     to))
 
 (define* (f32vector-delineate chan chan-min chan-max to
                               #:key (n-cell #f) (threshold 10))
   (let ((n-cell (or n-cell (f32vector-length chan))))
-    (f32vector-delineate-c (bytevector->pointer chan)
-                           (bytevector->pointer chan-min)
-                           (bytevector->pointer chan-max)
-                           n-cell
-                           threshold
-                           (bytevector->pointer to))
+    (f32vector_delineate (bytevector->pointer chan)
+                         (bytevector->pointer chan-min)
+                         (bytevector->pointer chan-max)
+                         n-cell
+                         threshold
+                         (bytevector->pointer to))
     to))
 
 
@@ -480,9 +480,9 @@
        (error "Vector copy failed.")))))
 
 (define (vigra-copy-float-array from to size)
-  (vigra-copy-float-array-c (bytevector->pointer from)
-                            (bytevector->pointer to)
-                            size))
+  (vigra_copy_float_array (bytevector->pointer from)
+                          (bytevector->pointer to)
+                          size))
 
 (define* (f32vector-complement vector #:key (of 255.0))
   (let* ((n-cell (f32vector-length vector))
@@ -717,7 +717,7 @@
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-copy-float-array-c
+(define vigra_copy_float_array
   (pointer->procedure int
 		      (dynamic-func "vigra_copy_float_array_c"
 				    %libvigra-c)

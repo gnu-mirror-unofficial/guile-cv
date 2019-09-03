@@ -97,7 +97,7 @@
                       (s32vector-ref v i)))))
 
 (define (glcm chan width height g0 g45 g90 g135 n-gl dist)
-  (glcm-c (bytevector->pointer chan)
+  (glcm_c (bytevector->pointer chan)
           width
           height
           (bytevector->pointer g0)

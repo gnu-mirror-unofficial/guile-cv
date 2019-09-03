@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -411,42 +411,42 @@
 ;;;
 
 (define (vigra-disc-erode from to width height radius)
-  (vigra-disc-erode-c (bytevector->pointer from)
-		 (bytevector->pointer to)
-		 width
-		 height
-		 radius))
+  (vigra_disc_erode (bytevector->pointer from)
+		    (bytevector->pointer to)
+		    width
+		    height
+		    radius))
 
 (define (vigra-disc-dilate from to width height radius)
-  (vigra-disc-dilate-c (bytevector->pointer from)
-		       (bytevector->pointer to)
-		       width
-		       height
-		       radius))
+  (vigra_disc_dilate (bytevector->pointer from)
+		     (bytevector->pointer to)
+		     width
+		     height
+		     radius))
 
 (define (vigra-distance-transform from to width height bg mode)
-  (vigra-distance-transform-c (bytevector->pointer from)
-                              (bytevector->pointer to)
-                              width
-                              height
-                              (case bg
-                                ((black) 0.0)
-                                ((white) 255.0)
-                                (else
-                                 (error "No such background: " bg)))
-                              (case mode
-                                ((chessboard) 0)
-                                ((manhattan) 1)
-                                ((euclidian) 2)
-                                (else
-                                 (error "No such mode: " mode)))))
+  (vigra_distance_transform (bytevector->pointer from)
+                            (bytevector->pointer to)
+                            width
+                            height
+                            (case bg
+                              ((black) 0.0)
+                              ((white) 255.0)
+                              (else
+                               (error "No such background: " bg)))
+                            (case mode
+                              ((chessboard) 0)
+                              ((manhattan) 1)
+                              ((euclidian) 2)
+                              (else
+                               (error "No such mode: " mode)))))
 
 
 ;;;
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-disc-erode-c
+(define vigra_disc_erode
   (pointer->procedure int
 		      (dynamic-func "vigra_discerosion_c"
 				    %libvigra-c)
@@ -456,7 +456,7 @@
 			    int      ;; height
 			    int)))   ;; radius
 
-(define vigra-disc-dilate-c
+(define vigra_disc_dilate
   (pointer->procedure int
 		      (dynamic-func "vigra_discdilation_c"
 				    %libvigra-c)
@@ -466,7 +466,7 @@
 			    int      ;; height
 			    int)))   ;; radius
 
-(define vigra-distance-transform-c
+(define vigra_distance_transform
   (pointer->procedure int
 		      (dynamic-func "vigra_distancetransform_c"
 				    %libvigra-c)

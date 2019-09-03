@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2018
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -31,60 +31,60 @@
   #:use-module (cv init)
 
   #:export (;; misc.
-            pointer-address-size-c
+            pointer_address_size
 
             ;; limits
-            float-min-c
-            float-max-c
+            float_min
+            float_max
 
             ;; bounding box
-            bb-intersect-c
+            bb_intersect
 
             ;; floats
-            float-to-int-c
-            float-equal-c
+            float_to_int
+            float_equal
 
             ;; f32vectors
-            f32vector-min-c
-            f32vector-max-c
-            f32vector-range-c
-            f32vector-scrap-c
-            f32vector-scrap-in-place-c
-            f32vector-threshold-c
-            f32vector-fill-holes-c
-            f32vector-rgb-to-gray-c
-            f32vector-add-value-c
-            f32vector-add-vectors-c
-            f32vector-subtract-value-c
-            f32vector-subtract-vectors-c
-            f32vector-times-value-c
-            f32vector-times-vectors-c
-            f32vector-mtimes-c
-            f32vector-divide-value-c
-            f32vector-divide-vectors-c
-            f32vector-invert-c
-            f32vector-and-vectors-c
-            f32vector-or-vectors-c
-            f32vector-xor-vectors-c
-            f32vector-transpose-c
-            f32vector-equal-vectors-c
-            f32vector-binary-vectors-c
-            f32vector-is-a-seed-c
-            f32vector-scale-c
-            f32vector-to-s32vector-c
-            f32vector-delineate-c
+            f32vector_min
+            f32vector_max
+            f32vector_range
+            f32vector_scrap
+            f32vector_scrap_in_place
+            f32vector_threshold
+            f32vector_fill_holes
+            f32vector_rgb_to_gray
+            f32vector_add_value
+            f32vector_add_vectors
+            f32vector_subtract_value
+            f32vector_subtract_vectors
+            f32vector_times_value
+            f32vector_times_vectors
+            f32vector_mtimes
+            f32vector_divide_value
+            f32vector_divide_vectors
+            f32vector_invert
+            f32vector_and_vectors
+            f32vector_or_vectors
+            f32vector_xor_vectors
+            f32vector_transpose
+            f32vector_equal_vectors
+            f32vector_binary_vectors
+            f32vector_is_a_seed
+            f32vector_scale
+            f32vector_to_s32vector
+            f32vector_delineate
 
             ;; glcm
-            glcm-c))
+            glcm_c))
 
 
 ;;;
 ;;; misc.
 ;;;
 
-(define pointer-address-size-c
+(define pointer_address_size
   (pointer->procedure size_t
-                      (dynamic-func "pointer_address_size_c"
+                      (dynamic-func "pointer_address_size"
                                     %libguile-cv)
                       (list)))
 
@@ -93,15 +93,15 @@
 ;;; limits
 ;;;
 
-(define float-min-c
+(define float_min
   (pointer->procedure float
-                      (dynamic-func "float_min_c"
+                      (dynamic-func "float_min"
                                     %libguile-cv)
                       (list)))
 
-(define float-max-c
+(define float_max
   (pointer->procedure float
-                      (dynamic-func "float_max_c"
+                      (dynamic-func "float_max"
                                     %libguile-cv)
                       (list)))
 
@@ -110,9 +110,9 @@
 ;;; bouding box
 ;;;
 
-(define bb-intersect-c
+(define bb_intersect
   (pointer->procedure int
-                      (dynamic-func "bb_intersect_c"
+                      (dynamic-func "bb_intersect"
                                     %libguile-cv)
                       (list int int int int int int int int)))
 
@@ -121,15 +121,15 @@
 ;;; floats
 ;;;
 
-(define float-to-int-c
+(define float_to_int
   (pointer->procedure int
-                      (dynamic-func "float_to_int_c"
+                      (dynamic-func "float_to_int"
                                     %libguile-cv)
                       (list float)))
 
-(define float-equal-c
+(define float_equal
   (pointer->procedure int
-                      (dynamic-func "float_equal_c"
+                      (dynamic-func "float_equal"
                                     %libguile-cv)
                       (list float	;; f1
                             float	;; f2
@@ -140,256 +140,256 @@
 ;;; f32vectors
 ;;;
 
-(define f32vector-min-c
+(define f32vector_min
   (pointer->procedure int
-                      (dynamic-func "f32vector_min_c"
+                      (dynamic-func "f32vector_min"
                                     %libguile-cv)
                       (list '*		;; channel
-                            int		;; n-cell
+                            int		;; n_cell
                             '*)))	;; result vector
 
-(define f32vector-max-c
+(define f32vector_max
   (pointer->procedure int
-                      (dynamic-func "f32vector_max_c"
+                      (dynamic-func "f32vector_max"
                                     %libguile-cv)
                       (list '*		;; channel
-                            int		;; n-cell
+                            int		;; n_cell
                             '*)))	;; result vector
 
-(define f32vector-range-c
+(define f32vector_range
   (pointer->procedure int
-                      (dynamic-func "f32vector_range_c"
+                      (dynamic-func "f32vector_range"
                                     %libguile-cv)
                       (list '*		;; channel
-                            int		;; n-cell
+                            int		;; n_cell
                             '*)))	;; result vector
 
-(define f32vector-scrap-c
+(define f32vector_scrap
   (pointer->procedure int
-                      (dynamic-func "f32vector_scrap_c"
+                      (dynamic-func "f32vector_scrap"
                                     %libguile-cv)
                       (list '*		;; chan
-                            '*		;; l-chan
-                            int		;; n-cell
-                            '*		;; scrap-cache
+                            '*		;; l_chan
+                            int		;; n_cell
+                            '*		;; scrap_cache
                             '*)))	;; to
 
-(define f32vector-scrap-in-place-c
+(define f32vector_scrap_in_place
   (pointer->procedure int
-                      (dynamic-func "f32vector_scrap_in_place_c"
+                      (dynamic-func "f32vector_scrap_in_place"
                                     %libguile-cv)
                       (list '*		;; chan
-                            '*		;; l-chan
-                            int		;; n-cell
-                            '*)))	;; scrap-cache
+                            '*		;; l_chan
+                            int		;; n_cell
+                            '*)))	;; scrap_cache
 
-(define f32vector-threshold-c
+(define f32vector_threshold
   (pointer->procedure int
-                      (dynamic-func "f32vector_threshold_c"
+                      (dynamic-func "f32vector_threshold"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int		;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int		;; n_vectors
                             float	;; threshold
                             int)))	;; bg [0 or 255]
 
-(define f32vector-fill-holes-c
+(define f32vector_fill_holes
   (pointer->procedure int
-                      (dynamic-func "f32vector_fill_holes_c"
+                      (dynamic-func "f32vector_fill_holes"
                                     %libguile-cv)
                       (list '*       ;; labeled chan
-                            int      ;; n-cell
+                            int      ;; n_cell
                             float))) ;; bg label value
 
-(define f32vector-rgb-to-gray-c
+(define f32vector_rgb_to_gray
   (pointer->procedure int
-                      (dynamic-func "f32vector_rgb_to_gray_c"
+                      (dynamic-func "f32vector_rgb_to_gray"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
+                            int		;; n_cell
                             '*		;; r
                             '*		;; g
                             '*)))	;; b
 
-(define f32vector-add-value-c
+(define f32vector_add_value
   (pointer->procedure int
-                      (dynamic-func "f32vector_add_value_c"
+                      (dynamic-func "f32vector_add_value"
                                     %libguile-cv)
                       (list '*		;; chan
-                            int		;; n-cell
+                            int		;; n_cell
                             float	;; value
                             '*)))	;; to
 
-(define f32vector-add-vectors-c
+(define f32vector_add_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_add_vectors_c"
+                      (dynamic-func "f32vector_add_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-subtract-value-c
+(define f32vector_subtract_value
   (pointer->procedure int
-                      (dynamic-func "f32vector_subtract_value_c"
+                      (dynamic-func "f32vector_subtract_value"
                                     %libguile-cv)
                       (list '*		;; chan
-                            int		;; n-cell
+                            int		;; n_cell
                             float	;; value
                             '*)))	;; to
 
-(define f32vector-subtract-vectors-c
+(define f32vector_subtract_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_subtract_vectors_c"
+                      (dynamic-func "f32vector_subtract_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-times-value-c
+(define f32vector_times_value
   (pointer->procedure int
-                      (dynamic-func "f32vector_times_value_c"
+                      (dynamic-func "f32vector_times_value"
                                     %libguile-cv)
                       (list '*		;; chan
-                            int		;; n-cell
+                            int		;; n_cell
                             float	;; value
                             '*)))	;; to
 
-(define f32vector-times-vectors-c
+(define f32vector_times_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_times_vectors_c"
+                      (dynamic-func "f32vector_times_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-mtimes-c
+(define f32vector_mtimes
   (pointer->procedure int
-                      (dynamic-func "f32vector_mtimes_c"
+                      (dynamic-func "f32vector_mtimes"
                                     %libguile-cv)
                       (list '*		;; v1
-                            int		;; width-1
+                            int		;; width_1
                             int		;; height1
                             '*		;; v2
-                            int		;; width-2
+                            int		;; width_2
                             '*)))	;; to
 
-(define f32vector-divide-value-c
+(define f32vector_divide_value
   (pointer->procedure int
-                      (dynamic-func "f32vector_divide_value_c"
+                      (dynamic-func "f32vector_divide_value"
                                     %libguile-cv)
                       (list '*		;; chan
-                            int		;; n-cell
+                            int		;; n_cell
                             float	;; value
                             '*)))	;; to
 
-(define f32vector-divide-vectors-c
+(define f32vector_divide_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_divide_vectors_c"
+                      (dynamic-func "f32vector_divide_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-invert-c
+(define f32vector_invert
   (pointer->procedure int
-                      (dynamic-func "f32vector_invert_c"
+                      (dynamic-func "f32vector_invert"
                                     %libguile-cv)
                       (list '*		;; from
-                            int		;; n-cell
+                            int		;; n_cell
                             '*)))	;; to
 
-(define f32vector-and-vectors-c
+(define f32vector_and_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_and_vectors_c"
+                      (dynamic-func "f32vector_and_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-or-vectors-c
+(define f32vector_or_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_or_vectors_c"
+                      (dynamic-func "f32vector_or_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-xor-vectors-c
+(define f32vector_xor_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_xor_vectors_c"
+                      (dynamic-func "f32vector_xor_vectors"
                                     %libguile-cv)
                       (list '*		;; to
-                            int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                            int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-transpose-c
+(define f32vector_transpose
   (pointer->procedure int
-                      (dynamic-func "f32vector_transpose_c"
+                      (dynamic-func "f32vector_transpose"
                                     %libguile-cv)
                       (list '*		;; chan
                             int		;; width
                             int		;; height
                             '*)))	;; to
 
-(define f32vector-equal-vectors-c
+(define f32vector_equal_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_equal_vectors_c"
+                      (dynamic-func "f32vector_equal_vectors"
                                     %libguile-cv)
-                      (list int		;; n-cell
-                            '*		;; v-ptr[]
-                            int		;; n-vectors
+                      (list int		;; n_cell
+                            '*		;; v_ptr[]
+                            int		;; n_vectors
                             float)))	;; precision
 
-(define f32vector-binary-vectors-c
+(define f32vector_binary_vectors
   (pointer->procedure int
-                      (dynamic-func "f32vector_binary_vectors_c"
+                      (dynamic-func "f32vector_binary_vectors"
                                     %libguile-cv)
-                      (list int		;; n-cell
-                            '*		;; v-ptr[]
-                            int)))	;; n-vectors
+                      (list int		;; n_cell
+                            '*		;; v_ptr[]
+                            int)))	;; n_vectors
 
-(define f32vector-is-a-seed-c
+(define f32vector_is_a_seed
   (pointer->procedure int
-                      (dynamic-func "f32vector_is_a_seed_c"
+                      (dynamic-func "f32vector_is_a_seed"
                                     %libguile-cv)
-                      (list '*		;; i-chan
-                            int		;; n-cell
-                            '*)))	;; s-chan
+                      (list '*		;; i_chan
+                            int		;; n_cell
+                            '*)))	;; s_chan
 
-(define f32vector-scale-c
+(define f32vector_scale
   (pointer->procedure int
-                      (dynamic-func "f32vector_scale_c"
+                      (dynamic-func "f32vector_scale"
                                     %libguile-cv)
                       (list '*		;; chan
-                            int		;; n-cell
-                            float	;; o-gl
-                            float	;; n-gl
+                            int		;; n_cell
+                            float	;; o_gl
+                            float	;; n_gl
                             '*)))	;; to
 
-(define f32vector-to-s32vector-c
+(define f32vector_to_s32vector
   (pointer->procedure int
-                      (dynamic-func "f32vector_to_s32vector_c"
+                      (dynamic-func "f32vector_to_s32vector"
                                     %libguile-cv)
                       (list '*    ;; chan
-                            int   ;; n-cell
+                            int   ;; n_cell
                             '*))) ;; to
 
-(define f32vector-delineate-c
+(define f32vector_delineate
   (pointer->procedure int
-                      (dynamic-func "f32vector_delineate_c"
+                      (dynamic-func "f32vector_delineate"
                                     %libguile-cv)
                       (list '*		;; chan
-                            '*		;; chan-min
-                            '*		;; chan-max
-                            int		;; n-cell
+                            '*		;; chan_min
+                            '*		;; chan_max
+                            int		;; n_cell
                             int		;; threshold
                             '*)))	;; to
 
@@ -398,16 +398,16 @@
 ;;; glcm
 ;;;
 
-(define glcm-c
+(define glcm_c
   (pointer->procedure int
                       (dynamic-func "glcm_c"
                                     %libguile-cv)
                       (list '*		;; chan
                             int		;; width
                             int		;; height
-                            '*		;; g0-chan
-                            '*		;; g45-chan
-                            '*		;; g90-chan
-                            '*		;; g135-chan
-                            int		;; n-gl
+                            '*		;; g0_chan
+                            '*		;; g45_chan
+                            '*		;; g90_chan
+                            '*		;; g135_chan
+                            int		;; n_gl
                             int)))	;; dist

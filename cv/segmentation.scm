@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2018
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -162,54 +162,54 @@
 ;;;
 
 (define (vigra-label from to width height con bg)
-  (vigra-label-c (bytevector->pointer from)
-		 (bytevector->pointer to)
-		 width
-		 height
-		 (case con
-		   ((8) 1)
-		   ((4) 0)
-		   (else
-		    (error "No such connectivity: " con)))
-		 (case bg
-		   ((black) 0.0)
-		   ((white) 255.0)
-		   (else
-		    (error "No such background: " bg)))))
+  (vigra_label (bytevector->pointer from)
+	       (bytevector->pointer to)
+	       width
+	       height
+	       (case con
+		 ((8) 1)
+		 ((4) 0)
+		 (else
+		  (error "No such connectivity: " con)))
+	       (case bg
+		 ((black) 0.0)
+		 ((white) 255.0)
+		 (else
+		  (error "No such background: " bg)))))
 
 (define (vigra-label-all from to width height con)
-  (vigra-label-all-c (bytevector->pointer from)
-		     (bytevector->pointer to)
-		     width
-		     height
-		     (case con
-		       ((8) 1)
-		       ((4) 0)
-		       (else
-			(error "No such connectivity: " con)))))
+  (vigra_label_all (bytevector->pointer from)
+		   (bytevector->pointer to)
+		   width
+		   height
+		   (case con
+		     ((8) 1)
+		     ((4) 0)
+		     (else
+		      (error "No such connectivity: " con)))))
 
 (define (vigra-canny-edge-channel from to width height sigma threshold marker)
-  (vigra-canny-edge-channel-c (bytevector->pointer from)
-                              (bytevector->pointer to)
-                              width
-                              height
-                              sigma
-                              threshold
-                              marker))
+  (vigra_canny_edge_channel (bytevector->pointer from)
+                            (bytevector->pointer to)
+                            width
+                            height
+                            sigma
+                            threshold
+                            marker))
 
 (define (vigra-crack-edge-channel from to width height marker)
-  (vigra-region-image-to-crack-edge-image-c (bytevector->pointer from)
-                                            (bytevector->pointer to)
-                                            width
-                                            height
-                                            marker))
+  (vigra_region_image_to_crack_edge_image (bytevector->pointer from)
+                                          (bytevector->pointer to)
+                                          width
+                                          height
+                                          marker))
 
 
 ;;;
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-label-c
+(define vigra_label
   (pointer->procedure int
 		      (dynamic-func "vigra_labelimagewithbackground_c"
 				    %libvigra-c)
@@ -217,10 +217,10 @@
 			    '*	     ;; to channel
 			    int	     ;; width
 			    int	     ;; height
-			    int	     ;; 8-con?
+			    int	     ;; 8_con?
 			    float))) ;; background
 
-(define vigra-label-all-c
+(define vigra_label_all
   (pointer->procedure int
 		      (dynamic-func "vigra_labelimage_c"
 				    %libvigra-c)
@@ -228,9 +228,9 @@
 			    '*	     ;; to channel
 			    int	     ;; width
 			    int	     ;; height
-			    int)))   ;; 8-con?
+			    int)))   ;; 8_con?
 
-(define vigra-canny-edge-channel-c
+(define vigra_canny_edge_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_cannyedgeimage_c"
 				    %libvigra-c)
@@ -239,10 +239,10 @@
 			    int	     ;; width
 			    int	     ;; height
                             float    ;; scale
-                            float    ;; gradient-threshold
-			    float))) ;; edge-marker
+                            float    ;; gradient_threshold
+			    float))) ;; edge_marker
 
-(define vigra-region-image-to-crack-edge-image-c
+(define vigra_region_image_to_crack_edge_image
   (pointer->procedure int
 		      (dynamic-func "vigra_regionimagetocrackedgeimage_c"
 				    %libvigra-c)

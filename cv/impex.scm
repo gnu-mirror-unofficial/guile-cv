@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -91,13 +91,13 @@
 	(im-n-channel filename)))
 
 (define-method (im-width (filename <string>))
-  (vigra-image-width-c (string->pointer filename)))
+  (vigra_image_width (string->pointer filename)))
 
 (define-method (im-height (filename <string>))
-  (vigra-image-height-c (string->pointer filename)))
+  (vigra_image_height (string->pointer filename)))
 
 (define-method (im-n-channel (filename <string>))
-  (vigra-image-numbands-c (string->pointer filename)))
+  (vigra_image_numbands (string->pointer filename)))
 
 (define-method (im-channels (filename <string>))
   (let ((port (current-output-port))) 
@@ -118,10 +118,10 @@
 
 (define (vigra-load-gray-image filename width height)
   (let ((c (im-make-channel width height)))
-    (case (vigra-importgrayimage-c (bytevector->pointer c)
-                                   width
-                                   height
-                                   (string->pointer filename))
+    (case (vigra_importgrayimage (bytevector->pointer c)
+                                 width
+                                 height
+                                 (string->pointer filename))
       ((0) (list width height 1 (list c)))
       ((1) (error "Not a GRAY image" filename))
       ((2) (error "Sizes mismatch" filename)))))
@@ -130,12 +130,12 @@
   (let ((idata (im-make-channels width height 3)))
     (match idata
       ((r g b)
-       (case (vigra-importrgbimage-c (bytevector->pointer r)
-                                     (bytevector->pointer g)
-                                     (bytevector->pointer b)
-                                     width
-                                     height
-                                     (string->pointer filename))
+       (case (vigra_importrgbimage (bytevector->pointer r)
+                                   (bytevector->pointer g)
+                                   (bytevector->pointer b)
+                                   width
+                                   height
+                                   (string->pointer filename))
          ((0) (list width height 3 idata))
          ((1) (error "Not an RGB image" filename))
          ((2) (error "Sizes mismatch" filename)))))))
@@ -144,13 +144,13 @@
   (let ((idata (im-make-channels width height 4)))
     (match idata
       ((r g b a)
-       (case (vigra-importrgbaimage-c (bytevector->pointer r)
-                                      (bytevector->pointer g)
-                                      (bytevector->pointer b)
-                                      (bytevector->pointer a)
-                                      width
-                                      height
-                                      (string->pointer filename))
+       (case (vigra_importrgbaimage (bytevector->pointer r)
+                                    (bytevector->pointer g)
+                                    (bytevector->pointer b)
+                                    (bytevector->pointer a)
+                                    width
+                                    height
+                                    (string->pointer filename))
          ((0) (list width height 4 idata))
          ((1) (error "Load RGBA image failed." filename)))))))
 
@@ -158,11 +158,11 @@
                                 #:optional (scale #f))
   (match (im-channels image)
     ((c)
-     (case (vigra-exportgrayimage-c (bytevector->pointer c)
-                                    width
-                                    height
-                                    (string->pointer filename)
-                                    (if scale 1 0))
+     (case (vigra_exportgrayimage (bytevector->pointer c)
+                                  width
+                                  height
+                                  (string->pointer filename)
+                                  (if scale 1 0))
        ((0) #t)
        (else
         (error "Image could not be saved." filename))))))
@@ -171,13 +171,13 @@
                                #:optional (scale #f))
   (match (im-channels image)
     ((r g b)
-     (case (vigra-exportrgbimage-c (bytevector->pointer r)
-                                   (bytevector->pointer g)
-                                   (bytevector->pointer b)
-                                   width
-                                   height
-                                   (string->pointer filename)
-                                   (if scale 1 0))
+     (case (vigra_exportrgbimage (bytevector->pointer r)
+                                 (bytevector->pointer g)
+                                 (bytevector->pointer b)
+                                 width
+                                 height
+                                 (string->pointer filename)
+                                 (if scale 1 0))
        ((0) #t)
        (else
         (error "Image could not be saved." filename))))))
@@ -186,14 +186,14 @@
                                 #:optional (scale #f))
   (match (im-channels image)
     ((r g b a)
-     (case (vigra-exportrgbaimage-c (bytevector->pointer r)
-                                    (bytevector->pointer g)
-                                    (bytevector->pointer b)
-                                    (bytevector->pointer a)
-                                    width
-                                    height
-                                    (string->pointer filename)
-                                    (if scale 1 0))
+     (case (vigra_exportrgbaimage (bytevector->pointer r)
+                                  (bytevector->pointer g)
+                                  (bytevector->pointer b)
+                                  (bytevector->pointer a)
+                                  width
+                                  height
+                                  (string->pointer filename)
+                                  (if scale 1 0))
        ((0) #t)
        (else
         (error "Image could not be saved." filename))))))
@@ -203,55 +203,55 @@
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-image-width-c
+(define vigra_image_width
   (pointer->procedure int
 		      (dynamic-func "vigra_imagewidth_c"
 				    %libvigra-c)
 		      (list '*)))
 
-(define vigra-image-height-c
+(define vigra_image_height
   (pointer->procedure int
 		      (dynamic-func "vigra_imageheight_c"
 				    %libvigra-c)
 		      (list '*)))
 
-(define vigra-image-numbands-c
+(define vigra_image_numbands
   (pointer->procedure int
 		      (dynamic-func "vigra_imagenumbands_c"
 				    %libvigra-c)
 		      (list '*)))
 
-(define vigra-importgrayimage-c
+(define vigra_importgrayimage
   (pointer->procedure int
 		      (dynamic-func "vigra_importgrayimage_c"
 				    %libvigra-c)
 		      (list '* int int '*)))
 
-(define vigra-importrgbimage-c
+(define vigra_importrgbimage
   (pointer->procedure int
 		      (dynamic-func "vigra_importrgbimage_c"
 				    %libvigra-c)
 		      (list '* '* '* int int '*)))
 
-(define vigra-importrgbaimage-c
+(define vigra_importrgbaimage
   (pointer->procedure int
 		      (dynamic-func "vigra_importrgbaimage_c"
 				    %libvigra-c)
 		      (list '* '* '* '* int int '*)))
 
-(define vigra-exportgrayimage-c
+(define vigra_exportgrayimage
   (pointer->procedure int
 		      (dynamic-func "vigra_exportgrayimage_c"
 				    %libvigra-c)
 		      (list '* int int '* int)))
 
-(define vigra-exportrgbimage-c
+(define vigra_exportrgbimage
   (pointer->procedure int
 		      (dynamic-func "vigra_exportrgbimage_c"
 				    %libvigra-c)
 		      (list '* '* '* int int '* int)))
 
-(define vigra-exportrgbaimage-c
+(define vigra_exportrgbaimage
   (pointer->procedure int
 		      (dynamic-func "vigra_exportrgbaimage_c"
 				    %libvigra-c)

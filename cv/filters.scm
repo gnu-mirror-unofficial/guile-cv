@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2018
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -72,7 +72,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-gaussian-blur-channel channel width height sigma))
-		       idata))))))
+		 idata))))))
 
 (define (im-gaussian-blur-channel channel width height sigma)
   (let ((to (im-make-channel width height)))
@@ -89,7 +89,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-gaussian-gradient-channel channel width height sigma))
-		       idata))))))
+		 idata))))))
 
 (define (im-gaussian-gradient-channel channel width height sigma)
   (let ((to (im-make-channel width height)))
@@ -106,7 +106,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-gaussian-sharp-channel channel width height factor scale))
-		       idata))))))
+		 idata))))))
 
 (define (im-gaussian-sharp-channel channel width height factor scale)
   (let ((to (im-make-channel width height)))
@@ -123,7 +123,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-sharpen-channel channel width height factor))
-		       idata))))))
+		 idata))))))
 
 (define (im-sharpen-channel channel width height factor)
   (let ((to (im-make-channel width height)))
@@ -153,10 +153,10 @@
 	     (map-proc (lambda (channel)
 			 (im-median-filter-channel channel width height w-width w-height
                                                    #:obs obs))
-		       idata))))))
+		 idata))))))
 
 (define* (im-median-filter-channel channel width height w-width w-height
-                                  #:key (obs 'repeat))
+                                   #:key (obs 'repeat))
   (let ((obs (median-obs->int obs))
         (to (im-make-channel width height)))
     (case (vigra-median-filter channel to width height w-width w-height obs)
@@ -272,7 +272,7 @@
                                   step-size
                                   n-iteration
                                   n-thread
-                                  #f)  ;; verbose
+                                  #f) ;; verbose
       ((0) to)
       ((1)
        (error "Nl-means failed."))
@@ -285,91 +285,91 @@
 ;;;
 
 (define (vigra-gaussian-smoothing from to width height sigma)
-  (vigra-gaussian-smoothing-c (bytevector->pointer from)
-			      (bytevector->pointer to)
-			      width
-			      height
-			      sigma))
+  (vigra_gaussian_smoothing (bytevector->pointer from)
+			    (bytevector->pointer to)
+			    width
+			    height
+			    sigma))
 
 (define (vigra-gaussian-gradient from to width height sigma)
-  (vigra-gaussian-gradient-c (bytevector->pointer from)
-			      (bytevector->pointer to)
-			      width
-			      height
-			      sigma))
+  (vigra_gaussian_gradient (bytevector->pointer from)
+			   (bytevector->pointer to)
+			   width
+			   height
+			   sigma))
 
 (define (vigra-gaussian-sharpening from to width height factor scale)
-  (vigra-gaussian-sharpening-c (bytevector->pointer from)
-                               (bytevector->pointer to)
-                               width
-                               height
-                               factor
-                               scale))
+  (vigra_gaussian_sharpening (bytevector->pointer from)
+                             (bytevector->pointer to)
+                             width
+                             height
+                             factor
+                             scale))
 
 (define (vigra-simple-sharpening from to width height factor)
-  (vigra-simple-sharpening-c (bytevector->pointer from)
-                               (bytevector->pointer to)
-                               width
-                               height
-                               factor))
+  (vigra_simple_sharpening (bytevector->pointer from)
+                           (bytevector->pointer to)
+                           width
+                           height
+                           factor))
 
 (define (vigra-median-filter from to width height w-width w-height obs)
-  (vigra-median-filter-c (bytevector->pointer from)
-                         (bytevector->pointer to)
-                         width
-                         height
-                         w-width
-                         w-height
-                         obs))
+  (vigra_median_filter (bytevector->pointer from)
+                       (bytevector->pointer to)
+                       width
+                       height
+                       w-width
+                       w-height
+                       obs))
 
 (define (vigra-convolve-channel from to width height kernel k-width k-height obs)
-  (vigra-convolve-channel-c (bytevector->pointer from)
-                            (bytevector->pointer kernel)
-                            (bytevector->pointer to)
-                            width
-                            height
-                            k-width
-                            k-height
-                            obs))
+  (vigra_convolve_channel (bytevector->pointer from)
+                          (bytevector->pointer kernel)
+                          (bytevector->pointer to)
+                          width
+                          height
+                          k-width
+                          k-height
+                          obs))
 
 (define (vigra-nl-means-channel from to width height
-                               policy-type
-                               sigma
-                               mean-ratio
-                               variance-ratio
-                               epsilon
-                               spatial-sigma
-                               search-radius
-                               patch-radius
-                               mean-sigma
-                               step-size
-                               n-iteration
-                               n-thread
-                               verbose)
-  (vigra-nl-means-channel-c (bytevector->pointer from)
-                                  (bytevector->pointer to)
-                                  width
-                                  height
-                                  policy-type
-                                  sigma
-                                  mean-ratio
-                                  variance-ratio
-                                  epsilon
-                                  spatial-sigma
-                                  search-radius
-                                  patch-radius
-                                  mean-sigma
-                                  step-size
-                                  n-iteration
-                                  n-thread
-                                  (if verbose 1 0)))
+                                policy-type
+                                sigma
+                                mean-ratio
+                                variance-ratio
+                                epsilon
+                                spatial-sigma
+                                search-radius
+                                patch-radius
+                                mean-sigma
+                                step-size
+                                n-iteration
+                                n-thread
+                                verbose)
+  (vigra_nl_means_channel (bytevector->pointer from)
+                          (bytevector->pointer to)
+                          width
+                          height
+                          policy-type
+                          sigma
+                          mean-ratio
+                          variance-ratio
+                          epsilon
+                          spatial-sigma
+                          search-radius
+                          patch-radius
+                          mean-sigma
+                          step-size
+                          n-iteration
+                          n-thread
+                          (if verbose 1 0)))
 
 
 ;;;
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-gaussian-smoothing-c
+(define vigra_gaussian_smoothing
   (pointer->procedure int
 		      (dynamic-func "vigra_gaussiansmoothing_c"
 				    %libvigra-c)
@@ -379,7 +379,7 @@
 			    int	     ;; height
 			    float))) ;; sigma
 
-(define vigra-gaussian-gradient-c
+(define vigra_gaussian_gradient
   (pointer->procedure int
 		      (dynamic-func "vigra_gaussiangradientmagnitude_c"
 				    %libvigra-c)
@@ -389,7 +389,7 @@
 			    int	     ;; height
 			    float))) ;; sigma
 
-(define vigra-gaussian-sharpening-c
+(define vigra_gaussian_sharpening
   (pointer->procedure int
 		      (dynamic-func "vigra_gaussiansharpening_c"
 				    %libvigra-c)
@@ -400,7 +400,7 @@
                             float    ;; factor
 			    float))) ;; scale
 
-(define vigra-simple-sharpening-c
+(define vigra_simple_sharpening
   (pointer->procedure int
 		      (dynamic-func "vigra_simplesharpening_c"
 				    %libvigra-c)
@@ -410,7 +410,7 @@
 			    int	     ;; height
                             float))) ;; factor
 
-(define vigra-median-filter-c
+(define vigra_median_filter
   (pointer->procedure int
 		      (dynamic-func "vigra_medianfilter_c"
 				    %libvigra-c)
@@ -422,7 +422,7 @@
                             int      ;; window height
                             int)))   ;; border treatment
 
-(define vigra-convolve-channel-c
+(define vigra_convolve_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_convolveimage_c"
 				    %libvigra-c)
@@ -435,7 +435,7 @@
 			    int      ;; kernel height
                             int)))   ;; border treatment
 
-(define vigra-nl-means-channel-c
+(define vigra_nl_means_channel
     (pointer->procedure int
 		      (dynamic-func "vigra_nonlocalmean_c"
 				    %libvigra-c)
@@ -454,5 +454,5 @@
                             float    ;; mean sigma
                             int      ;; step size
                             int      ;; iterations
-                            int      ;; n-thread
+                            int      ;; n_thread
                             int)))   ;; verbose (a C bool)

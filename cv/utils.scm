@@ -192,6 +192,6 @@
     ((b1-left b1-top b1-right b1-bottom)
      (match b2
        ((b2-left b2-top b2-right b2-bottom)
-        (= (bb-intersect-c b1-left b1-top b1-right b1-bottom
+        (= (bb-intersectb1-left b1-top b1-right b1-bottom
                            b2-left b2-top b2-right b2-bottom)
            1))))))

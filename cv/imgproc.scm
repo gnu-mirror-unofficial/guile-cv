@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -82,7 +82,7 @@
 	     (map-proc (lambda (channel)
 			 (im-resize-channel channel width height new-w new-h
 					    #:i-mode i-mode))
-	       idata))))))
+	         idata))))))
 
 (define* (im-resize-channel channel width height new-w new-h
 			    #:key (i-mode 'bilinear))
@@ -113,7 +113,7 @@
 	     (map-proc (lambda (channel)
 			 (im-rotate-channel channel width height angle
 					    #:i-mode i-mode))
-	       idata))))))
+	         idata))))))
 
 (define* (im-rotate-channel channel width height angle
 			    #:key (i-mode 'bilinear))
@@ -141,7 +141,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-flip-channel channel width height plane))
-	       idata))))))
+	         idata))))))
 
 (define (im-flip-channel channel width height plane)
   (let ((to (im-make-channel width height)))
@@ -183,7 +183,7 @@
 		(map-proc (lambda (channel)
 			    (im-crop-channel channel width height left top right bottom
 					     #:new-w new-w #:new-h new-h))
-			  idata))))))))
+		    idata))))))))
 
 (define* (im-crop-channel channel width height left top right bottom
 			  #:key (new-w #f) (new-h #f))
@@ -254,7 +254,7 @@
 		(map-proc (lambda (channel)
 			    (im-unpadd-channel channel width height left top right bottom
 					       #:new-w new-w #:new-h new-h))
-			  idata))))))))
+		    idata))))))))
 
 (define* (im-unpadd-channel channel width height left top right bottom
 			    #:key (new-w #f) (new-h #f))
@@ -277,7 +277,7 @@
                                     (%use-par-map)) par-map map)))
 	     (map-proc (lambda (channel)
 			 (im-clip-channel channel width height #:lower lower #:upper upper))
-	       idata))))))
+	         idata))))))
 
 (define* (im-clip-channel channel width height #:key (lower 0.0) (upper 255.0))
   (let ((to (im-make-channel width height))
@@ -285,7 +285,7 @@
     (case (vigra-clip-channel channel to width height lower upper)
       ((0) to)
       (else
-        (error "Clip failed.")))))
+       (error "Clip failed.")))))
 
 (define* (im-local-minima image
                           #:key (con 8)
@@ -307,7 +307,7 @@
                                                   #:borders? borders?
                                                   #:plateaus? plateaus?
                                                   #:epsilon epsilon))
-	       idata))))))
+	         idata))))))
 
 (define* (im-local-minima-channel channel width height
                                   #:key (con 8)
@@ -322,7 +322,7 @@
                               borders? plateaus? epsilon)
       ((0) to)
       (else
-        (error "Local minima failed.")))))
+       (error "Local minima failed.")))))
 
 (define* (im-local-maxima image
                           #:key (con 8)
@@ -345,7 +345,7 @@
                                                   #:plateaus? plateaus?
                                                   #:epsilon epsilon))
 
-	       idata))))))
+	         idata))))))
 
 (define* (im-local-maxima-channel channel width height
                                   #:key (con 8)
@@ -360,7 +360,7 @@
                               borders? plateaus? epsilon)
       ((0) to)
       (else
-        (error "Local maxima failed.")))))
+       (error "Local maxima failed.")))))
 
 
 ;;;
@@ -368,97 +368,97 @@
 ;;;
 
 (define (vigra-resize-channel from to width height new-w new-h i-mode)
-  (vigra-resize-channel-c (bytevector->pointer from)
-			  (bytevector->pointer to)
-			  width
-			  height
-			  new-w
-			  new-h
-			  i-mode))
+  (vigra_resize_channel (bytevector->pointer from)
+			(bytevector->pointer to)
+			width
+			height
+			new-w
+			new-h
+			i-mode))
 
 (define (vigra-rotate-channel from to width height angle i-mode)
-  (vigra-rotate-channel-c (bytevector->pointer from)
-			  (bytevector->pointer to)
-			  width
-			  height
-			  angle
-			  i-mode))
+  (vigra_rotate_channel (bytevector->pointer from)
+			(bytevector->pointer to)
+			width
+			height
+			angle
+			i-mode))
 
 (define (vigra-flip-channel from to width height axis)
-  (vigra-flip-channel-c (bytevector->pointer from)
-			(bytevector->pointer to)
-			width
-			height
-			axis))
+  (vigra_flip_channel (bytevector->pointer from)
+		      (bytevector->pointer to)
+		      width
+		      height
+		      axis))
 
 (define (vigra-crop-channel from to width height left top right bottom)
-  (vigra-crop-channel-c (bytevector->pointer from)
-			(bytevector->pointer to)
-			width
-			height
-			left
-			top
-			right
-			bottom))
+  (vigra_crop_channel (bytevector->pointer from)
+		      (bytevector->pointer to)
+		      width
+		      height
+		      left
+		      top
+		      right
+		      bottom))
 
 (define (vigra-padd-channel from to width height left top right bottom)
-  (vigra-padd-channel-c (bytevector->pointer from)
-			(bytevector->pointer to)
-			width
-			height
-			left
-			top
-			right
-			bottom))
+  (vigra_padd_channel (bytevector->pointer from)
+		      (bytevector->pointer to)
+		      width
+		      height
+		      left
+		      top
+		      right
+		      bottom))
 
 (define (vigra-clip-channel from to width height lower upper)
-  (vigra-clip-channel-c (bytevector->pointer from)
-			(bytevector->pointer to)
-			width
-			height
-			lower
-			upper))
+  (vigra_clip_channel (bytevector->pointer from)
+		      (bytevector->pointer to)
+		      width
+		      height
+		      lower
+		      upper))
 
 (define (vigra-local-minima from to width height con marker threshold
                             borders? plateaus? epsilon)
-  (vigra-local-minima-c (bytevector->pointer from)
-                        (bytevector->pointer to)
-                        width
-                        height
-                        (case con
-                          ((8) 1)
-                          ((4) 0)
-                          (else
-                           (error "No such connectivity: " con)))
-                        marker
-                        threshold
-                        (if borders? 1 0)
-                        (if plateaus? 1 0)
-                        epsilon))
+  (vigra_local_minima (bytevector->pointer from)
+                      (bytevector->pointer to)
+                      width
+                      height
+                      (case con
+                        ((8) 1)
+                        ((4) 0)
+                        (else
+                         (error "No such connectivity: " con)))
+                      marker
+                      threshold
+                      (if borders? 1 0)
+                      (if plateaus? 1 0)
+                      epsilon))
 
 (define (vigra-local-maxima from to width height con marker threshold
                             borders? plateaus? epsilon)
-  (vigra-local-maxima-c (bytevector->pointer from)
-                        (bytevector->pointer to)
-                        width
-                        height
-                        (case con
-                          ((8) 1)
-                          ((4) 0)
-                          (else
-                           (error "No such connectivity: " con)))
-                        marker
-                        threshold
-                        (if borders? 1 0)
-                        (if plateaus? 1 0)
-                        epsilon))
+  (vigra_local_maxima (bytevector->pointer from)
+                      (bytevector->pointer to)
+                      width
+                      height
+                      (case con
+                        ((8) 1)
+                        ((4) 0)
+                        (else
+                         (error "No such connectivity: " con)))
+                      marker
+                      threshold
+                      (if borders? 1 0)
+                      (if plateaus? 1 0)
+                      epsilon))
 
 
 ;;;
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-resize-channel-c
+(define vigra_resize_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_resizeimage_c"
 				    %libvigra-c)
@@ -470,7 +470,7 @@
 			    int		;; new height
 			    int)))	;; interpolation mode
 
-(define vigra-rotate-channel-c
+(define vigra_rotate_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_rotateimage_c"
 				    %libvigra-c)
@@ -481,7 +481,7 @@
 			    float	;; angle
 			    int)))	;; interpolation mode
 
-(define vigra-flip-channel-c
+(define vigra_flip_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_reflectimage_c"
 				    %libvigra-c)
@@ -491,7 +491,7 @@
 			    int		;; height
 			    int)))	;; flip axis
 
-(define vigra-crop-channel-c
+(define vigra_crop_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_subimage_c"
 				    %libvigra-c)
@@ -504,7 +504,7 @@
 			    int		;; right
 			    int)))	;; bottom
 
-(define vigra-padd-channel-c
+(define vigra_padd_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_paddimage_c"
 				    %libvigra-c)
@@ -517,7 +517,7 @@
 			    int		;; right
 			    int)))	;; bottom
 
-(define vigra-clip-channel-c
+(define vigra_clip_channel
   (pointer->procedure int
 		      (dynamic-func "vigra_clipimage_c"
 				    %libvigra-c)
@@ -528,7 +528,7 @@
 			    float	;; lower
 			    float)))	;; upper
 
-(define vigra-local-minima-c
+(define vigra_local_minima
     (pointer->procedure int
 		      (dynamic-func "vigra_localminima_c"
 				    %libvigra-c)
@@ -536,14 +536,14 @@
 			    '*		;; to channel
 			    int		;; from width
 			    int		;; from height
-                            int		;; 8-con?
+                            int		;; 8_con?
                             float	;; marker
                             float	;; threshold
                             int		;; borders?
                             int		;; plateaus?
                             float)))	;; epsilon
 
-(define vigra-local-maxima-c
+(define vigra_local_maxima
     (pointer->procedure int
 		      (dynamic-func "vigra_localmaxima_c"
 				    %libvigra-c)
@@ -551,7 +551,7 @@
 			    '*		;; to channel
 			    int		;; from width
 			    int		;; from height
-                            int		;; 8-con?
+                            int		;; 8_con?
                             float	;; marker
                             float	;; threshold
                             int		;; borders?

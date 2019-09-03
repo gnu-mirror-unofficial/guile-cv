@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -118,8 +118,8 @@
           (+ i 1)))
       ((= i n-feature)
        (reverse! result))
-      (set! result
-            (cons (proc features i) result))))
+    (set! result
+          (cons (proc features i) result))))
 
 (define (eigen-vigra-coord->trigono-coord x y)
   ;; vigra returns eigen major and minor vector coordinates in the image
@@ -381,29 +381,29 @@
 ;;;
 
 (define (vigra-extract-features-gray from labels results width height n-label)
-  (vigra-extractfeatures-gray-c (bytevector->pointer from)
-                                (bytevector->pointer labels)
-                                (bytevector->pointer results)
-                                width
-                                height
-                                (- n-label 1))) ;; vigra wants n-object
+  (vigra_extractfeatures_gray (bytevector->pointer from)
+                              (bytevector->pointer labels)
+                              (bytevector->pointer results)
+                              width
+                              height
+                              (- n-label 1))) ;; vigra wants n-object
 
 (define (vigra-extract-features-rgb r g b labels results width height n-label)
-  (vigra-extractfeatures-rgb-c (bytevector->pointer r)
-                               (bytevector->pointer g)
-                               (bytevector->pointer b)
-                               (bytevector->pointer labels)
-                               (bytevector->pointer results)
-                               width
-                               height
-                               (- n-label 1))) ;; vigra wants n-object
+  (vigra_extractfeatures_rgb (bytevector->pointer r)
+                             (bytevector->pointer g)
+                             (bytevector->pointer b)
+                             (bytevector->pointer labels)
+                             (bytevector->pointer results)
+                             width
+                             height
+                             (- n-label 1))) ;; vigra wants n-object
 
 
 ;;;
 ;;; Vigra_c bindings
 ;;;
 
-(define vigra-extractfeatures-gray-c
+(define vigra_extractfeatures_gray
   (pointer->procedure int
 		      (dynamic-func "vigra_extractfeatures_gray_c"
 				    %libvigra-c)
@@ -412,9 +412,9 @@
 			    '*     ;; results vector
 			    int    ;; width
 			    int    ;; height
-			    int))) ;; n-object
+			    int))) ;; n_object
 
-(define vigra-extractfeatures-rgb-c
+(define vigra_extractfeatures_rgb
   (pointer->procedure int
 		      (dynamic-func "vigra_extractfeatures_rgb_c"
 				    %libvigra-c)
@@ -425,4 +425,4 @@
 			    '*     ;; results vector
 			    int    ;; width
 			    int    ;; height
-			    int))) ;; n-object
+			    int))) ;; n_object

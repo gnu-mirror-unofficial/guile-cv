@@ -1,7 +1,7 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 
 ;;;;
-;;;; Copyright (C) 2016 - 2017
+;;;; Copyright (C) 2016 - 2019
 ;;;; Free Software Foundation, Inc.
 
 ;;;; This file is part of GNU Guile-CV.
@@ -110,7 +110,7 @@
 ;;; From liguile-cv
 ;;;
 
-(define +float-min+ (float-min-c))
-(define +float-max+ (float-max-c))
+(define +float-min+ (float_min))
+(define +float-max+ (float_max))
 
-(define float->int float-to-int-c)
+(define float->int float_to_int)
