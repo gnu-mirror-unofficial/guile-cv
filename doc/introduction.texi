@@ -259,7 +259,7 @@ $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 @end example
 
 If you pass @code{--with-guile-site=yes}, these locations become the
-Guile site and site-ccache directories, respectively.
+Guile global site and site-ccache directories, respectively.
 
 The configure step reports these locations as the content of the
 @code{sitedir} and @code{siteccachedir} variables, respectivelly the

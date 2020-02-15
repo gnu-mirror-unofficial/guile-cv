@@ -125,7 +125,7 @@ Happy Guile-CV!
 	    $(libdir)/guile-cv/guile/$(GUILE_EFFECTIVE_VERSION)/site-ccache
 
     If you pass --with-guile-site=yes, these locations become the Guile
-    site and site-ccache directories, respectively.
+    global site and site-ccache directories, respectively.
 
     The configure step reports these locations as the content of the
     sitedir and siteccachedir variables, respectivelly the source
