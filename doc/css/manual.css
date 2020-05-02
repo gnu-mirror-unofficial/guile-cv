@@ -3,25 +3,25 @@
 Style-sheet to use for manuals, inspired by Guile,
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2020
 #### Free Software Foundation, Inc.
 
-#### This file is part of GNU Guile-CV.
+#### This file is part of GNU G-Golf.
 
-#### GNU Guile-CV is free software; you can redistribute it and/or
+#### GNU G-Golf is free software; you can redistribute it and/or
 #### modify it under the terms of the GNU General Public License as
-#### published by the Free Software Foundation; either version 3 of the
-#### License, or (at your option) any later version.
+#### published by the Free Software Foundation; either version 3 of
+#### the License, or (at your option) any later version.
 
-#### GNU Guile-CV is distributed in the hope that it will be useful, but
+#### GNU G-Golf is distributed in the hope that it will be useful, but
 #### WITHOUT ANY WARRANTY; without even the implied warranty of
 #### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #### General Public License for more details.
 
 #### You should have received a copy of the GNU General Public License
-#### along with GNU Guile-CV.  If not, see
+#### along with GNU G-Golf.  If not, see
 #### <https://www.gnu.org/licenses/gpl.html>.
-####
+
 
 /*
 Maybe later
@@ -30,15 +30,56 @@ Maybe later
 
 
 /*
-makeinfo convert @deffn and similar functions to something inside
-<blockquote>.  style.css uses italic for blockquote.  This looks poor
-in the Emacs manuals, which make extensive use of @defun (etc).  In
-particular, references to function arguments appear as <var> inside
-<blockquote>.  Since <var> is also italic, it makes it impossible to
-distinguish variables.  We could change <var> to e.g. bold-italic, or
-normal, or a different color, but that does not look as good IMO.  So
-we just override blockquote to be non-italic.
+  makeinfo convert @deffn and similar functions to something inside
+  <blockquote>.  style.css uses italic for blockquote.  This looks
+  poor in the Emacs manuals, which make extensive use of @defun (etc).
+  In particular, references to function arguments appear as <var>
+  inside <blockquote>.  Since <var> is also italic, it makes it
+  impossible to distinguish variables.  We could change <var> to
+  e.g. bold-italic, or normal, or a different color, but that does not
+  look as good IMO.  So we just override blockquote to be non-italic.
 */
+
+
+/*
+***
+***  Classes
+***
+*/
+
+.header {
+    background-color: #f2f2f2;
+    font-size: small;
+    padding: 0.2em 1em;
+}
+
+
+/*
+  This makes the very long tables of contents in Gnulib and other
+  manuals easier to read.
+*/
+
+.contents ul,
+.shortcontents ul {
+    font-weight: bold;
+}
+
+.contents ul ul,
+.shortcontents ul ul {
+    font-weight: normal;
+}
+
+.contents ul {
+    list-style: none;
+}
+
+
+/*
+***
+*** Native elements
+***
+*/
+
 blockquote {
     font-style: normal;
 }
@@ -47,33 +88,35 @@ var {
     font-style: italic;
 }
 
-/* layout.css indents "body p" when it should probably only indent
-   "body > p"?  In any case, disable indenting of p in these sub
-   elements.
+
+/*
+  layout.css indents "body p" when it should probably only indent
+  "body > p"?  In any case, disable indenting of p in these sub
+  elements.
 */
-dd p,li p {
+
+dd p,
+li p {
     margin-left: 0;
     margin-right: 0;
 }
 
-/* This makes the very long tables of contents in Gnulib and other
-   manuals easier to read. */
-.contents ul, .shortcontents ul { font-weight: bold; }
-.contents ul ul, .shortcontents ul ul { font-weight: normal; }
-.contents ul { list-style: none; }
-
 
 /*
-underlined links are distracting, especially within outlined
-tables.
+  Underlined links are distracting, especially within outlined
+  tables.
 */
+
 a { /* add :link for external links */
-    text-decoration: none; /* don't underline links by default */
-    outline-style: none;   /* don't put dotted box around clicked links */
+    /* don't underline links by default */
+    text-decoration: none;
+    /* don't put dotted box around clicked links */
+    outline-style: none;
     color: #547eaa;
     !color: #7a9b8f;
     !color: #6c8c80;
-    !color: #3e51b5; /* the economist blue alink */
+    /* the economist blue alink */
+    !color: #3e51b5;
 }
 
 a:hover {
@@ -83,12 +126,15 @@ a:hover {
 a code {
     color: #547eaa;
     !color: #6c8c80;
-    !color: #3e51b5; /* the economist blue alink */
+    /* the economist blue alink */
+    !color: #3e51b5;
 }
 
+
 /*
-The shadow around the body is distracting.
+  The shadow around the body is distracting.
 */
+
 body {
     box-shadow: 0 0 0 0;
     color: #333;
