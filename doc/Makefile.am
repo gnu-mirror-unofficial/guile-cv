@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2017
+#### Copyright (C) 2016 - 2020
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -69,7 +69,8 @@ EXTRA_DIST = \
 	$(DOC_IMAGES)		\
 	$(DOC_CSS)
 
-AM_MAKEINFOHTMLFLAGS = --css-ref=../css/manual.css
+AM_MAKEINFOHTMLFLAGS = \
+	-c DOCTYPE='<!DOCTYPE html>' --css-ref=../css/manual.css
 
 printenv:
 	printf '$(DOC_IMAGES)\n'
