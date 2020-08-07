@@ -14,7 +14,7 @@
 @c * What else::
 @c * Savannah::
 * Obtaining and Installing Guile-CV::
-* Contact::
+* Contact Information::
 * Reporting Bugs::
 @end menu
 
@@ -340,8 +340,8 @@ make check
 @end enumerate
 
 
-@node Contact
-@section Contact
+@node Contact Information
+@section Contact Information
 
 
 @subheading Mailing lists
@@ -349,31 +349,30 @@ make check
 Guile-CV uses the following mailing list:
 
 @itemize @bullet
+@item @email{guile-user@@gnu.org} is for general user help and
+discussion.
+@ifhtml
+@*@*
+@end ifhtml
 
-@item
-@value{GUILE-USER} is for general user help and discussion.
-
-@item
-@value{GUILE-DEVEL} is used to discuss most aspects of Guile-CV,
-including development and enhancement requests.
-
-@c @item
-@c @value{GUILE-CV-BUGS} is used for Guile-CV bug reports.
-
+@item @email{guile-devel@@gnu.org} is used to discuss most aspects
+of Guile-CV, including development and enhancement requests.
 @end itemize
 
-When sending emails to guile-user and/or guile-devel, please use
-'Guile-CV: ' to prefix the subject line of any Guile-CV related email,
-thanks!
+Please use @samp{Guile-CV - } to preceed the subject line of Guile-CV
+related emails, thanks!
+
+You can (un)subscribe to the one or both of these mailing lists by
+following instructions on their respective
+@uref{@value{UGUILE-LISTINFO}, list information page}.
 
 
 @subheading IRC
 
-Most of the time you can find me on irc, channel @code{#guile},
-@code{#guix} and @code{#scheme} on @emph{irc.freenode.net},
-@code{#clutter} and @code{#introspection} on @emph{irc.gnome.org}, under
-the nickname @strong{daviid}.
-
+Most of the time you can find me on irc, channel @emph{#guile},
+@emph{#guix} and @emph{#scheme} on @emph{irc.freenode.net},
+@emph{#clutter} and @emph{#introspection} on @emph{irc.gnome.org}, under
+the nickname @emph{daviid}.
 
 
 @node Reporting Bugs
@@ -388,3 +387,5 @@ Guile-CV uses the following bug reports mailing list:
 You can (un)subscribe to the bugs report list by following instructions
 on the @uref{@value{UGUILE-CV-BUGS-LISTINFO}, list information page}.
 
+Further information and a list of available commands are available
+@uref{@value{UGUILE-CV-BUGS-SERVER-CONTROL}, here}.
