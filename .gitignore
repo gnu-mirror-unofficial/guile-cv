@@ -23,6 +23,7 @@ meta/guile-cv-1.0.pc
 doc/version.texi
 doc/stamp-vti
 doc/guile-cv.t2p
+doc/guile-cv.dvi
 libtool
 m4/libtool.m4
 m4/ltoptions.m4
