@@ -62,6 +62,8 @@ Maybe later
 .contents ul,
 .shortcontents ul {
     font-weight: bold;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
 }
 
 .contents ul ul,
@@ -71,6 +73,18 @@ Maybe later
 
 .contents ul {
     list-style: none;
+}
+
+.unnumbered,
+.section,
+.subsection,
+.subheading {
+    !color: #931101;
+    !color: #cf8001;
+    !color: #edb927;
+    !color: #c84300;
+    !color: #a33900;
+    !color: #c1971f;
 }
 
 
