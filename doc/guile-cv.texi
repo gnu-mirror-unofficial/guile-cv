@@ -76,7 +76,7 @@ Documentation License.''
 * Preface::
 * Introduction::
 * Using Guile-CV::
-* API Reference::
+* Guile-CV Core Reference::
 
 Appendices
 

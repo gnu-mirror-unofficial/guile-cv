@@ -1,31 +1,32 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2020 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
-@node API Reference
-@chapter API Reference
+@node Guile-CV Core Reference
+@c @chapter Guile-CV Core Reference
+@unnumbered III. Guile-CV Core Reference
 
 @c Guile-CV Reference Manual still is a mock-up: any help is more
 @c then welcome to improve this situation, thanks!
 
 
 @menu
-* API Overview::
-* Guile-CV::
+* Overview::
+* Image Processing::
 * Support::
 @end menu
 
 
-@node API Overview
-@section API Overview
+@node Overview
+@section Overview
 
 @include api-overview.texi
 
 
-@node Guile-CV
-@section Guile-CV
+@node Image Processing
+@section Image Processing
 
 @include api-cv-idata.texi
 @include api-cv-kdata.texi

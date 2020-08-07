@@ -5,7 +5,8 @@
 
 
 @node Introduction
-@chapter Introduction
+@c @chapter Introduction
+@unnumbered I. Introduction
 
 @menu
 * About Guile-CV::
