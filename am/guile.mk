@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2018
+#### Copyright (C) 2016 - 2020
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -48,4 +48,4 @@ GUILE_WARNINGS = -Wunbound-variable -Warity-mismatch -Wformat
 SUFFIXES = .scm .go
 .scm.go:
 	$(AM_V_GEN)$(top_builddir)/pre-inst-env \
-	guild compile $(GUILE_WARNINGS) -o "$@" "$<"
+	$(GUILD) compile $(GUILE_WARNINGS) -o "$@" "$<"
