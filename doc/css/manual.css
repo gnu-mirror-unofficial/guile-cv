@@ -28,7 +28,6 @@ Maybe later
 @import url('/style.css');
 */
 
-
 /*
   makeinfo convert @deffn and similar functions to something inside
   <blockquote>.  style.css uses italic for blockquote.  This looks
@@ -48,11 +47,15 @@ Maybe later
 */
 
 .header {
-    background-color: #f2f2f2;
-    font-size: small;
-    padding: 0.2em 1em;
+    !background-color: #f2f2f2;
+    !font-size: small;
+    margin: 0 -1em;
+    padding: 0 1em;
 }
 
+.header p, .node p {
+    line-height: 2em;
+}
 
 /*
   This makes the very long tables of contents in Gnulib and other
@@ -87,12 +90,57 @@ Maybe later
     !color: #c1971f;
 }
 
+.float {
+    margin-top: -1em;
+    text-align: center;
+}
+
+.float-caption p {
+    margin-top: -1em;
+    margin-bottom: 1.3em;
+    text-align: center;
+}
+
 
 /*
 ***
 *** Native elements
 ***
 */
+
+table {
+    display: block;
+    overflow: auto;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+th {
+    padding: .3em .5em;
+    text-align: center; }
+
+td {
+    !border: 1px solid;
+    !padding: .2em .5em;
+}
+
+.menu td {
+    padding-top: .3em;
+}
+
+.menu td:nth-child(1) {
+    !border: 1px solid;
+    min-width: 18em;
+}
+
+.menu td:nth-child(2) {
+    !border: 1px solid;
+    max-width: 0px;
+}
+
+.menu td:nth-child(3) {
+    !border: 1px solid;
+}
 
 blockquote {
     font-style: normal;
@@ -144,14 +192,28 @@ a code {
     !color: #3e51b5;
 }
 
+a[href] { color: #005090; }
+a[href]:visited { color: #100070; }
+a[href]:active, a[href]:hover {
+   color: #100070;
+   text-decoration: none;
+}
 
 /*
   The shadow around the body is distracting.
 */
+html {
+    background-color: #e7e7e7;
+}
 
 body {
     box-shadow: 0 0 0 0;
     color: #333;
+    background-color: white;
+    max-width: 45em;
+    margin: 0 auto;
+    padding: .5em 3em .5em 3em;
+    border: .1em solid #c0c0c0;
 }
 
 code,
