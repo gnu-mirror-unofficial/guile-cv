@@ -388,4 +388,4 @@ You can (un)subscribe to the bugs report list by following instructions
 on the @uref{@value{UGUILE-CV-BUGS-LISTINFO}, list information page}.
 
 Further information and a list of available commands are available
-@uref{@value{UGUILE-CV-BUGS-SERVER-CONTROL}, here}.
+@uref{@value{UDEBBUGS-SERVER-CONTROL}, here}.
