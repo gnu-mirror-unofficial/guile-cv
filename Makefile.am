@@ -111,7 +111,6 @@ distclean-local:
 	rm -f build-aux/missing
 	rm -f build-aux/texinfo.tex
 	rm -f build-aux/*~
-	rm -f configure
 	rm -f *~
 	rm -f guile-cv-*.tar.gz
 	rm -f guile-cv-*.tar.gz.sig
