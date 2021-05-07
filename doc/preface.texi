@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -12,6 +12,7 @@ to Guile-CV version @value{VERSION}.
 
 @menu
 * Contributors to this manual::
+* Join the GNU Project::
 * Guile-CV License::
 @end menu
 
@@ -30,6 +31,25 @@ who is also the author and maintainer of Guile-CV.
 
 You are most welcome to join and help.  Visit @uref{@value{UGUILE-CV},
 Guile-CV} web site to find out how to get involved.
+
+
+@node Join the GNU Project
+@unnumberedsec Join the GNU Project
+@cindex the GNU Project
+
+GNU Guile-CV is part of the GNU Operating System, developed by the GNU
+Project.
+
+If you are the author of an awesome program and want to join us in
+writing Free (libre) Software, please consider making it an official GNU
+program and become a GNU Maintainer. You can find instructions on how to
+do this @uref{@value{UGNU-EVALUATION}, here}.
+
+You don't have a program to contribute? Look at all the other ways you
+may @uref{@value{UGNU-HELP}, help}.
+
+To learn more about Free (libre) Software, you can read and please share
+@uref{@value{UGNU-PHILOSOPHY}, this page}.
 
 
 @node Guile-CV License

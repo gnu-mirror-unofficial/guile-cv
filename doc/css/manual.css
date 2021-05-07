@@ -231,6 +231,12 @@ pre.verbatim {
     border-radius: .3em;
     border: 1px solid #d4cbb6;
     background-color: #f2efe4;
+    /* background-color: #f1f8e9; /* libfive h1 */
+    /* background-color: #e8f5e9; /* libfive h2 */
+    /* background-color: #e0f2f1; /* libfive h3 */
+    /* background-color: #e0f7fa; /* libfive h4 */
+    /* background-color: #e1f5fe; /* libfive h5 */
+    margin-left: -3.5em;
     padding: .8em;
     font-size: .9em;
 }
