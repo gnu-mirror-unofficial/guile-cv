@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2020 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -370,7 +370,7 @@ following instructions on their respective
 @subheading IRC
 
 Most of the time you can find me on irc, channel @emph{#guile},
-@emph{#guix} and @emph{#scheme} on @emph{irc.freenode.net},
+@emph{#guix} and @emph{#scheme} on @emph{irc.libera.chat},
 @emph{#clutter} and @emph{#introspection} on @emph{irc.gnome.org}, under
 the nickname @emph{daviid}.
 
