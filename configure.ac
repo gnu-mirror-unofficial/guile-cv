@@ -6,7 +6,7 @@ dnl
 
 define(GUILE_CV_CONFIGURE_COPYRIGHT,[[
 
-Copyright (C) 2016 - 2018
+Copyright (C) 2016 - 2021
 Free Software Foundation, Inc.
 
 This file is part of GNU Guile-CV.
@@ -51,8 +51,7 @@ LT_INIT([disable-static])
 AC_COPYRIGHT(GUILE_CV_CONFIGURE_COPYRIGHT)
 AC_CONFIG_SRCDIR([cv])
 
-AC_CHECK_PROG(have_makeinfo, makeinfo, yes, no)
-AM_CONDITIONAL(HAVE_MAKEINFO, test "$have_makeinfo" = yes)
+MAKEINFO_PROG([6.6])
 
 AC_CHECK_PROG(PDFLATEX, pdflatex, yes)
 if test -z "$PDFLATEX"; then
