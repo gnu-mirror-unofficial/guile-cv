@@ -8,9 +8,6 @@
 @c @chapter Using Guile-CV
 @unnumbered II. Using Guile-CV
 
-Guile-CV Reference Manual still is a mock-up: any help is more then
-welcome to improve this situation, thanks!
-
 
 @node Configuring Guile for Guile-CV
 @section Configuring Guile for Guile-CV
@@ -18,6 +15,7 @@ welcome to improve this situation, thanks!
 Guile must be modified, with respect to two @code{core} functionalities,
 before to start to use Guile-CV: (a) its @code{repl-print} procedure and
 (b) its @code{raised exception system}.
+
 
 @node Configuring Guile's repl-print procedure
 @subsection Configuring Guile's repl-print procedure
@@ -163,17 +161,17 @@ You are now ready to use Guile-CV!
 @node Images used in Guile-CV's documentation
 @section Images used in Guile-CV's documentation
 
-All images used in Guile-CV's documentation are distributed with the
-source and installed here:
+Images used in Guile-CV's documentation are distributed with the source
+and installed here:
 
 @example
 $prefix/share/doc/guile-cv/images
 @end example
 
-All examples using @code{im-load} and @code{im-save} given in this
-manual, unless a full pathname is specified, assume that these images
-are available from the guile current working directory, see
-@code{getcwd} and @code{chdir} in Guile's manual
+Examples using @code{im-load} and @code{im-save} given in this manual,
+unless a full pathname is specified, assume that these images are
+available from the guile current working directory, see @code{getcwd}
+and @code{chdir} in Guile's manual
 
 Our best recommendation, at least to start with, is to create a working
 directory, such as @code{mkdir $HOME/guile-cv/images}, for example, and
