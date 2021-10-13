@@ -118,7 +118,7 @@ Channel 3
 @end lisp
 
 @strong{Caution:} unless you specify @var{port}, both this and
-@ref{im-display-channel} procedures are ment to be used on very small
+@ref{im-display-channel} procedures are meant to be used on very small
 and testing images, otherwise even on a small image, it might be ok in a
 terminal, but it will definitely will kill your emacs.
 @end deffn
