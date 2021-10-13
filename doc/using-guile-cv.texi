@@ -31,18 +31,18 @@ will use one core at more then 100%, desperately trying to display
 hundreds of thousands of floating point values, heating your laptop (if
 you have a laptop) up to the point you'll be able to cook an egg on it,
 and get its fans crasy... You've been warned :).}. Fortunately, Guile
-provides us both a simple mechanism to alter the default repl printer
-and the alternate repl printer procedure we need:
-@code{truncated-print}.
+provides both a simple mechanism to alter the default repl printer and
+the alternate repl printer procedure we need: @code{truncated-print}.
 
-To modify the default repl printer, you have to modify your
-@file{$HOME/.guile} or, if you are working in a multi-user environmet,
-you may choose to add (or modify if it exists) the file named
-@file{init.scm} in the so-called Guile global site
-directory@footnote{You need write privileges to add or modify this file,
-contact your system administrator if you're not in charge of the system
-you are working on.}, here (evaluate the following expression in a
-terminal): @code{guile -c "(display (%global-site-dir))(newline)"}.
+To modify the default repl printer, you may alter (or add if it doesn't
+exist) your @file{$HOME/.guile} file or, if you are working in a
+multi-user environmet, you may alther (or add if it doesn't exist) the
+file named @file{init.scm} in the Guile global site directory@footnote{
+The Guile global site directory location may be obtained by evaluating
+the following expression in a terminal): @code{guile -c "(display
+(%global-site-dir))(newline)"}. You need write privileges to add or
+modify this file, contact your system administrator if you're not in
+charge of the system you are working on.}..
 
 Which ever solution you choose, add the following lines:
 
@@ -64,11 +64,14 @@ which is inadequate for images, even very small images (see the related
 footnote of the previous section, it explains how @samp{inadequate} this
 default is for images.
 
-Because Guile's module we need to patch has changed in between 2.0, 2.2
-and 2.2.3, we will guide you to manually update your local version, just
-don't be scared, be meticulous and it will be all fine. But if you think
-it is 'too much' for you, get in touch with us, and we will guide you or
-provide a 'ready to use module', depending on your version of Guile.
+As the Guile core module that needs to be patched has changed from 2.0,
+2.2 to 3.0, and still is subject to change any time in the future, we
+can't provide a @samp{one patch for all} solution.
+
+Instead, we describe the steps to manually update your local version.
+However if you think it is @samp{too much} for you, get in touch with
+us, and we will guide you or provide a @samp{ready to use module},
+depending on your version of Guile.
 
 The module we need to modify is @code{(ice-9 boot-9)}, so let's first
 figure out where it is on your system@footnote{You need write privileges
@@ -77,8 +80,8 @@ system you are working on.}, in a guile session, enter the following:
 
 @lisp
 (string-append (%package-data-dir) "/" (effective-version))
-@print{}
-$2 = "/opt2/share/guile/2.2"
+@result{}
+$2 = "/opt3/share/guile/3.0"
 @end lisp
 
 The above returned value is an example of course, just proceed with the
@@ -86,81 +89,60 @@ value returned by your system. So, the file we need to edit, in our
 example, is here:
 
 @example
-/opt2/share/guile/2.2/ice-9/boot-9.scm
+/opt3/share/guile/3.0/ice-9/boot-9.scm
 @end example
 
 Edit the above file and:
 
 @enumerate
 @item
-Search for the line @code{(define format simple-format)} (for Guile
-2.2.3, it is the line 327), and below, add the following lines:
+Search for the line @code{(define format simple-format)}, and below, add
+the following line:
 
 @lisp
-;; instead of using the above, let's define a specific format binding
-;; for exception printers, to allow its user customization.
 (define exception-format simple-format)
 @end lisp
 
 @item
-In the core of the following procedure, (and only in the core of the
-following procedures), you will replace all occurences calls to
-@code{format} by calls to @code{exception-format}:
+Replace all occurences of @code{'(format '} using
+@code{'(exception-format '} [note and meticulously respect the presence
+of the leading open paren '(' and the trailing space ' ' in both the
+search and replace expressions].
 
-@lisp
-dispatch-exception	- line 731 for Guile 2.2.3
-  1 occurrence
-
-(let ((exception-printers '()))		- line 864 for Guile 2.2.3
-  5 occurrences
-
-scm-error-printer	- line 910 for Guile 2.2.3
-  2 occurences
-
-syntax-error-printer	- line 921 for Guile 2.2.3
-  7 occurences
-
-keyword-error-printer	- line 941 for Guile 2.2.3
-  1 occurrence
-
-getaddrinfo-error-printer	- line 941 for Guile 2.2.3
-  1 occurrence
-
-false-if-exception	- line 1063 for Guile 2.2.3
-  2 occurences
-
-make-record-type	- line 1200 for Guile 2.2.3
-  1 occurence
-@end lisp
+Save the file.
 
 @item
-Let's compile it, and install the compiled version where it should (in
-the following lines, you'll need to substitute @code{/opt2} by your
-@code{$prefix} value, and the username by yours):
+Compile the file - in the following lines, substitute @code{/opt3} by
+your @code{$prefix} value, @code{3.0} by your guile (effective-version)
+as well as @code{$HOME}:
 
 @lisp
-cd /opt2/share/guile/2.2/ice-9
+cd /opt3/share/guile/3.0/ice-9
 guild compile boot-9.scm
-@print{} ;;; note: source file /opt2/share/guile/2.2/ice-9/boot-9.scm
-;;;       newer than compiled /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
-wrote `$HOME/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go'
+@print{}
+;;; note: source file /opt3/share/guile/3.0/ice-9/boot-9.scm
+;;;       newer than compiled /opt3/lib/guile/3.0/ccache/ice-9/boot-9.go
+wrote `$HOME/.cache/guile/ccache/3.0-LE-8-3.A/opt3/share/guile/3.0/ice-9/boot-9.scm.go'
+@end lisp
 
-Now we move it, so all users benefit from the new compiled version:
+Note that the target (compiled) filename is @file{boot-9.scm.go} - not
+@file{boot-9.go}.
 
-mv $HOME/.cache/guile/ccache/2.2-LE-8-3.A/opt2/share/guile/2.2/ice-9/boot-9.scm.go /opt2/lib/guile/2.2/ccache/ice-9/boot-9.go
+@item
+Install the compiled file:
+
+@lisp
+cp $HOME/.cache/guile/ccache/3.0-LE-8-3.A/opt3/share/guile/3.0/ice-9/boot-9.scm.go \
+   /opt3/lib/guile/3.0/ccache/ice-9/boot-9.go
 @end lisp
 @end enumerate
 
-Now, once the above is completed, you need to add the following lines
-(see below) to your @file{$HOME/.guile} or, if you are working in a
+Finally, last but not least, once the above is completed, add the
+following lines to your @file{$HOME/.guile} or, if you are working in a
 multi-user environmet, to the file named @file{init.scm} in the
 so-called Guile global site directory (the previous subsection lists the
 terminal command you need to run to see where that directory is on your
-system).
-
-Note that the following proposed modification assumes you did perform
-the steps recommended in the previous subsection, which means that
-@code{(use-modules (ice-9 pretty-print)) is already in there}:
+system):
 
 @lisp
 (when (defined? 'exception-format)
@@ -170,6 +152,10 @@ the steps recommended in the previous subsection, which means that
                       (truncated-print arg #:port port))
               args))))
 @end lisp
+
+Note that the above proposed modification assumes you did perform the
+steps recommended in the previous subsection, which means that
+@code{(use-modules (ice-9 pretty-print))} is already in there:
 
 You are now ready to use Guile-CV!
 
@@ -197,13 +183,13 @@ as you need them, copy the distributed images you are interested in.
 @node Starting Guile-CV
 @section Starting Guile-CV
 
-@indentedblock
-@strong{Special note:}
+@sp 1
+@center @sup{_} @sc{Special Note} @sup{_}
 
 Before you start to use Guile-CV, make sure you read and implement the
 recommendation made in @ref{Configuring Guile for Guile-CV}
-@end indentedblock
 
+@sp 1
 With the previous @ref{Images used in Guile-CV's documentation}
 recommendations in mind, open a terminal and:
 
@@ -212,7 +198,7 @@ cd ~/guile-cv/images
 guile
 scheme@@(guile-user)> ,use (cv)
 scheme@@(guile-user)> (im-load "sand.tif")
-@print{}
+@result{}
 $2 = (512 512 1 (#f32(125.0 128.0 124.0 118.0 108.0 75.0 76.0 # …)))
 @end lisp
 
@@ -229,7 +215,7 @@ Change default directory: ~/guile-cv/images
 M-x run-guile
 scheme@@(guile-user)> ,use (cv)
 scheme@@(guile-user)> (im-load "sand.tif")
-@print{}
+@result{}
 $2 = (512 512 1 (#f32(125.0 128.0 124.0 118.0 108.0 75.0 76.0 # …)))
 @end lisp
 
