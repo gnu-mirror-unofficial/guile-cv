@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -16,7 +16,10 @@
 
 
 @anchor{re-export-public-interface}
-@defspec re-export-public-interface  . args
-Re-export the public interface of a module or modules. Invoked as
-@code{(re-export-modules (mod1) (mod2)...)}.
-@end defspec
+@deffn Syntax re-export-public-interface mod1 mod2 ...
+
+Re-export the public interface of a @var{mod1} @var{mod2} @dots{}
+
+Invoked like @code{use-modules}, where each @var{mod1} @var{mod2}
+@dots{} is a module name (a list of symbol(s)).
+@end deffn
