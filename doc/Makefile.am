@@ -1,6 +1,6 @@
 
 ####
-#### Copyright (C) 2016 - 2020
+#### Copyright (C) 2016 - 2021
 #### Free Software Foundation, Inc.
 
 #### This file is part of GNU Guile-CV.
@@ -41,21 +41,23 @@ guile_cv_TEXINFOS = \
   preface.texi     		\
   introduction.texi		\
   using-guile-cv.texi		\
-  api-abreviations.texi		\
-  api-overview.texi		\
-  api-cv-idata.texi		\
-  api-cv-kdata.texi		\
-  api-cv-impex.texi		\
-  api-cv-imgproc.texi		\
-  api-cv-features.texi		\
-  api-cv-texture.texi		\
-  api-cv-filters.texi		\
-  api-cv-morphology.texi	\
-  api-cv-segmentation.texi	\
-  api-cv-utils.texi		\
-  api-support-modules.texi	\
-  api-support.texi		\
-  api.texi			\
+  cr-ov-naming-conventions.texi	\
+  cr-ov-abreviations.texi	\
+  cr-ov.texi			\
+  cr-ip-idata.texi		\
+  cr-ip-kdata.texi		\
+  cr-ip-impex.texi		\
+  cr-ip-imgproc.texi		\
+  cr-ip-features.texi		\
+  cr-ip-texture.texi		\
+  cr-ip-filters.texi		\
+  cr-ip-morphology.texi		\
+  cr-ip-segmentation.texi	\
+  cr-ip-utils.texi		\
+  cr-ip.texi			\
+  cr-support-modules.texi	\
+  cr-support.texi		\
+  cr.texi			\
   indices.texi			\
   fdl.texi			\
   $(DOC_IMAGES)			\

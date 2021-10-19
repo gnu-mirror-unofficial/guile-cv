@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -14,21 +14,21 @@ support goops))}, ...
 @menu
 * Modules::
 * Goops::
-* G-export::
+@c * G-export::
 * Pi::
 * Utils::
 @end menu
 
 
-@include api-support-modules.texi
+@include cr-support-modules.texi
 
 
 @node Goops
 @subsection Goops
 
 
-@node G-export
-@subsection G-export
+@c @node G-export
+@c @subsection G-export
 
 
 @node Pi

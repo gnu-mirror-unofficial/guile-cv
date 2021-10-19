@@ -44,7 +44,7 @@ Documentation License.''
 @finalout
 @c DL: lose the egregious vertical whitespace, esp. around examples
 @c but paras in @defun-like things don't have parindent
-@c @parskip 4pt plus 1pt
+@parskip 4pt plus 1pt
 @end iftex
 
 
@@ -98,7 +98,8 @@ Indices
 @include preface.texi
 @include introduction.texi
 @include using-guile-cv.texi
-@include api.texi
+@include cr.texi
+
 
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License

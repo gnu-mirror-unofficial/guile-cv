@@ -9,4 +9,4 @@
 @node Abreviations
 @subsection Abreviations
 
-In the table below we list respectively the abreviation ...
+FIXME. Needs to be 'filled'.

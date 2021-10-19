@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2020 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -22,24 +22,16 @@
 @node Overview
 @section Overview
 
-@include api-overview.texi
+@include cr-ov.texi
 
 
 @node Image Processing
 @section Image Processing
 
-@include api-cv-idata.texi
-@include api-cv-kdata.texi
-@include api-cv-impex.texi
-@include api-cv-imgproc.texi
-@include api-cv-features.texi
-@include api-cv-texture.texi
-@include api-cv-filters.texi
-@include api-cv-morphology.texi
-@include api-cv-segmentation.texi
-@include api-cv-utils.texi
+@include cr-ip.texi
+
 
 @node Support
 @section Support
 
-@include api-support.texi
+@include cr-support.texi
