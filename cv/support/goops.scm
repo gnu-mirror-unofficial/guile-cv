@@ -32,6 +32,7 @@
 (define-module (cv support goops)
   #:use-module (srfi srfi-1)
   #:use-module (oop goops)
+  #:use-module (oop goops describe)
   #:use-module (cv support modules)
   #:use-module (cv support g-export)
 
@@ -49,7 +50,8 @@
 
 
 (eval-when (expand load eval)
-  (re-export-public-interface (oop goops)))
+  (re-export-public-interface (oop goops)
+                              (oop goops describe)))
 
 
 (define-method (class-direct-virtual-slots (c <class>))
@@ -66,7 +68,7 @@
 		     slot-definition))
       (class-slots c)))
 
-(define-method (describe (self <object>))
+#;(define-method (describe (self <object>))
   (format #t "~S - instance of ~A~%"
 	  self
 	  (class-name (class-of self)))

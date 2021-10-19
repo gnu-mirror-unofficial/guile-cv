@@ -28,6 +28,7 @@
 
 (define-module (cv)
   #:use-module (oop goops)
+  #:use-module (oop goops describe)
   #:use-module (system foreign)
   #:use-module (rnrs bytevectors)
   #:use-module (ice-9 match)
@@ -72,6 +73,7 @@
 
 (eval-when (compile load eval)
   (re-export-public-interface (oop goops)
+                              (oop goops describe)
 			      (system foreign)
 			      (rnrs bytevectors)
 			      (ice-9 match)
