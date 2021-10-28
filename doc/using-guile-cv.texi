@@ -21,16 +21,18 @@ before to start to use Guile-CV: (a) its @code{repl-print} procedure and
 @subsection Configuring Guile's repl-print procedure
 
 Guile's @code{repl-print} procedure calls @code{(write val)}, which is
-inadequate for images, even very small images@footnote{Even for very
-small images, using write is inadequate, in a terminal, and will
-definitely kill your Emacs/Geiser session.  Not to mention it will raise
-your electricity bill :) - till you succeed to delete its process, Emacs
-will use one core at more then 100%, desperately trying to display
-hundreds of thousands of floating point values, heating your laptop (if
-you have a laptop) up to the point you'll be able to cook an egg on it,
-and get its fans crasy... You've been warned :).}. Fortunately, Guile
-provides both a simple mechanism to alter the default repl printer and
-the alternate repl printer procedure we need: @code{truncated-print}.
+inadequate for Guile-CV images - or for that matter, for any work that
+involves very large data structure manipulations - even very small
+images@footnote{Even for very small images, using write is inadequate,
+in a terminal, and will definitely kill your Emacs/Geiser session.  Not
+to mention it will raise your electricity bill :) - till you succeed to
+delete its process, Emacs will use one core at more then 100%,
+desperately trying to display hundreds of thousands of floating point
+values, heating your laptop (if you have a laptop) up to the point
+you'll be able to cook an egg on it, and get its fans crasy... You've
+been warned :).}. Fortunately, Guile provides both a simple mechanism to
+alter the default repl printer and the alternate repl printer procedure
+we need: @code{truncated-print}.
 
 To modify the default repl printer, you may alter (or add if it doesn't
 exist) your @file{$HOME/.guile} file or, if you are working in a
@@ -57,12 +59,22 @@ Which ever solution you choose, add the following lines:
 @node Configuring Guile's raised exception system
 @subsection Configuring Guile's raised exception system
 
-Guile's default raised exception system calls @code{simple-format},
-which is inadequate for images, even very small images (see the related
-footnote of the previous section, it explains how @samp{inadequate} this
-default is for images.
+Guile's core raised exception printers call @code{simple-format}, which
+is inadequate for Guile-CV images - or for that matter, for any work
+that involves very large data structure manipulations - even very small
+images (see the related footnote of the previous section, it explains
+how @samp{inadequate} this default is for Guile-CV images).
 
-As the Guile core module that needs to be patched has changed from 2.0,
+Unfortunately, Guile does not provide an easy mechanism to alter its
+core raised exception printers. This leaves us with no other option but
+making some changes to the module where those are defined, namely the
+@code{(ice-9 boot-9)} Guile's core module, which then needs to be
+(re)compiled and (re)installed@footnote{Special thanks to Daniel
+Llorens, who proposed these changes, without which it would just be
+impossible to work with Guile-CV - or for that matter, any work that
+involves very large data structure manipulations.}.
+
+As the @code{(ice-9 boot-9)} Guile's core module has changed from 2.0,
 2.2 to 3.0, and still is subject to change any time in the future, we
 can't provide a @samp{one patch for all} solution.
 
@@ -71,10 +83,10 @@ However if you think it is @samp{too much} for you, get in touch with
 us, and we will guide you or provide a @samp{ready to use module},
 depending on your version of Guile.
 
-The module we need to modify is @code{(ice-9 boot-9)}, so let's first
-figure out where it is on your system@footnote{You need write privileges
-to modify this module, contact your admin if you're not in charge of the
-system you are working on.}, in a guile session, enter the following:
+So, let's first figure out where the @code{(ice-9 boot-9)} resides on
+your system@footnote{You need write privileges to modify this module,
+contact your admin if you're not in charge of the system you are working
+on.}, in a guile session, enter the following:
 
 @lisp
 (string-append (%package-data-dir) "/" (effective-version))
@@ -95,9 +107,11 @@ Edit the above file and:
 @enumerate
 @item
 Search for the line @code{(define format simple-format)}, and below, add
-the following line:
+a line containing @code{(define exception-format simple-format)}, so
+now your version of the file looks like this:
 
 @lisp
+(define format simple-format)
 (define exception-format simple-format)
 @end lisp
 
@@ -135,25 +149,46 @@ cp $HOME/.cache/guile/ccache/3.0-LE-8-3.A/opt3/share/guile/3.0/ice-9/boot-9.scm.
 @end lisp
 @end enumerate
 
-Finally, last but not least, once the above is completed, add the
-following lines to your @file{$HOME/.guile} or, if you are working in a
-multi-user environmet, to the file named @file{init.scm} in the
-so-called Guile global site directory (the previous subsection lists the
-terminal command you need to run to see where that directory is on your
-system):
+Finally, once the above is completed, add the following
+lines@footnote{Early versions of Guile-CV used to recommend an
+@code{exception-format} setting based on @code{truncated-print}, which
+works as expected if you are using Guile 2.0 or 2.2, but using Guile
+3.0, a raised exception would lead to a series of @samp{Unwind-only
+stack overflow exception} and exit Guile abruptly.} to your
+@file{$HOME/.guile} or, if you are working in a multi-user environmet,
+to the file named @file{init.scm} in the so-called Guile global site
+directory (the previous subsection lists the terminal command you need
+to run to see where that directory is on your system):
 
 @lisp
+(define %n-char-limit 400)
+(define %n-char-limit-fmt-expr
+  (simple-format #f "~~~a@@y" %n-char-limit))
+
+(define (rewrite-fmt fmt tell)
+  (let loop ((f "")
+             (b 0))
+    (let ((next (string-contains-ci fmt tell b)))
+      (if next
+          (loop (if (or (zero? next)
+                        (not (char=? #\~ (string-ref fmt (- next 1)))))
+                    (string-append f
+                                   (substring fmt b next)
+                                   %n-char-limit-fmt-expr)
+                    f)
+                (+ next 2))
+          (string-append f (substring fmt b))))))
+
 (when (defined? 'exception-format)
   (set! exception-format
-        (lambda (port fmt . args)
-          (for-each (lambda (arg)
-                      (truncated-print arg #:port port))
-              args))))
+        (lambda (port fmt0 . args)
+          (apply (@@ (ice-9 format) format)
+                 port
+                 (rewrite-fmt (rewrite-fmt fmt0 "~s") "~a")
+                 args))))
 @end lisp
 
-Note that the above proposed modification assumes you did perform the
-steps recommended in the previous subsection, which means that
-@code{(use-modules (ice-9 pretty-print))} is already in there:
+Feel free to adapt the @code{%n-char-limit} value to your own taste.
 
 You are now ready to use Guile-CV!
 
