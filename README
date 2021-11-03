@@ -37,26 +37,26 @@ Image Processing and Analysis in [[http://www.gnu.org/software/guile/][Guile]]
 a Computer Vision functional programming library
 
 Guile-CV is based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vigra (Vision with Generic Algorithms),
-enhanced with additional algorithms (Image Textures, Delineate,
-Reconstruction and many more), all accessible through a nice, clean and
-easy to use high level API.
+enhanced with additional algorithms (=Image Textures=, =Delineate=,
+=Reconstruction= and many more), all accessible through a =nice=,
+=clean= and =easy to use= high level API.
 
-Guile-CV is natively multi-threaded, and takes advantage of multiple
-cores, using high-level and fine grained application-level parallelism
-constructs available in Guile, based on its support to POSIX threads.
+Guile-CV is natively =multi-threaded=, and takes advantage of =multiple
+cores=, using high-level and fine grained application-level =parallelism
+constructs= available in Guile, based on its support to POSIX threads.
 
 ** Latest News
 
-November 2018
+November 2021
 
-GNU Guile-CV version 0.2.1 is released.
+GNU Guile-CV version 0.3.0 is released.
 
 Visit the NEWS file or see the [[http://git.savannah.gnu.org/cgit/guile-cv.git/tree/NEWS][News]] page for the list of visible changes
 since the last release, as well as older news.
 
 ** Objective
 
-Guile-CV objective is to be a robust, reliable and fast - Image
+Guile-CV objective is to be a =robust=, =reliable= and =fast= - Image
 Processing and Analysis - Computer Vision functional programming library
 for the Guile Scheme language. Guile-CV also wants to be easy to use,
 study, modify and extend.

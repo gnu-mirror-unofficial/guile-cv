@@ -102,9 +102,10 @@ Autoconf >= 2.69
 @item
 Automake >= 1.14
 @item
-Makeinfo >= 6.3
+Makeinfo >= 6.6
 @item
-@uref{@value{UGUILE}, Guile} >= 2.0.13
+@uref{@value{UGUILE}, Guile} >= 2.0.14 @*
+@ @  [allows 2.2, 3.0 (>= 3.0.7)]
 @item
 @uref{@value{UGUILE-LIB}, Guile-Lib} >= 0.2.5
 @item 
@@ -371,8 +372,8 @@ following instructions on their respective
 
 Most of the time you can find me on irc, channel @emph{#guile},
 @emph{#guix} and @emph{#scheme} on @emph{irc.libera.chat},
-@emph{#clutter} and @emph{#introspection} on @emph{irc.gnome.org}, under
-the nickname @emph{daviid}.
+@emph{#introspection}, @emph{#gtk} and @emph{#clutter} on
+@emph{irc.gnome.org}, under the nickname @emph{daviid}.
 
 
 @node Reporting Bugs

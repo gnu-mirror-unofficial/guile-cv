@@ -4,7 +4,7 @@
 
 #+BEGIN_COMMENT
 
-Copyright (C) 2016 - 2020
+Copyright (C) 2016 - 2021
 Free Software Foundation, Inc.
 
 This document is part of GNU Guile-CV.
@@ -18,7 +18,7 @@ warranty.
 
 * Guile-CV
 
-Guile-CV
+[[http://www.gnu.org/software/guile-cv/][GNU Guile-CV]]
 Image Processing and analysis in Guile
 a Computer Vision functional programming library
 
@@ -28,8 +28,9 @@ Guile-CV needs the following software to run:
 
 	Autoconf	>= 2.69
 	Automake	>= 1.14
-    Makeinfo	>= 6.3
-	[[http://www.gnu.org/software/guile][Guile]] 		>= 2.0.13
+    Makeinfo	>= 6.6
+	[[http://www.gnu.org/software/guile][Guile]] 		>= 2.0.14
+	  [allows 2.2, 3.0 (>= 3.0.7)]
 	[[http://www.nongnu.org/guile-lib/][Guile-Lib]]	>= 0.2.5
 	[[http://ukoethe.github.io/vigra/][Vigra]]		>= 1.11.0
 
@@ -87,12 +88,12 @@ Guile-CV needs the following software to run:
 	  that it is not part of your ’basic’ LaTex distro, on debian
 	  for example, iwona is part of the texlive-fonts-extra package.
 
-** Quickstart
+** Install from the tarball
 
 Guile-CV releases are [[http://ftp.gnu.org/gnu/guile-cv/][here]].  The latest tarballs are:
 
-		guile-cv-0.2.1.tar.gz
-		guile-cv-0.2.1.tar.gz.sig
+		guile-cv-0.3.0.tar.gz
+		guile-cv-0.3.0.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -101,8 +102,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.2.1.tar.gz
-	cd guile-cv-0.2.1
+	tar zxf guile-cv-0.3.0.tar.gz
+	cd guile-cv-0.3.0
 	./configure [--prefix=/your/prefix] [--with-guile-site=yes]
 	make
 	make install
@@ -112,11 +113,43 @@ proceed with the following steps:
 
 	  Before you start to use Guile-CV, make sure you read and
       implement the recommendation made in the manual, section
-      'Configuring Guile for Guile-CV'.
+      /Configuring Guile for Guile-CV/.
 
 Happy Guile-CV!
 
-*** Notes
+** Install from the source
+
+Guile-CV uses Git for revision control, hosted on Savannah, you may
+browse the sources repository here.
+
+There are currently 2 [important] branches: master and devel. Guile-CV
+stable branch is master, developments occur on the devel branch.
+
+So, to grab, compile and install from the source, open a terminal and:
+
+	git clone git://git.savannah.gnu.org/guile-cv.git
+	cd guile-cv
+	./autogen.sh
+	./configure [--prefix=/your/prefix] [--with-guile-site=yes]
+	make
+	make install
+
+	  Special note:
+	  -------------
+
+	  Before you start to use Guile-CV, make sure you read and
+      implement the recommendation made in the manual, section
+      /Configuring Guile for Guile-CV/.
+
+The above steps ensure you’re using Guile-CV bleeding edge stable
+version. If you wish to participate to developments, checkout the devel
+branch:
+
+	git checkout devel
+
+Happy hacking!
+
+** Notes
 
 [1] The default and --prefix install locations for source modules and
     compiled files (in the absence of --with-guile-site=yes) are:
@@ -149,8 +182,8 @@ Happy Guile-CV!
     may consult these variables using pkg-config:
 
 	    pkg-config guile-cv-1.0 --variable=prefix
-      pkg-config guile-cv-1.0 --variable=exec_prefix
-      pkg-config guile-cv-1.0 --variable=libdir
+        pkg-config guile-cv-1.0 --variable=exec_prefix
+        pkg-config guile-cv-1.0 --variable=libdir
 
     You will need - unless the $(libdir) location is already ’known’ by
     your system - to either define or augment your $LD_LIBRARY_PATH

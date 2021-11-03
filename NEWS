@@ -4,7 +4,7 @@
 
 #+BEGIN_COMMENT
 
-Copyright (C) 2016 - 2018
+Copyright (C) 2016 - 2021
 Free Software Foundation, Inc.
 
 This document is part of GNU Guile-CV.
@@ -21,23 +21,40 @@ warranty.
                ==========================================
 
                   Please send Guile-CV bug reports to
-
                           bug-guile-cv@gnu.org
 
 
 * Latest News
 
-** XXX 2019
+** November 2021
 
-Guile-CV version 0.2.2 is released.
+[[http://www.gnu.org/software/guile-cv/][GNU Guile-CV]] version 0.3.0 is released.
 
-This is a maintenance release, which introduces new interfaces.  In
-addition (a) ...
+This is a maintenance release, which allows Guile-CV to work with Guile
+3.0 (>= 3.0.7 to be specific). In addition, im-transpose performance has
+been improved.
+
+The documentation has been restructured and follows the model we adopted
+for [[http://www.gnu.org/software/g-golf][GNU G-Golf]]. The /Configuring Guile's raised exception system/
+section has been updated. Make sure you carefully read and apply the
+proposed changes.
 
 *** Changes since 0.2.1
 
 Here is a summary of visible changes since version 0.2.1. See GNU
 Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
+
+**** Dependencies
+
+Guile-CV allows Guile 3.0 (>= 3.0.7 to be specific). The minimal 2.0
+version is now 2.0.14
+
+	[[http://www.gnu.org/software/guile][Guile]]	 	>= 2.0.14
+	  [allows 2.2, 3.0 (>= 3.0.7)]
+
+The makeinfo program dependency is now version 6.6.
+
+	Makeinfo	>= 6.6
 
 **** Performance improvements
 
@@ -55,6 +72,13 @@ im-transpose-channel
   these that runs as fast as in C, and I am prety confident that it will
   happen, maybe not tomorrow, but it will happen, we will revert these
   and use Guile Scheme again.
+
+**** Documentation
+
+The documentation has been restructured and follows the model we adopted
+for [[http://www.gnu.org/software/g-golf][GNU G-Golf]]. The /Configuring Guile's raised exception system/
+section has been updated. Make sure you carefully read and apply the
+proposed changes.
 
 
 * Older News
