@@ -1,6 +1,6 @@
 @c -*- mode: texinfo; coding: utf-8 -*-
 @c This is part of the GNU Guile-CV Reference Manual.
-@c Copyright (C) 2016 - 2018 Free Software Foundation, Inc.
+@c Copyright (C) 2016 - 2021 Free Software Foundation, Inc.
 @c See the file guile-cv.texi for copying conditions.
 
 
@@ -151,7 +151,7 @@ Returns a new image or channel.
 
 Crack edges are marked @samp{between} the (different) pixels of
 @var{image}.  In order to accommodate the cracks, the resulting image or
-channel size must be (* (- width 1) 2) and (* (- height 1) 2)
+channel size must be (- (* width 2) 1) and (- (* height 2) 1)
 respectively.
 
 Crack pixels are first inserted, then all crack pixels whose non-crack
