@@ -1,7 +1,7 @@
 ##
 ## Autoconf macros for working with latex.
 ##
-## Copyright (C) 2015 - 2017 Free Software Foundation, Inc.
+## Copyright (C) 2015 - 2021 Free Software Foundation, Inc.
 ##
 ## This library is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -51,18 +51,18 @@
 
 ###
 ### LATEX_CHECK
-###   -- using Guile, imports (grip m4 support), evaluate the
+###   -- using Guile, imports (build-aux latex), evaluate the
 ###      guile scheme code and capture the return value
 ###
 
 # Usage: LATEX_CHECK(var, check)
 #
 # @var{var} is a shell variable name to be set to the return value.
-# @var{check} is a Guile Scheme expression, evaluated with "$GUILE -c",
-#    importing the (build-aux latex) module, and returning either 0 or
-#    non-#f to indicate the check passed.  Non-0 number or #f
-#    indicates failure.  Avoid using the character "#" since that
-#    confuses autoconf.
+# @var{check} is a Guile Scheme expression, evaluated with "$GUILE -L
+# "$srcdir" -c", importing the (build-aux latex) module, and returning
+# either 0 or non-#f to indicate the check passed.  Non-0 number or #f
+# indicates failure.  Avoid using the character "#" since that
+# confuses autoconf.
 #
 AC_DEFUN([LATEX_CHECK],
  [AC_REQUIRE([GUILE_PROGS])
