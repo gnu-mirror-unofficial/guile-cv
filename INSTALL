@@ -92,8 +92,8 @@ Guile-CV needs the following software to run:
 
 Guile-CV releases are [[http://ftp.gnu.org/gnu/guile-cv/][here]].  The latest tarballs are:
 
-		guile-cv-0.3.0.tar.gz
-		guile-cv-0.3.0.tar.gz.sig
+		guile-cv-0.3.1.tar.gz
+		guile-cv-0.3.1.tar.gz.sig
 
 		[ GPG Key: A3057AD7
 		[ gpg --keyserver keys.gnupg.net --recv-keys A3057AD7
@@ -102,8 +102,8 @@ Assuming you have satisfied the dependencies, open a terminal and
 proceed with the following steps:
 
 	cd <download-path>
-	tar zxf guile-cv-0.3.0.tar.gz
-	cd guile-cv-0.3.0
+	tar zxf guile-cv-0.3.1.tar.gz
+	cd guile-cv-0.3.1
 	./configure [--prefix=/your/prefix] [--with-guile-site=yes]
 	make
 	make install

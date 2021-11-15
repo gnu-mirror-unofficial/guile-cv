@@ -28,6 +28,32 @@ warranty.
 
 ** November 2021
 
+[[http://www.gnu.org/software/guile-cv/][GNU Guile-CV]] version 0.3.1 is released.
+
+This is a maintenance release, which fixes a bug in the =pre-inst-env=
+script, which is used by Guile-CV at build time and may also be used
+to test and run an uninstalled Guile-CV instance,
+
+*** Changes since 0.3.0
+
+Here is a summary of visible changes since version 0.3.0. See GNU
+Guile-CV's [[http://git.savannah.gnu.org/cgit/guile-cv.git][git summary]] and [[http://git.savannah.gnu.org/cgit/guile-cv.git/log/][git log]] for a complete description.
+
+**** Bug fixing
+
+The =pre-inst-env.in= script has been fixed and now adds a specific
+build time library location, so Guile 3.0 (>= 3.0.6) finds libguile-cv
+at build time.
+
+Guile 3.0 (>= 3.0.6) does not use libltdl anymore, and although in guile
+(system foreign-library) module, both the comment and the definition of
+augment-ltdl-library-path seems to take care of finding .so files either
+aside .la or in a .libs/ subdir, it does not work.
+
+* Older News
+
+** November 2021
+
 [[http://www.gnu.org/software/guile-cv/][GNU Guile-CV]] version 0.3.0 is released.
 
 This is a maintenance release, which allows Guile-CV to work with Guile
@@ -79,10 +105,6 @@ The documentation has been restructured and follows the model we adopted
 for [[http://www.gnu.org/software/g-golf][GNU G-Golf]]. The /Configuring Guile's raised exception system/
 section has been updated. Make sure you carefully read and apply the
 proposed changes.
-
-
-* Older News
-
 ** November 2018
 
 Guile-CV version 0.2.1 is released.

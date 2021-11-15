@@ -36,8 +36,8 @@ Guile-CV
 Image Processing and Analysis in [[http://www.gnu.org/software/guile/][Guile]]
 a Computer Vision functional programming library
 
-Guile-CV is based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vigra (Vision with Generic Algorithms),
-enhanced with additional algorithms (=Image Textures=, =Delineate=,
+Guile-CV is based on [[http://ukoethe.github.io/vigra/][Vigra]] (Vision with Generic Algorithms), enhanced
+with additional algorithms (=Image Textures=, =Delineate=,
 =Reconstruction= and many more), all accessible through a =nice=,
 =clean= and =easy to use= high level API.
 
@@ -49,7 +49,7 @@ constructs= available in Guile, based on its support to POSIX threads.
 
 November 2021
 
-GNU Guile-CV version 0.3.0 is released.
+GNU Guile-CV version 0.3.1 is released.
 
 Visit the NEWS file or see the [[http://git.savannah.gnu.org/cgit/guile-cv.git/tree/NEWS][News]] page for the list of visible changes
 since the last release, as well as older news.
